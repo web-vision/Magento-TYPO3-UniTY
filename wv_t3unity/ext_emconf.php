@@ -28,9 +28,9 @@ $EM_CONF[$_EXTKEY] = array(
 		),
 		'conflicts' => array(
             'seo_basics' => '0.0.0-0.0.0',
-		),
-		'suggests' => array(
             'realurl' => '0.0.0-0.0.0'
+        ),
+		'suggests' => array(
 		),
 	),
 );

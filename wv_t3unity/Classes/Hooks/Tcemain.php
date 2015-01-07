@@ -42,7 +42,7 @@ class Tcemain {
         if ($tableName == 'pages') {
             $select = '*';
             $from = 'tx_realurl_pathcache';
-            $where = 'uid = '.$recordId;
+            $where = 'page_id = '.$recordId;
             $group = '';
             $order = '';
             $limit = '';

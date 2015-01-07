@@ -1,6 +1,7 @@
 [globalVar = GP:mode = page]
 page = PAGE
 page {
+    typeNum = 0
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
 
@@ -41,6 +42,7 @@ page {
 [globalVar = GP:mode = column]
 page = PAGE
 page {
+    typeNum = 0
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
 
@@ -52,6 +54,7 @@ page {
 [globalVar = GP:mode = element]
 page = PAGE
 page {
+    typeNum = 0
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
 
