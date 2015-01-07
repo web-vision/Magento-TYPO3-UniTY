@@ -3,7 +3,7 @@ if (!defined ('TYPO3_MODE')) {
     die ('Access denied.');
 }
 
-$GLOBALS['TYPO3_CONF_VARS']['FE']['pageOverlayFields'] .= ',unity_path,path_canonical_url';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['pageOverlayFields'] .= ',unity_path,canonical_url';
 
 $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wv_t3unity']);
 
