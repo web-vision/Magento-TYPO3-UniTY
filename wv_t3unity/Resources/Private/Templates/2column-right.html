@@ -1,0 +1,17 @@
+<f:comment>
+    Template für die zweispaltige Darstellung mit rechter Sidebar
+</f:comment>
+
+<f:layout name="default" />
+<f:section name="content">
+
+    <div class="container">
+        <section id="content-inner" class="col-md-9">
+            <f:format.raw>{content}</f:format.raw>
+        </section>
+        <aside id="sidebar" class="sidebar-right col-md-3">
+            <f:format.raw>{sidebar}</f:format.raw>
+        </aside>
+    </div>
+
+</f:section>

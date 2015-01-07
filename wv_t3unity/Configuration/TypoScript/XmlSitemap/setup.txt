@@ -1,0 +1,11 @@
+tx_wvt3unity_xmlsitemap = PAGE
+tx_wvt3unity_xmlsitemap {
+    typeNum = 776
+    config.disableAllHeaderCode = 1
+    config.renderCharset = utf-8
+    config.additionalHeaders = Content-type: text/xml
+    config.xhtml_cleaning = 0
+    10 = USER
+    10.userFunc = WebVision\WvT3unity\Controllers\SitemapController->renderXMLSitemap
+    10.resolveMainShortcut = 1
+}
