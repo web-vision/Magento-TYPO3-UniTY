@@ -67,7 +67,7 @@ page {
 
     10 = TEMPLATE
     10.template = TEXT
-    10.value = ###CONTENT###
+    10.template.value = ###CONTENT###
     10.marks {
         CONTENT = RECORDS
         CONTENT.tables = tt_content
