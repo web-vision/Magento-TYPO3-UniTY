@@ -15,8 +15,10 @@ page {
 
 			default = TEXT
 			default.value = EXT:wv_t3unity/Resources/Private/Templates/1column.html
+
 			2 = TEXT
 			2.value = EXT:wv_t3unity/Resources/Private/Templates/2column-left.html
+
 			3 = TEXT
             3.value = EXT:wv_t3unity/Resources/Private/Templates/2column-right.html
         }
@@ -46,8 +48,13 @@ page {
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
 
-    10 < styles.content.get
-    10.select.where = colPos= {GP:colPos}
+    10 = TEMPLATE
+    10.template = TEXT
+    10.value = ###CONTENT###
+    10.marks {
+        CONTENT < styles.content.get
+        CONTENT.select.where = colPos={GP:colPos}
+    }
 }
 [global]
 
@@ -58,10 +65,15 @@ page {
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
 
-    10 = RECORDS
-    10.table = tt_content
-    10.source.data = GP:uid
-    10.dontCheckPid = 1
+    10 = TEMPLATE
+    10.template = TEXT
+    10.value = ###CONTENT###
+    10.marks {
+        CONTENT = RECORDS
+        CONTENT.tables = tt_content
+        CONTENT.source.data = GP:uid
+        CONTENT.dontCheckPid = 1
+    }
 }
 [global]
 
@@ -69,6 +81,8 @@ headerData = PAGE
 headerData {
     typeNum = 777
     config.disableAllHeaderCode = 1
+
+    10 = TEMPLATE
     10.template = TEXT
     10.template.value (
     {

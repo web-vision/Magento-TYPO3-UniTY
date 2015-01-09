@@ -351,7 +351,7 @@ class SitemapController {
      * @param int $id
      * @return array
      */
-    protected function fetchPagesFromTreeStructure($id) {
+    public function fetchPagesFromTreeStructure($id) {
         $depth = 50;
         $additionalFields = 'uid,pid,doktype,shortcut,crdate,SYS_LASTCHANGED';
 
