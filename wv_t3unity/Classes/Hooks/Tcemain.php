@@ -42,47 +42,92 @@ class Tcemain {
 
         if ($tableName == 'pages') {
 
-            /** @var \WebVision\WvT3unity\Controller\SitemapController $xmlSitemapController */
-            $xmlSitemapController = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\WebVision\WvT3unity\Controller\SitemapController');
-            $treeRecords = $xmlSitemapController->fetchPagesFromTreeStructure($recordId);
+	        $recordPath = self::getRecordPath($recordId,'',1000);
+	        $path = str_replace(' ','-',strtolower($recordPath));
+	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages', 'uid =' . $recordId, array('unity_path' => $path) );
+
+	        $treeRecords = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($recordId);
 
             foreach ($treeRecords as $row) {
-                $item = $row['row'];
-
-                $conf = array(
-                    'parameter' => $item['uid']
-                );
-
-                /** @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $frontendController */
-                $frontendController = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController');
-
-                $url = $frontendController->cObj->typoLink_URL($conf);
-                $urlParts = parse_url($url);
-
-                $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages', 'uid =' . $recordId, array('unity_path' => $urlParts['path']) );
-
+				if ($row['uid'] > 0) {
+  	                $recordPath = self::getRecordPath($row['uid'],'',1000);
+                    $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages', 'uid =' . $recordId, array('unity_path' => $this->buildPath($recordPath)) );
+				}
             }
 
         }
-        /*if ($tableName == 'pages_language_overlay') {
-            $select = '*';
-            $from = 'tx_realurl_pathcache';
-            $where = 'page_id = '.$recordId.' AND language_id != 0';
-            $group = '';
-            $order = '';
-            $limit = '';
+        if ($tableName == 'pages_language_overlay') {
 
-            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select, $from, $where, $group, $order, $limit);
-            while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                $path = $row['pagepath'];
-                $language = $row['sys_language_uid'];
+	        $recordPath = self::getRecordPath($recordId,'',1000);
+	        $path = str_replace(' ','-',strtolower($recordPath));
+	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages_language_overlay', 'uid =' . $recordId, array('unity_path' => $path) );
 
-                if ($path != '') {
-                    $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages_language_overlay', 'pid = '.$recordId.'AND sys_language_uid = '.$language ,array('unity_path' => $path));
-                }
-            }
+	        $treeRecords = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($recordId);
 
-        }*/
+	        foreach ($treeRecords as $row) {
+
+		        $recordPath = self::getRecordPath($row['uid'],'',1000);
+		        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages_language_overlay', 'uid =' . $recordId, array('unity_path' => $this->buildPath($recordPath)) );
+	        }
+        }
     }
+
+	/**
+	 * buildPath
+	 *
+	 * @param $recordPath
+	 *
+	 * @return string
+	 */
+	protected function buildPath($recordPath) {
+		$pathLong = str_replace(' ','-',strtolower($recordPath));
+		$path = substr($pathLong, 0, -1);
+		return $path . '.html';
+	}
+
+	/**
+	 * getRecordPath
+	 *
+	 * @param     $uid
+	 * @param     $clause
+	 * @param     $titleLimit
+	 * @param int $fullTitleLimit
+	 *
+	 * @return array|string
+	 */
+	static public function getRecordPath($uid, $clause, $titleLimit, $fullTitleLimit = 0) {
+		if (!$titleLimit) {
+			$titleLimit = 1000;
+		}
+		$loopCheck = 100;
+		$output = ($fullOutput = '/');
+		$clause = trim($clause);
+		if ($clause !== '' && substr($clause, 0, 3) !== 'AND') {
+			$clause = 'AND ' . $clause;
+		}
+		$data = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($uid, $clause);
+		foreach ($data as $record) {
+			if ($record['uid'] === 0) {
+				continue;
+			}
+			if (!is_null($record['nav_title'])) {
+				$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $output;
+			} else {
+				$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $output;
+			}
+			if ($fullTitleLimit) {
+				if (!is_null($record['nav_title'])) {
+					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $fullOutput;
+				} else {
+					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $fullOutput;
+				}
+			}
+		}
+		if ($fullTitleLimit) {
+			return array($output, $fullOutput);
+		} else {
+			return $output;
+		}
+	}
 
 }

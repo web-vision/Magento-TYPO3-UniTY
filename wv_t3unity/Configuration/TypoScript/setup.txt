@@ -50,7 +50,7 @@ page {
 
     10 = TEMPLATE
     10.template = TEXT
-    10.value = ###CONTENT###
+    10.template.value = ###CONTENT###
     10.marks {
         CONTENT < styles.content.get
         CONTENT.select.where = colPos={GP:colPos}
@@ -85,16 +85,16 @@ headerData {
     10 = TEMPLATE
     10.template = TEXT
     10.template.value (
-    {
-        "title": "###TITLE###",
-        "keywords": "###KEYWORDS###",
-        "description": "###DESCRIPTION###",
-        "canonical": "###CANONICAL###",
-        "includeJs":[###INCLUDEJS###],
-        "includeCss":[###INCLUDECSS###],
-        "includeFooterJs":[###INCLUDEFOOTERJS###],
-        "includeFooterCss":[###INCLUDEFOOTERCSS###]
-    }
+{
+    "title": "###TITLE###",
+    "keywords": "###KEYWORDS###",
+    "description": "###DESCRIPTION###",
+    "canonical": "###CANONICAL###",
+    "includeJs":[###INCLUDEJS###],
+    "includeCss":[###INCLUDECSS###],
+    "includeFooterJs":[###INCLUDEFOOTERJS###],
+    "includeFooterCss":[###INCLUDEFOOTERCSS###]
+}
     )
     10.marks {
         TITLE = TEXT
