@@ -1,0 +1,34 @@
+##############################################
+#### BACKENDLAYOUT: Default Sidebar Left #####
+##############################################
+mod {
+	web_layout {
+		UnityBackendLayouts {
+			2columns-left {
+				title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.2columns-left
+				config {
+					backend_layout {
+						colCount = 12
+						rowCount = 1
+						rows {
+							1 {
+								columns {
+									1 {
+										name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_left
+										colPos = 1
+										colspan = 3
+									}
+									2 {
+										name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
+										colPos = 0
+										colspan = 9
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

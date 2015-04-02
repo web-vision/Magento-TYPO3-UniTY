@@ -1,0 +1,14 @@
+<f:comment>
+    Template for 3 column magento layout with sidebar left and right
+</f:comment>
+
+<f:layout name="default" />
+<f:section name="content">
+<div class="col-wrapper">
+    <div class="col-main">
+        <f:format.raw>{content}</f:format.raw>
+    </div>
+    <div class="col-left sidebar"><f:format.raw>{sidebar_left}</f:format.raw></div>
+</div>
+<div class="col-right sidebar"><f:format.raw>{sidebar_right}</f:format.raw></div>
+</f:section>

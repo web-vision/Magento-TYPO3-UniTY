@@ -18,6 +18,7 @@ if (TYPO3_MODE === 'BE') {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript/XmlSitemap', 'Unity XML Sitemap');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript/Sitemap', 'Unity Sitemap');
 
-
-
-
+/**
+ * BackendLayoutDataProvider
+ */
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY] = 'WebVision\WvT3unity\Hooks\Options\BackendLayoutDataProvider';
