@@ -51,7 +51,7 @@ class Tcemain {
             foreach ($treeRecords as $row) {
 				if ($row['uid'] > 0) {
   	                $recordPath = self::getRecordPath($row['uid'],'',1000);
-                    $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages', 'uid =' . $recordId, array('unity_path' => $this->buildPath($recordPath)) );
+                    $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages', 'uid =' . $row['uid'], array('unity_path' => $this->buildPath($recordPath)) );
 				}
             }
 
@@ -67,7 +67,7 @@ class Tcemain {
 	        foreach ($treeRecords as $row) {
 
 		        $recordPath = self::getRecordPath($row['uid'],'',1000);
-		        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages_language_overlay', 'uid =' . $recordId, array('unity_path' => $this->buildPath($recordPath)) );
+		        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages_language_overlay', 'uid =' . $row['uid'], array('unity_path' => $this->buildPath($recordPath)) );
 	        }
         }
     }
@@ -82,6 +82,9 @@ class Tcemain {
 	protected function buildPath($recordPath) {
 		$pathLong = str_replace(' ','-',strtolower($recordPath));
 		$path = substr($pathLong, 0, -1);
+		if ($path ==  '') {
+			$path = 'index';
+		}
 		return $path . '.html';
 	}
 
@@ -110,16 +113,19 @@ class Tcemain {
 			if ($record['uid'] === 0) {
 				continue;
 			}
-			if (!is_null($record['nav_title'])) {
-				$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $output;
-			} else {
-				$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $output;
-			}
-			if ($fullTitleLimit) {
+			print_r($record['is_siteroot']);
+			if ($record['is_siteroot'] == 0) {
 				if (!is_null($record['nav_title'])) {
-					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $fullOutput;
+					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $output;
 				} else {
-					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $fullOutput;
+					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $output;
+				}
+				if ($fullTitleLimit) {
+					if (!is_null($record['nav_title'])) {
+						$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $fullOutput;
+					} else {
+						$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $fullOutput;
+					}
 				}
 			}
 		}
