@@ -113,7 +113,6 @@ class Tcemain {
 			if ($record['uid'] === 0) {
 				continue;
 			}
-			print_r($record['is_siteroot']);
 			if ($record['is_siteroot'] == 0) {
 				if (!is_null($record['nav_title'])) {
 					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $output;
