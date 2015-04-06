@@ -43,8 +43,7 @@ class Tcemain {
         if ($tableName == 'pages') {
 
 	        $recordPath = self::getRecordPath($recordId,'',1000);
-	        $path = str_replace(' ','-',strtolower($recordPath));
-	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages', 'uid =' . $recordId, array('unity_path' => $path) );
+	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages', 'uid =' . $recordId, array('unity_path' => $recordPath) );
 
 	        $treeRecords = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($recordId);
 
@@ -55,20 +54,44 @@ class Tcemain {
 				}
             }
 
+	        $childRecords = self::getPageChilds($recordId);
+	        foreach ($childRecords as $row) {
+		        if ($row['uid'] > 0) {
+			        $recordPath = self::getRecordPath($row['uid'],'',1000);
+			        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages', 'uid =' . $row['uid'], array('unity_path' => $this->buildPath($recordPath)) );
+		        }
+	        }
+
         }
         if ($tableName == 'pages_language_overlay') {
+	        $titleLimit = 1000;
+	        $output = ($fullOutput = '/');
 
-	        $recordPath = self::getRecordPath($recordId,'',1000);
-	        $path = str_replace(' ','-',strtolower($recordPath));
-	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages_language_overlay', 'uid =' . $recordId, array('unity_path' => $path) );
+	        $record = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecord('pages_language_overlay',$recordId);
+	        /** @var \TYPO3\CMS\Frontend\Page\PageRepository $pageRepository */
+	        $pageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
+	        $pageRepository->sys_language_uid = $record['sys_language_uid'];
 
-	        $treeRecords = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($recordId);
+	        $rootline = new \TYPO3\CMS\Core\Utility\RootlineUtility($record['pid'],'',$pageRepository);
+	        foreach($rootline->get() as $row) {
+		        if ($row['uid'] === 0) {
+			        continue;
+		        }
+		        if (array_key_exists('is_siteroot',$row)) {
+			        if ($row['is_siteroot'] == 0) {
+				        print_r($row);
 
-	        foreach ($treeRecords as $row) {
-
-		        $recordPath = self::getRecordPath($row['uid'],'',1000);
-		        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages_language_overlay', 'uid =' . $row['uid'], array('unity_path' => $this->buildPath($recordPath)) );
+				        if ($row['nav_title'] !== '') {
+					        $output = '/' . strip_tags($row['nav_title']) . $output;
+				        } else {
+					        $output = '/' . strip_tags($row['title']) . $output;
+				        }
+			        }
+		        }
 	        }
+	        $recordPath = self::buildPath($output);
+
+	        $GLOBALS['TYPO3_DB']->exec_UPDATEquery('pages_language_overlay', 'uid =' . $recordId, array('unity_path' => $this->buildPath($recordPath)) );
         }
     }
 
@@ -113,14 +136,29 @@ class Tcemain {
 			if ($record['uid'] === 0) {
 				continue;
 			}
-			if ($record['is_siteroot'] == 0) {
-				if (!is_null($record['nav_title'])) {
+			if (array_key_exists('is_siteroot',$record)) {
+				if ($record['is_siteroot'] == 0) {
+					if ($record['nav_title'] !== '') {
+						$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $output;
+					} else {
+						$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $output;
+					}
+					if ($fullTitleLimit) {
+						if ($record['nav_title'] !== '') {
+							$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $fullOutput;
+						} else {
+							$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $fullOutput;
+						}
+					}
+				}
+			} else {
+				if ($record['nav_title'] !== '') {
 					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $output;
 				} else {
 					$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $output;
 				}
 				if ($fullTitleLimit) {
-					if (!is_null($record['nav_title'])) {
+					if ($record['nav_title'] !== '') {
 						$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['nav_title']), $titleLimit) . $fullOutput;
 					} else {
 						$output = '/' . \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs(strip_tags($record['title']), $titleLimit) . $fullOutput;
@@ -135,4 +173,26 @@ class Tcemain {
 		}
 	}
 
+	/**
+	 * getPageChilds
+	 *
+	 * @param        $uid
+	 * @param string $clause
+	 *
+	 * @return array
+	 */
+	static protected function getPageChilds($uid, $clause = '') {
+		static $getPageChilds_cache = array();
+		$ident = $uid . '-' . $clause;
+		if (is_array($getPageChilds_cache[$ident])) {
+			$row = $getPageChilds_cache[$ident];
+		} else {
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('pid,uid,title,TSconfig,is_siteroot,storage_pid,t3ver_oid,t3ver_wsid,t3ver_state,t3ver_stage,backend_layout_next_level', 'pages', 'pid=' . (int)$uid . ' ' . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('pages') . ' ' . $clause);
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$result[] = $row;
+			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		}
+		return $result;
+	}
 }
