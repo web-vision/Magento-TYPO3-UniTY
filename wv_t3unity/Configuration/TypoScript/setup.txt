@@ -38,13 +38,13 @@ page {
         // Variables in template
         variables {
             content < styles.content.get
-            content.select.where = colPos=0
+            content.select.where = colPos=1
 
             sidebar_left < styles.content.get
-            sidebar_left.select.where = colPos=1
+            sidebar_left.select.where = colPos=2
 
             sidebar_right < styles.content.get
-            sidebar_right.select.where = colPos=2
+            sidebar_right.select.where = colPos=3
         }
     }
 }
@@ -63,6 +63,7 @@ page {
     10.marks {
         CONTENT < styles.content.get
         CONTENT.select.where = colPos={GP:colPos}
+        CONTENT.select.where.insertData = 1
     }
 }
 [global]
@@ -124,7 +125,6 @@ headerData {
         INCLUDEFOOTERCSS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeFooterCss
     }
 }
-
 
 plugin.tx_wvt3unity >
 plugin.tx_wvt3unity = COA
