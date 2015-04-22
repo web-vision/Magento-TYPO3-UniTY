@@ -144,9 +144,6 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 		if (!empty($pageTsConfig['mod.']['web_layout.']['UnityBackendLayouts.'])) {
 			$backendLayouts = (array)$pageTsConfig['mod.']['web_layout.']['UnityBackendLayouts.'];
 			foreach ($backendLayouts as $identifier => $data) {
-                $han = fopen('/Users/eydamos/Sites/fashionestaRelaunch/httpdocs/log.txt', 'a');
-                fwrite($han, $identifier);
-                fclose($han);
 				$backendLayout = $this->generateBackendLayoutFromTsConfig($identifier, $data);
 				$this->attachBackendLayout($backendLayout);
 			}
