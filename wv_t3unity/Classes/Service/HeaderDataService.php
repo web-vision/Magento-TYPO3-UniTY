@@ -55,11 +55,4 @@ class HeaderDataService {
     public function getIncludeFooterJs() {
         return $GLOBALS['TSFE']->jsFooterFiles;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getIncludeFooterCss() {
-        return $GLOBALS['TSFE']->cssFooterFiles;
-    }
 }

@@ -30,7 +30,6 @@ page {
         }
 
         // Define paths for templates
-		templateRootPath = EXT:wv_t3unity/Resources/Private/Templates/
         partialRootPath = EXT:wv_t3unity/Resources/Private/Partials/
         layoutRootPath = EXT:wv_t3unity/Resources/Private/Layouts/
 
@@ -177,8 +176,8 @@ page {
     }
 [global]
 
-headerData = PAGE
-headerData {
+page = PAGE
+page {
     typeNum = 777
     config.disableAllHeaderCode = 1
 
@@ -192,8 +191,7 @@ headerData {
     "canonical": "###CANONICAL###",
     "includeJs":[###INCLUDEJS###],
     "includeCss":[###INCLUDECSS###],
-    "includeFooterJs":[###INCLUDEFOOTERJS###],
-    "includeFooterCss":[###INCLUDEFOOTERCSS###]
+    "includeFooterJs":[###INCLUDEFOOTERJS###]
 }
     )
     10.marks {
@@ -211,80 +209,5 @@ headerData {
         INCLUDECSS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeCss
         INCLUDEFOOTERJS = USER
         INCLUDEFOOTERJS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeFooterJs
-        INCLUDEFOOTERCSS = USER
-        INCLUDEFOOTERCSS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeFooterCss
     }
 }
-
-plugin.tx_wvt3unity >
-plugin.tx_wvt3unity = COA
-plugin.tx_wvt3unity {
-
-	# Append a line break for every header tag
-	5 = TEXT
-	5.value (
-
-
-)
-
-	# Building the page title
-	10 = TEXT
-	10.data = page:title
-	10.trim = 1
-	10.stdWrap.stdWrap.append = TEXT
-	10.stdWrap.stdWrap.append.data = TSFE:tmpl|sitetitle
-	10.stdWrap.stdWrap.append.trim = 1
-	10.stdWrap.stdWrap.append.noTrimWrap = | - ||
-	10.stdWrap.insertData = 1
-	10.htmlSpecialChars = 1
-	10.wrap = <title>|</title>
-	10.append < .5
-
-	20 < .10
-	20.wrap = <meta name="title" content="|" />
-
-
-	# Building the Keywords tag
-	30 = TEXT
-	30 < .10
-	30.data = page:keywords
-	30.stdWrap.noTrimWrap = {$plugin.tx_wvt3unity.keywordsWrap}
-	30.stdWrap.stdWrap >
-	30.required = 1
-	30.wrap = <meta name="keywords" content="|" />
-
-
-	# Building the Description tag
-	40 = TEXT
-	40 < .30
-	40.data = page:description
-	40.stdWrap.noTrimWrap = {$plugin.tx_wvt3unity.descriptionWrap}
-	40.wrap = <meta name="description" content="|" />
-
-
-	# Building the date tag (last changed)
-	50 = TEXT
-	50 < .10
-	50.data = page:SYS_LASTCHANGED // page:crdate
-	50.date = Y-m-d
-	50.stdWrap >
-	50.wrap = <meta name="date" content="|" />
-
-	# Building the canonical tag
-	60 = TEXT
-	60 < .10
-	60.data >
-	60.cObject = USER
-	60.cObject.userFunc = WebVision\WvT3unity\Service\UrlService->getCanonicalUrl
-	#60.cObject.useDomain = current
-	60.required = 1
-	60.if.isTrue = {$plugin.tx_seo.enableCanonicalTag}
-	60.stdWrap >
-	60.wrap = <link rel="canonical" href="|" />
-}
-
-
-# activate SEO in main "page." configuration
-# config.noPageTitle = 2
-page.headerData.776 = < plugin.tx_wvt3unity
-
