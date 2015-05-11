@@ -3,7 +3,6 @@ if (!defined ('TYPO3_MODE')) {
     die ('Access denied.');
 }
 
-
 $additioncalColumns = array(
     'hidden_xs' => array(
         'exclude' => 1,
