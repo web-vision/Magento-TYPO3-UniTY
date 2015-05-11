@@ -32,6 +32,11 @@ use \TYPO3\CMS\Backend\Utility\BackendUtility;
 class Tcemain
 {
     /**
+     * @var \TYPO3\CMS\Core\Database\DatabaseConnection
+     */
+    protected $_db;
+
+    /**
      * A TCEmain hook to expire old records and add new ones
      *
      * @param string $status 'new' (ignoring) or 'update'
@@ -66,22 +71,12 @@ class Tcemain
                 return;
         }
 
-        /** @var \TYPO3\CMS\Core\Database\DatabaseConnection $db */
-        $db = $GLOBALS['TYPO3_DB'];
+        $this->_db = $GLOBALS['TYPO3_DB'];
 
         $unityPath = $this->getRecordPath($pagesUid, $sysLanguageUid);
-        $db->exec_UPDATEquery($tableName, 'uid =' . $recordId, array('unity_path' => $unityPath));
+        $this->_db->exec_UPDATEquery($tableName, 'uid =' . $recordId, array('unity_path' => $unityPath));
 
-        /*
-        // WVTODO this goes up the tree but we need code down the tree
-        $treeRecords = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($recordId);
-
-        foreach ($treeRecords as $row) {
-
-            $recordPath = self::getRecordPath($row['uid'],'',1000);
-            $db->exec_UPDATEquery('pages_language_overlay', 'uid =' . $row['uid'], array('unity_path' => $this->buildPath($recordPath)) );
-        }
-        */
+        $this->_updateSubPages($pagesUid, $sysLanguageUid, $unityPath);
     }
 
     /**
@@ -105,20 +100,142 @@ class Tcemain
                 continue;
             }
 
-            $output .= '/' . $this->cleanTitle($record['nav_title'] ? $record['nav_title'] : $record['title']);
+            $output = $this->_addToPath($output, $record);
         }
-
-        $output = str_replace(' ', '-', strtolower($output));
 
         if(strlen($output) == 0) {
-            $output = '/index';
+            $output = '/index.html';
         }
 
-        return $output . '.html';
+        return $output;
     }
 
-    protected function cleanTitle($title)
+    protected function _updateSubPages($uid, $sysLanguageUid, $path) {
+        // remove previously added .html
+        $path = preg_replace('/\.html$/', '', $path) . '/';
+
+        // remove index as a special case for the root page
+        if($path == '/index/') {
+            $path = '/';
+        }
+
+        $subPages = $this->_getTreeList($uid, $sysLanguageUid);
+
+        foreach($subPages as $subPage) {
+            $this->_updateSubPage($subPage, $path);
+        }
+    }
+
+    protected function _updateSubPage($data, $currentPath)
     {
-        return urlencode(strip_tags($title));
+        if(array_key_exists('lang', $data)) {
+            $page = $data['lang'];
+            $tableName = 'pages_language_overlay';
+            // if page is false there is no translation for this page
+            if(!$page) {
+                $page = $data;
+                unset($page['uid']);
+            }
+        } else {
+            $page = $data;
+            $tableName = 'pages';
+        }
+        // if unity path doesn't start with the current path it needs an update
+        if(strpos($page['unity_path'], $currentPath) !== 0) {
+            $unityPath = $this->_addToPath($currentPath, $page);
+
+            if(array_key_exists('uid', $page)) {
+                $this->_db->exec_UPDATEquery($tableName, 'uid =' . $page['uid'], array('unity_path' => $unityPath));
+            }
+
+            if(array_key_exists('children', $data)) {
+                foreach($data['children'] as $subPage) {
+                    $this->_updateSubPage($subPage, $unityPath);
+                }
+            }
+        }
+    }
+
+    protected function _getTreeList($pid, $sysLanguageUid)
+    {
+        $id = (int)$pid;
+        if ($id < 0) {
+            $id = abs($id);
+        }
+        $theList = array();
+        if ($id) {
+            $resultSet = $this->_db->exec_SELECTquery('uid, title, nav_title, unity_path', 'pages', 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages'));
+            while ($row = $this->_db->sql_fetch_assoc($resultSet)) {
+                $theList[$row['uid']] = $row;
+
+                if($sysLanguageUid) {
+                    // get localized data
+                    $langResultSet = $this->_db->exec_SELECTquery('uid, title, nav_title, unity_path', 'pages_language_overlay', 'pid=' . $row['uid'] . ' ' . BackendUtility::deleteClause('pages_language_overlay') . ' AND sys_language_uid = ' . $sysLanguageUid);
+                    $langResult = $this->_db->sql_fetch_assoc($langResultSet);
+                    $theList[$row['uid']]['lang'] = $langResult;
+                }
+
+                // get children
+                $children = $this->_getTreeList($row['uid'], $sysLanguageUid);
+                if(!empty($children)) {
+                    $theList[$row['uid']]['children'] = $children;
+                }
+            }
+        }
+        return $theList;
+    }
+
+    protected function _addToPath($path, $newElement)
+    {
+        // remove previously added .html
+        $path = preg_replace('/\.html$/', '', $path);
+        // add slash and remove possibly trailing slashes before
+        $path = rtrim($path, '/') . '/';
+
+        // if array is given use nav_title or title or first element if neiter is given
+        if (is_array($newElement)) {
+            if (array_key_exists('nav_title', $newElement) && $newElement['nav_title']) {
+                $newElement = $newElement['nav_title'];
+            } elseif (array_key_exists('title', $newElement)) {
+                $newElement = $newElement['title'];
+            } else {
+                $newElement = reset($newElement);
+            }
+        }
+
+        // remove html tags and make string lower case
+        $newElement = strtolower(strip_tags($newElement));
+
+        $chars = array(
+            'ä' => 'ae',
+            'ö' => 'oe',
+            'ü' => 'ue',
+            'ß' => 'ss',
+            ' ' => '-',
+        );
+
+        // replace german characters and spaces
+        foreach($chars as $search => $replace) {
+            $newElement = str_replace($search, $replace, $newElement);
+        }
+
+        // replace all non ascii characters like è
+        $newElement = iconv('UTF-8', 'ASCII//TRANSLIT', $newElement);
+        $newElement = iconv('ASCII', 'UTF-8', $newElement);
+
+        // translit can result in upper case characters € -> EUR
+        $newElement = strtolower($newElement);
+
+        // replace everything that is not in the alphabet or a number with a minus
+        $newElement = preg_replace('/[^a-z0-9-]/', '-', $newElement);
+
+        // remove multiple -
+        $newElement = preg_replace('/--{1,}/', '-', $newElement);
+
+        // remove trailing minus
+        $newElement = rtrim($newElement, '-');
+
+        // urlencode to be absolute sure that it is a valid url
+        return $path . urlencode($newElement) . '.html';
     }
 }
