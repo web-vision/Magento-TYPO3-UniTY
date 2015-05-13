@@ -1,6 +1,7 @@
+// mode sitemap
 tx_wvt3unity_xmlsitemap = PAGE
 tx_wvt3unity_xmlsitemap {
-    typeNum = 776
+    typeNum = 3215
     config.disableAllHeaderCode = 1
     config.renderCharset = utf-8
     config.additionalHeaders = Content-type: application/json

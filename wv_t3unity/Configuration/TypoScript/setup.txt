@@ -1,7 +1,44 @@
-[globalVar = GP:mode = page]
-page = PAGE
-page {
-    typeNum = 0
+// header data
+tx_wvt3unity_head = PAGE
+tx_wvt3unity_head {
+    typeNum = 3210
+    config.disableAllHeaderCode = 1
+
+    10 = TEMPLATE
+    10.template = TEXT
+    10.template.value (
+{
+    "title": "###TITLE###",
+    "keywords": "###KEYWORDS###",
+    "description": "###DESCRIPTION###",
+    "canonical": "###CANONICAL###",
+    "includeJs":[###INCLUDEJS###],
+    "includeCss":[###INCLUDECSS###],
+    "includeFooterJs":[###INCLUDEFOOTERJS###]
+}
+    )
+    10.marks {
+        TITLE = TEXT
+        TITLE.data = page:title
+        KEYWORDS = TEXT
+        KEYWORDS.data = page:keywords
+        DESCRIPTION = TEXT
+        DESCRIPTION.data = page:description
+        CANONICAL = TEXT
+        CANONICAL.data = page:canonical_url
+        INCLUDEJS = USER
+        INCLUDEJS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeJs
+        INCLUDECSS = USER
+        INCLUDECSS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeCss
+        INCLUDEFOOTERJS = USER
+        INCLUDEFOOTERJS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeFooterJs
+    }
+}
+
+// mode page
+tx_wvt3unity_page = PAGE
+tx_wvt3unity_page {
+    typeNum = 3211
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
 
@@ -47,13 +84,11 @@ page {
         }
     }
 }
-[global]
 
-[globalVar = GP:mode = column]
-page >
-page = PAGE
-page {
-    typeNum = 0
+// mode column
+tx_wvt3unity_column = PAGE
+tx_wvt3unity_column {
+    typeNum = 3212
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
 
@@ -66,12 +101,11 @@ page {
         CONTENT.select.where.insertData = 1
     }
 }
-[global]
 
-[globalVar = GP:mode = element]
-page = PAGE
-page {
-    typeNum = 0
+// mode element
+tx_wvt3unity_element = PAGE
+tx_wvt3unity_element {
+    typeNum = 3213
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
 
@@ -85,12 +119,11 @@ page {
         CONTENT.dontCheckPid = 1
     }
 }
-[global]
 
-[globalVar = GP:mode = menu]
-page = PAGE
-page {
-    typeNum = 0
+// mode menu
+tx_wvt3unity_menu = PAGE
+tx_wvt3unity_menu {
+    typeNum = 3214
     config.disableAllHeaderCode = 1
     config.metaCharset = UTF-8
     10 = CASE
@@ -115,7 +148,7 @@ page {
                     NO = 1
                     NO {
                         doNotLinkIt = 1
-                        allWrap = <a href="###BASE_URL###{field: unity_path}">|</a>
+                        allWrap = <a href="#BASE_URL#{field: unity_path}">|</a>
                         allWrap.insertData = 1
                         wrapItemAndSub = <li class="first">|</li> |*| <li>|</li> |*| <li class="last">|</li>
                     }
@@ -173,42 +206,5 @@ page {
                 }
             }
         }
-    }
-}
-[global]
-
-tx_wvt3unity_head = PAGE
-tx_wvt3unity_head {
-    typeNum = 777
-    config.disableAllHeaderCode = 1
-
-    10 = TEMPLATE
-    10.template = TEXT
-    10.template.value (
-{
-    "title": "###TITLE###",
-    "keywords": "###KEYWORDS###",
-    "description": "###DESCRIPTION###",
-    "canonical": "###CANONICAL###",
-    "includeJs":[###INCLUDEJS###],
-    "includeCss":[###INCLUDECSS###],
-    "includeFooterJs":[###INCLUDEFOOTERJS###]
-}
-    )
-    10.marks {
-        TITLE = TEXT
-        TITLE.data = page:title
-        KEYWORDS = TEXT
-        KEYWORDS.data = page:keywords
-        DESCRIPTION = TEXT
-        DESCRIPTION.data = page:description
-        CANONICAL = TEXT
-        CANONICAL.data = page:canonical_url
-        INCLUDEJS = USER
-        INCLUDEJS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeJs
-        INCLUDECSS = USER
-        INCLUDECSS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeCss
-        INCLUDEFOOTERJS = USER
-        INCLUDEFOOTERJS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeFooterJs
     }
 }
