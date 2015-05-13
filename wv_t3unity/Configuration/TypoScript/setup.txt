@@ -14,19 +14,19 @@ page {
 			key.override.field = backend_layout
 
             default = TEXT
-			default.value = EXT:wv_t3unity/Resources/Private/Templates/1column.html
+			default.value = {$plugin.tx_wvt3unity.templatePath}1column.html
 
             wv_t3unity__1column = TEXT
-            wv_t3unity__1column.value = EXT:wv_t3unity/Resources/Private/Templates/1column.html
+            wv_t3unity__1column.value = {$plugin.tx_wvt3unity.templatePath}1column.html
 
             wv_t3unity__2columns-left = TEXT
-            wv_t3unity__2columns-left.value = EXT:wv_t3unity/Resources/Private/Templates/2columns-left.html
+            wv_t3unity__2columns-left.value = {$plugin.tx_wvt3unity.templatePath}2columns-left.html
 
             wv_t3unity__2columns-right = TEXT
-            wv_t3unity__2columns-right.value = EXT:wv_t3unity/Resources/Private/Templates/2columns-right.html
+            wv_t3unity__2columns-right.value = {$plugin.tx_wvt3unity.templatePath}2columns-right.html
 
             wv_t3unity__3columns = TEXT
-            wv_t3unity__3columns.value = EXT:wv_t3unity/Resources/Private/Templates/3columns.html
+            wv_t3unity__3columns.value = {$plugin.tx_wvt3unity.templatePath}3columns.html
         }
 
         // Define paths for templates
@@ -50,6 +50,7 @@ page {
 [global]
 
 [globalVar = GP:mode = column]
+page >
 page = PAGE
 page {
     typeNum = 0
@@ -87,97 +88,97 @@ page {
 [global]
 
 [globalVar = GP:mode = menu]
-    page = PAGE
-    page {
-        typeNum = 0
-        config.disableAllHeaderCode = 1
-        config.metaCharset = UTF-8
-        10 = CASE
-        10 {
-            key.data = GP:layout
+page = PAGE
+page {
+    typeNum = 0
+    config.disableAllHeaderCode = 1
+    config.metaCharset = UTF-8
+    10 = CASE
+    10 {
+        key.data = GP:layout
 
-            default = CASE
+        default = CASE
+        default {
+            key.data = GP:special
+
+            default = HMENU
             default {
-                key.data = GP:special
+                special = directory
+                special.value.data = GP:special-value
 
-                default = HMENU
-                default {
-                    special = directory
-                    special.value.data = GP:special-value
+                wrap = <nav class="t3-menu t3-directory">|</nav>
 
-                    wrap = <nav class="t3-menu t3-directory">|</nav>
-
-                    1 = TMENU
-                    1 {
-                        expAll = 1
-                        wrap = <ul class="t3-menu-list">|</ul>
-                        NO = 1
-                        NO {
-                            doNotLinkIt = 1
-                            allWrap = <a href="{field: unity_path}">|</a>
-                            allWrap.insertData = 1
-                            wrapItemAndSub = <li class="first">|</li> |*| <li>|</li> |*| <li class="last">|</li>
-                        }
-                        ACT < .NO
-                        ACT {
-                            wrapItemAndSub = <li class="first active">|</li> |*| <li class="active">|</li> |*| <li class="last active">|</li>
-                        }
-                        IFSUB < .NO
-                        IFSUB {
-                            wrapItemAndSub = <li class="first hassub">|</li> |*| <li class="hassub">|</li> |*| <li class="last hassub">|</li>
-                        }
-                        ACTIFSUB < .NO
-                        ACTIFSUB {
-                            wrapItemAndSub = <li class="first active hassub">|</li> |*| <li class="active hassub">|</li> |*| <li class="last active hassub">|</li>
-                        }
+                1 = TMENU
+                1 {
+                    expAll = 1
+                    wrap = <ul class="t3-menu-list">|</ul>
+                    NO = 1
+                    NO {
+                        doNotLinkIt = 1
+                        allWrap = <a href="###BASE_URL###{field: unity_path}">|</a>
+                        allWrap.insertData = 1
+                        wrapItemAndSub = <li class="first">|</li> |*| <li>|</li> |*| <li class="last">|</li>
                     }
-                    2 < .1
-                    2 {
-                        wrap = <ul class="t3-menu-sublist">|</ul>
+                    ACT < .NO
+                    ACT {
+                        wrapItemAndSub = <li class="first active">|</li> |*| <li class="active">|</li> |*| <li class="last active">|</li>
                     }
-                    3 < .2
+                    IFSUB < .NO
+                    IFSUB {
+                        wrapItemAndSub = <li class="first hassub">|</li> |*| <li class="hassub">|</li> |*| <li class="last hassub">|</li>
+                    }
+                    ACTIFSUB < .NO
+                    ACTIFSUB {
+                        wrapItemAndSub = <li class="first active hassub">|</li> |*| <li class="active hassub">|</li> |*| <li class="last active hassub">|</li>
+                    }
                 }
-                list < .default
-                list {
-                    wrap = <nav class="t3-menu t3-list">|</nav>
-                    special = list
-                    1 {
-                        expAll = 1
-                        IFSUB < .NO
-                        ACTIFSUB < .ACT
-                    }
+                2 < .1
+                2 {
+                    wrap = <ul class="t3-menu-sublist">|</ul>
+                }
+                3 < .2
+            }
+            list < .default
+            list {
+                wrap = <nav class="t3-menu t3-list">|</nav>
+                special = list
+                1 {
+                    expAll = 1
+                    IFSUB < .NO
+                    ACTIFSUB < .ACT
                 }
             }
+        }
 
-            menuItem < .default
-            menuItem {
-                default {
+        menuItem < .default
+        menuItem {
+            default {
+                wrap >
+                1 {
                     wrap >
-                    1 {
-                        wrap >
-                        NO.wrapItemAndSub = <li>|</li>
-                        ACT.wrapItemAndSub = <li class="active">|</li>
-                        IFSUB.wrapItemAndSub = <li class="hassub">|</li>
-                        ACTIFSUB.wrapItemAndSub = <li class="active hassub">|</li>
-                    }
+                    NO.wrapItemAndSub = <li>|</li>
+                    ACT.wrapItemAndSub = <li class="active">|</li>
+                    IFSUB.wrapItemAndSub = <li class="hassub">|</li>
+                    ACTIFSUB.wrapItemAndSub = <li class="active hassub">|</li>
                 }
-                list {
+            }
+            list {
+                wrap >
+                1 {
                     wrap >
-                    1 {
-                        wrap >
-                        NO.wrapItemAndSub = <li>|</li>
-                        ACT.wrapItemAndSub = <li class="active">|</li>
-                        IFSUB.wrapItemAndSub = <li class="hassub">|</li>
-                        ACTIFSUB.wrapItemAndSub = <li class="active hassub">|</li>
-                    }
+                    NO.wrapItemAndSub = <li>|</li>
+                    ACT.wrapItemAndSub = <li class="active">|</li>
+                    IFSUB.wrapItemAndSub = <li class="hassub">|</li>
+                    ACTIFSUB.wrapItemAndSub = <li class="active hassub">|</li>
                 }
             }
         }
     }
+}
 [global]
 
-page = PAGE
-page {
+tx_wvt3unity_head = PAGE
+tx_wvt3unity_head {
     typeNum = 777
     config.disableAllHeaderCode = 1
 

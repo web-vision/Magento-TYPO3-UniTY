@@ -58,6 +58,11 @@ class Tcemain
             $recordId = $dataHandler->substNEWwithIDs[$recordId];
         }
 
+        // don't generate path for folder, recycler and menu separator
+        if($dataHandler->checkValue_currentRecord['doktype'] >= 199) {
+            return;
+        }
+
         switch ($tableName) {
             case 'pages':
                 $pagesUid = $recordId;
