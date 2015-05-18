@@ -54,11 +54,11 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
     protected function _parseCss(&$content)
     {
-        $content = preg_replace('/<link rel=".*?" type=".*?" href="(.*?)" media=".*?">/', '{"href": "$1"},', $content);
+        $content = preg_replace('/<link rel=".*?" type=".*?" href="(.*?)" media=".*?">/', '"$1",', $content);
     }
 
     protected function _parseJs(&$content)
     {
-        $content = preg_replace('/<script( src="(.*?)")? type=".*?">(.*?)<\/script>/', '{"src": "$2", "content": "$3"},', $content);
+        $content = preg_replace('/<script( src="(.*?)")? type=".*?" ?\/?>(<\/script>)?/', '"$2",', $content);
     }
 }
