@@ -32,7 +32,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 {
     public function contentPostProcAll(&$params, &$that)
     {
-        if( $params['pObj']->type == $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_head.']['typeNum'] ) {
+        if ($params['pObj']->type == $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_head.']['typeNum']) {
             $this->_removeGenerator($params['pObj']->content);
             $this->_parseMetaTags($params['pObj']->content);
             $this->_parseCss($params['pObj']->content);
@@ -42,23 +42,23 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         }
     }
 
-    private function _removeGenerator(&$content)
+    protected function _removeGenerator(&$content)
     {
-        $content = preg_replace('/<meta name="?generator"?.+?>/is', '', $content);
+        $content = preg_replace('/<meta name="generator".*?>/', '', $content);
     }
 
-    private function _parseMetaTags(&$content)
+    protected function _parseMetaTags(&$content)
     {
         $content = preg_replace('/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/', '{"$1": "$2", "content":"$3"},', $content);
     }
-    private function _parseCss(&$content)
+
+    protected function _parseCss(&$content)
     {
-        $content = preg_replace('/<link rel="(.*?)" type="(.*?)" href="(.*?)" media="(.*?)">/',
-            '{"href": "$3"},', $content);
+        $content = preg_replace('/<link rel=".*?" type=".*?" href="(.*?)" media=".*?">/', '{"href": "$1"},', $content);
     }
-    private function _parseJs(&$content)
+
+    protected function _parseJs(&$content)
     {
-        $content = preg_replace('/<script( src="(.*?)")? type="(.*?)">(.*?)<\/script>/',
-            '{"src": "$2", "content": "$4"},', $content);
+        $content = preg_replace('/<script( src="(.*?)")? type=".*?">(.*?)<\/script>/', '{"src": "$2", "content": "$3"},', $content);
     }
 }

@@ -4,11 +4,15 @@ tx_wvt3unity_head = PAGE
 tx_wvt3unity_head {
     typeNum = 3210
 
-    config.disableAllHeaderCode = 0
-    config.removeDefaultJS = external
-    config.removeDefaultCss = external
-    config.absRefPrefix = #TYPO3_URL#/
-    config.pageRendererTemplateFile = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/PageRenderer.html
+    config {
+        disableAllHeaderCode = 0
+        disableBodyTag = 1
+        additionalHeaders = Content-Type: application/json; charset=utf-8
+        removeDefaultJS = external
+        removeDefaultCss = external
+        absRefPrefix = #TYPO3_URL#/
+        pageRendererTemplateFile = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/PageRenderer.html
+    }
 
     meta {
         abstract.field = abstract
