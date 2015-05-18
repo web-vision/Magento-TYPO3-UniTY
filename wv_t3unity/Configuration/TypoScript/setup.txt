@@ -1,37 +1,46 @@
 // header data
+tx_wvt3unity_head < page
 tx_wvt3unity_head = PAGE
 tx_wvt3unity_head {
     typeNum = 3210
-    config.disableAllHeaderCode = 1
+
+    config.disableAllHeaderCode = 0
+    config.removeDefaultJS = external
+    config.removeDefaultCss = external
+    config.absRefPrefix = #TYPO3_URL#/
+    config.pageRendererTemplateFile = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/PageRenderer.html
+
+    meta {
+        abstract.field = abstract
+
+        keywords.field = keywords
+        description.field = description
+
+        author.field = author
+        author_email.field = author_email
+        last_updated.field = lastUpdated
+    }
 
     10 = TEMPLATE
     10.template = TEXT
     10.template.value (
-{
     "title": "###TITLE###",
-    "keywords": "###KEYWORDS###",
-    "description": "###DESCRIPTION###",
     "canonical": "###CANONICAL###",
-    "includeJs":[###INCLUDEJS###],
-    "includeCss":[###INCLUDECSS###],
-    "includeFooterJs":[###INCLUDEFOOTERJS###]
-}
     )
     10.marks {
+        // Get Content to make sure the CSS/JS/Meta-Tags included in the content are in the header // NO OUTPUT
+        content < styles.content.get
+        content.select.where = colPos=1
+        sidebar_left < styles.content.get
+        sidebar_left.select.where = colPos=2
+        sidebar_right < styles.content.get
+        sidebar_right.select.where = colPos=3
+
+        // Relevant data
         TITLE = TEXT
         TITLE.data = page:title
-        KEYWORDS = TEXT
-        KEYWORDS.data = page:keywords
-        DESCRIPTION = TEXT
-        DESCRIPTION.data = page:description
         CANONICAL = TEXT
         CANONICAL.data = page:canonical_url
-        INCLUDEJS = USER
-        INCLUDEJS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeJs
-        INCLUDECSS = USER
-        INCLUDECSS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeCss
-        INCLUDEFOOTERJS = USER
-        INCLUDEFOOTERJS.userFunc = WebVision\WvT3unity\Service\HeaderDataService->getIncludeFooterJs
     }
 }
 
