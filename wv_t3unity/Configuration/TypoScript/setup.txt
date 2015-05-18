@@ -5,14 +5,20 @@ tx_wvt3unity_head {
     typeNum = 3210
 
     config {
-        disableAllHeaderCode = 0
-        disableBodyTag = 1
-        additionalHeaders = Content-Type: application/json; charset=utf-8
-        removeDefaultJS = external
-        removeDefaultCss = external
         absRefPrefix = #TYPO3_URL#/
-        pageRendererTemplateFile = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/PageRenderer.html
+        // set proper content type
+        additionalHeaders = Content-Type: application/json; charset=utf-8
+        // disable parsetime output
         debug = 0
+        // make sure that header data is fetched
+        disableAllHeaderCode = 0
+        // disable body tag
+        disableBodyTag = 1
+        // change template for rendering the whole page
+        pageRendererTemplateFile = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/PageRenderer.html
+        // write inline CSS/JS in file
+        removeDefaultCss = external
+        removeDefaultJS = external
     }
 
     meta {
@@ -33,7 +39,7 @@ tx_wvt3unity_head {
     "canonical": "###CANONICAL###",
     )
     10.marks {
-        // Get Content to make sure the CSS/JS/Meta-Tags included in the content are in the header // NO OUTPUT
+        // get Content to make sure the CSS/JS/Meta-Tags included in the content are in the header // NO OUTPUT
         content < styles.content.get
         content.select.where = colPos=1
         sidebar_left < styles.content.get
@@ -41,7 +47,7 @@ tx_wvt3unity_head {
         sidebar_right < styles.content.get
         sidebar_right.select.where = colPos=3
 
-        // Relevant data
+        // relevant data
         TITLE = TEXT
         TITLE.data = page:title
         CANONICAL = TEXT
