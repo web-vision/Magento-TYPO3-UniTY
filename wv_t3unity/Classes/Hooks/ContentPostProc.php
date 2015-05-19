@@ -49,7 +49,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
     protected function _parseMetaTags(&$content)
     {
-        $content = preg_replace('/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/', '{"$1": "$2", "content":"$3"},', $content);
+        $content = preg_replace_callback('/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/s', array($this, 'metaCallback'), $content);
     }
 
     protected function _parseCss(&$content)
@@ -60,5 +60,12 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
     protected function _parseJs(&$content)
     {
         $content = preg_replace('/<script( src="(.*?)")? type=".*?" ?\/?>(<\/script>)?/', '"$2",', $content);
+    }
+
+    function metaCallback($matches)
+    {
+        $matches[3] = str_replace(array("\r\n", "\n"), ' ', $matches[3]);
+
+        return '{"' . $matches[1] . '": "' . $matches[2] . '", "content":"' . $matches[3] . '"},';
     }
 }
