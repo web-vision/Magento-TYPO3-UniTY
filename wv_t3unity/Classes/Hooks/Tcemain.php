@@ -209,7 +209,7 @@ class Tcemain
         }
 
         // remove html tags and make string lower case
-        $newElement = strtolower(strip_tags($newElement));
+        $newElement = mb_convert_case(strip_tags($newElement), MB_CASE_LOWER, 'utf-8');
 
         $chars = array(
             'ä' => 'ae',
@@ -237,8 +237,8 @@ class Tcemain
         // remove multiple -
         $newElement = preg_replace('/--{1,}/', '-', $newElement);
 
-        // remove trailing minus
-        $newElement = rtrim($newElement, '-');
+        // remove leading and trailing minus
+        $newElement = trim($newElement, '-');
 
         // urlencode to be absolute sure that it is a valid url
         return $path . urlencode($newElement) . '.html';
