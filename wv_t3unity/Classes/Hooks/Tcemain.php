@@ -79,7 +79,8 @@ class Tcemain
         $this->_db = $GLOBALS['TYPO3_DB'];
 
         $unityPath = $this->getRecordPath($pagesUid, $sysLanguageUid);
-        $this->_db->exec_UPDATEquery($tableName, 'uid =' . $recordId, array('unity_path' => $unityPath));
+
+        $this->_updateRecord($recordId, $sysLanguageUid, $unityPath);
 
         $this->_updateSubPages($pagesUid, $sysLanguageUid, $unityPath);
     }
@@ -101,18 +102,44 @@ class Tcemain
         $data = $pageRepo->getRootLine($uid);
         ksort($data);
         foreach ($data as $record) {
-            if ($record['is_siteroot'] == '1') {
+            if ($record['is_siteroot'] == '1' || $record['tx_realurl_exclude']) {
                 continue;
             }
 
             $output = $this->_addToPath($output, $record);
         }
 
-        if(strlen($output) == 0) {
+        if(strlen($output) == 0 && isset($record) && $record['is_siteroot'] == '1') {
             $output = '/index.html';
         }
 
         return $output;
+    }
+
+    protected function _updateRecord($uid, $sysLanguageUid, $unityPath)
+    {
+        if($unityPath == '/') {
+            $unityPath = '';
+        }
+        $realUrlPath = rtrim(preg_replace('/\.html$/', '', $unityPath), '/');
+
+        // set default values for update query
+        $tableName = 'pages';
+        $where = 'uid = ' . (int)$uid;
+        $fields = array(
+            'unity_path' => $unityPath,
+            'tx_realurl_pathsegment' => $realUrlPath
+        );
+
+        // overwrite some settings
+        if($sysLanguageUid > 0) {
+            $tableName .= '_language_overlay';
+            $where .= ' AND sys_language_uid = ' . (int)$sysLanguageUid;
+        } elseif($realUrlPath) {
+            $fields['tx_realurl_pathoverride'] = 1;
+        }
+
+        $this->_db->exec_UPDATEquery($tableName, $where, $fields);
     }
 
     protected function _updateSubPages($uid, $sysLanguageUid, $path) {
@@ -120,7 +147,7 @@ class Tcemain
         $path = preg_replace('/\.html$/', '', $path) . '/';
 
         // remove index as a special case for the root page
-        if($path == '/index/') {
+        if($path == '/index/' || $path == '') {
             $path = '/';
         }
 
@@ -133,24 +160,16 @@ class Tcemain
 
     protected function _updateSubPage($data, $currentPath)
     {
-        if(array_key_exists('lang', $data)) {
-            $page = $data['lang'];
-            $tableName = 'pages_language_overlay';
-            // if page is false there is no translation for this page
-            if(!$page) {
-                $page = $data;
-                unset($page['uid']);
-            }
-        } else {
-            $page = $data;
-            $tableName = 'pages';
-        }
         // if unity path doesn't start with the current path it needs an update
-        if(strpos($page['unity_path'], $currentPath) !== 0) {
-            $unityPath = $this->_addToPath($currentPath, $page);
+        if(strpos($data['unity_path'], $currentPath) !== 0 || $currentPath == '/') {
+            if(!$data['tx_realurl_exclude']) {
+                $unityPath = $this->_addToPath($currentPath, $data);
+            } else {
+                $unityPath = $currentPath;
+            }
 
-            if(array_key_exists('uid', $page)) {
-                $this->_db->exec_UPDATEquery($tableName, 'uid =' . $page['uid'], array('unity_path' => $unityPath));
+            if(array_key_exists('uid', $data) && $data['doktype'] < 199) {
+                $this->_updateRecord($data['uid'], $data['sys_language_uid'], $unityPath);
             }
 
             if(array_key_exists('children', $data)) {
@@ -167,27 +186,36 @@ class Tcemain
         if ($id < 0) {
             $id = abs($id);
         }
-        $theList = array();
+        $treeList = array();
         if ($id) {
-            $resultSet = $this->_db->exec_SELECTquery('uid, title, nav_title, unity_path', 'pages', 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages'));
+            $resultSet = $this->_db->exec_SELECTquery('uid, doktype, title, nav_title, unity_path, tx_realurl_exclude', 'pages', 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages'));
             while ($row = $this->_db->sql_fetch_assoc($resultSet)) {
-                $theList[$row['uid']] = $row;
+                $uid = $row['uid'];
+
+                $row['sys_language_uid'] = 0;
 
                 if($sysLanguageUid) {
                     // get localized data
-                    $langResultSet = $this->_db->exec_SELECTquery('uid, title, nav_title, unity_path', 'pages_language_overlay', 'pid=' . $row['uid'] . ' ' . BackendUtility::deleteClause('pages_language_overlay') . ' AND sys_language_uid = ' . $sysLanguageUid);
+                    $langResultSet = $this->_db->exec_SELECTquery('uid, doktype, title, nav_title, unity_path', 'pages_language_overlay', 'pid=' . $uid . ' ' . BackendUtility::deleteClause('pages_language_overlay') . ' AND sys_language_uid = ' . $sysLanguageUid);
                     $langResult = $this->_db->sql_fetch_assoc($langResultSet);
-                    $theList[$row['uid']]['lang'] = $langResult;
+                    if($langResult) {
+                        $row = array_merge($row, $langResult);
+                        $row['sys_language_uid'] = $sysLanguageUid;
+                    } else {
+                        unset($row['uid']);
+                    }
                 }
 
+                $treeList[$uid] = $row;
+
                 // get children
-                $children = $this->_getTreeList($row['uid'], $sysLanguageUid);
+                $children = $this->_getTreeList($uid, $sysLanguageUid);
                 if(!empty($children)) {
-                    $theList[$row['uid']]['children'] = $children;
+                    $treeList[$uid]['children'] = $children;
                 }
             }
         }
-        return $theList;
+        return $treeList;
     }
 
     protected function _addToPath($path, $newElement)

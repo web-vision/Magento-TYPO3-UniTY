@@ -5,7 +5,7 @@ tx_wvt3unity_head {
     typeNum = 3210
 
     config {
-        absRefPrefix = #TYPO3_URL#/
+        absRefPrefix = %TYPO3_URL%/
         // set proper content type
         additionalHeaders = Content-Type: application/json; charset=utf-8
         // disable parsetime output
@@ -19,6 +19,8 @@ tx_wvt3unity_head {
         // write inline CSS/JS in file
         removeDefaultCss = external
         removeDefaultJS = external
+        // enable realurl
+        tx_realurl_enable = 1
     }
 
     meta {
@@ -59,8 +61,13 @@ tx_wvt3unity_head {
 tx_wvt3unity_page = PAGE
 tx_wvt3unity_page {
     typeNum = 3211
-    config.disableAllHeaderCode = 1
-    config.metaCharset = UTF-8
+
+    config {
+        disableAllHeaderCode = 1
+        metaCharset = UTF-8
+        absRefPrefix = %BASE_URL%/
+        tx_realurl_enable = 1
+    }
 
     10 = FLUIDTEMPLATE
     10 {
@@ -109,8 +116,13 @@ tx_wvt3unity_page {
 tx_wvt3unity_column = PAGE
 tx_wvt3unity_column {
     typeNum = 3212
-    config.disableAllHeaderCode = 1
-    config.metaCharset = UTF-8
+
+    config {
+        disableAllHeaderCode = 1
+        metaCharset = UTF-8
+        absRefPrefix = %BASE_URL%/
+        tx_realurl_enable = 1
+    }
 
     10 = TEMPLATE
     10.template = TEXT
@@ -126,8 +138,13 @@ tx_wvt3unity_column {
 tx_wvt3unity_element = PAGE
 tx_wvt3unity_element {
     typeNum = 3213
-    config.disableAllHeaderCode = 1
-    config.metaCharset = UTF-8
+
+    config {
+        disableAllHeaderCode = 1
+        metaCharset = UTF-8
+        absRefPrefix = %BASE_URL%/
+        tx_realurl_enable = 1
+    }
 
     10 = TEMPLATE
     10.template = TEXT
@@ -144,8 +161,14 @@ tx_wvt3unity_element {
 tx_wvt3unity_menu = PAGE
 tx_wvt3unity_menu {
     typeNum = 3214
-    config.disableAllHeaderCode = 1
-    config.metaCharset = UTF-8
+
+    config {
+        disableAllHeaderCode = 1
+        metaCharset = UTF-8
+        absRefPrefix = %BASE_URL%/
+        tx_realurl_enable = 1
+    }
+
     10 = CASE
     10 {
         key.data = GP:layout
@@ -167,9 +190,6 @@ tx_wvt3unity_menu {
                     wrap = <ul class="t3-menu-list">|</ul>
                     NO = 1
                     NO {
-                        doNotLinkIt = 1
-                        allWrap = <a href="#BASE_URL#{field: unity_path}">|</a>
-                        allWrap.insertData = 1
                         wrapItemAndSub = <li class="first">|</li> |*| <li>|</li> |*| <li class="last">|</li>
                     }
                     ACT < .NO
@@ -223,6 +243,20 @@ tx_wvt3unity_menu {
                     ACT.wrapItemAndSub = <li class="active">|</li>
                     IFSUB.wrapItemAndSub = <li class="hassub">|</li>
                     ACTIFSUB.wrapItemAndSub = <li class="active hassub">|</li>
+                }
+            }
+        }
+    }
+}
+
+# url fix for enlarge image
+tt_content.image.20 {
+    1 {
+        stdWrap {
+            replacement {
+                10 {
+                    search = %BASE_URL%
+                    replace = %TYPO3_URL%
                 }
             }
         }

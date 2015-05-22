@@ -1,6 +1,8 @@
 <?php
 namespace WebVision\WvT3unity\Hooks;
 
+use WebVision\WvT3unity\Utility\Configuration;
+
 /***************************************************************
  *
  *  Copyright notice
@@ -32,7 +34,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 {
     public function contentPostProcAll(&$params, &$that)
     {
-        if ($params['pObj']->type == $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_head.']['typeNum']) {
+        if (Configuration::isMagentoContent($params['pObj']->type, 'head')) {
             $this->_removeGenerator($params['pObj']->content);
             $this->_parseMetaTags($params['pObj']->content);
             $this->_parseCss($params['pObj']->content);

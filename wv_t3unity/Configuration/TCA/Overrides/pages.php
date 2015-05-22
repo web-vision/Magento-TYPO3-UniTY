@@ -24,6 +24,17 @@ $additionalColumns = array(
             'eval' => 'trim'
         )
     ),
+    'tx_realurl_pathsegment' => array(
+        'label' => 'LLL:EXT:realurl/locallang_db.xml:pages.tx_realurl_pathsegment',
+        'displayCond' => 'FIELD:tx_realurl_exclude:!=:1',
+        'exclude' => 1,
+        'config' => array (
+            'type' => 'input',
+            'max' => 255,
+            'eval' => 'trim,nospace,lower',
+            'readOnly' => 1,
+        ),
+    ),
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('pages', $additionalColumns);
