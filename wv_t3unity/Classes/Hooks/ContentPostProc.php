@@ -32,7 +32,7 @@ use WebVision\WvT3unity\Utility\Configuration;
 
 class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 {
-    public function contentPostProcAll(&$params, &$that)
+    public function contentPostProc(&$params, &$that)
     {
         if (Configuration::isMagentoContent($params['pObj']->type, 'head')) {
             $this->_removeGenerator($params['pObj']->content);
@@ -40,7 +40,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $this->_parseCss($params['pObj']->content);
             $this->_parseJs($params['pObj']->content);
 
-            $params['pObj']->content = str_replace(',]', ']', $params['pObj']->content);
+            $params['pObj']->content = preg_replace('/,\s?]/', ']', $params['pObj']->content);
         }
     }
 
