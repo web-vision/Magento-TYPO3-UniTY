@@ -122,7 +122,7 @@ class SitemapController {
      * @param int $sysLanguageUid
      * @return array
      */
-    protected function _getTreeList($pid, $sysLanguageUid) {
+    protected function _getTreeList($pid, $sysLanguageUid, $prefix = '') {
         $fields = 'uid,doktype,crdate,unity_path,canonical_url';
 
         $id = (int)$pid;
@@ -130,19 +130,26 @@ class SitemapController {
             $id = abs($id);
         }
         if ($id) {
-            $resultSet = $this->_db->exec_SELECTquery($fields . ',nav_hide,SYS_LASTCHANGED', 'pages', 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages'));
+            $resultSet = $this->_db->exec_SELECTquery($fields . ',mount_pid,nav_hide,SYS_LASTCHANGED', 'pages', 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages'));
             while ($row = $this->_db->sql_fetch_assoc($resultSet)) {
+                $row['unity_path'] = $prefix . $row['unity_path'];
                 $this->_tree[$row['uid']] = $row;
 
                 if($sysLanguageUid) {
                     // get localized data
                     $langResultSet = $this->_db->exec_SELECTquery($fields, 'pages_language_overlay', 'pid=' . $row['uid'] . ' ' . BackendUtility::deleteClause('pages_language_overlay') . ' AND sys_language_uid = ' . $sysLanguageUid);
                     $langResult = $this->_db->sql_fetch_assoc($langResultSet);
+                    $langResult['unity_path'] = $prefix . $langResult['unity_path'];
                     $this->_tree[$row['uid']]['lang'] = $langResult;
                 }
 
                 // get children
-                $this->_getTreeList($row['uid'], $sysLanguageUid);
+                if($row['doktype'] == 7 && $row['mount_pid']) {
+                    $sub_prefix = preg_replace('/\.html$/', '', $row['unity_path']);
+                    $this->_getTreeList($row['mount_pid'], $sysLanguageUid, $sub_prefix);
+                } else {
+                    $this->_getTreeList($row['uid'], $sysLanguageUid, $prefix);
+                }
             }
         }
         return $this->_tree;

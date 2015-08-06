@@ -56,7 +56,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
     protected function _parseCss(&$content)
     {
-        $content = preg_replace('/<link rel=".*?" type=".*?" href="(.*?)" media=".*?">/', '"$1",', $content);
+        $content = preg_replace('/<link rel=".*?" type=".*?" href="(.*?)" media=".*?"\s*\/{0,1}>/', '"$1",', $content);
     }
 
     protected function _parseJs(&$content)
@@ -64,7 +64,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         $content = preg_replace('/<script( src="(.*?)")? type=".*?" ?\/?>(<\/script>)?/', '"$2",', $content);
     }
 
-    function metaCallback($matches)
+    public function metaCallback($matches)
     {
         $matches[3] = str_replace(array("\r\n", "\n"), ' ', $matches[3]);
 

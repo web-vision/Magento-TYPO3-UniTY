@@ -47,7 +47,9 @@ class Configuration extends ConfigurationManager
 
         $unityTypeNums = array();
         foreach($unityTypes as $unityType) {
-            $unityTypeNums[] = $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_' . $unityType .'.']['typeNum'];
+            if(($config = $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_' . $unityType . '.']['typeNum']) !== null) {
+                $unityTypeNums[] = $config;
+            }
         }
 
         return in_array($pageType, $unityTypeNums);
