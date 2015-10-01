@@ -1,0 +1,133 @@
+####################
+# Stand 2015.08.28
+####################
+
+# Compiled source
+####################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages
+####################
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.tgz
+
+# Logs and databases
+####################
+*.log
+*.sqlite
+
+# OS generated files
+####################
+.DS_Store
+.ApplDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+*.swp
+
+# JetBrains
+####################
+/.idea/
+/.idea_modules
+/atlassian-ide-plugin.xml
+*.iml
+*.ipr
+*.iws
+
+# Composer
+####################
+composer.phar
+/vendor/
+
+# Sass
+####################
+.sass-cache
+*.css.map
+
+# Own excludes Magento
+########################
+# for symlinks
+/media
+/media/
+/var/
+*.sample
+/app/etc/local.xml
+/downloader/.cache/
+/downloader/cache.cfg
+/downloader/connect.cfg
+/tmp/
+/includes/
+/bak_mhsi*/
+/mhsi_*/
+/mhsi/index.php
+/mhsi/CHANGELOG.txt
+/mhsi/fw/
+/mhsi/bin/cache.php
+/license-mhsi.txt
+/LICENSE.html
+/LICENSE.txt
+/LICENSE_AFL.txt
+/RELEASE_NOTES.txt
+/app/code/local/*/Config/sql/*/*.config
+/git.lock
+/sitemap.xml
+/sitemap/
+/app/etc/applied.patches.list
+# Developer Extensions
+# Aoe_TemplateHints, Mgt_DeveloperToolbar
+*[Tt]emplate[Hh]ints*
+*[Mm]gt*
+
+# Own excludes TYPO3
+######################
+/*.txt
+/fileadmin/
+/uploads/
+/typo3temp/
+/typo3conf/l10n/
+/typo3conf/deprecation*
+/typo3conf/temp_*
+/typo3conf/localconf.php
+/typo3conf/ENABLE_INSTALL_TOOL
+
+# Own other excludes
+######################
+/infoxxx.php
+/.modman/
+/piwik/
+/plesk-stat/
+/.htaccess
+/.htpasswd
+/mysqldump/
+/ai-cache/
+/webvision_installations/
+/*.png
+/*.jpg
+/*.gif
+
+# Repository excludes
+#######################

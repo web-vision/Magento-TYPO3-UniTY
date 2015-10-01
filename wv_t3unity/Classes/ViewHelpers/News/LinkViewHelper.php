@@ -34,12 +34,13 @@ class LinkViewHelper extends \Tx_News_ViewHelpers_LinkViewHelper
     /**
      * Render link to news item or internal/external pages
      *
-     * @param \Tx_News_Domain_Model_News $newsItem current news object
-     * @param array $settings
-     * @param bool $uriOnly return only the url without the a-tag
-     * @param array $configuration optional typolink configuration
-     * @param string $content optional content which is linked
-     * @param bool $forceBaseUrl optional forces %BASE_URL% instead of %TYPO3_URL%
+     * @param \Tx_News_Domain_Model_News $newsItem      current news object
+     * @param array                      $settings
+     * @param bool                       $uriOnly       return only the url without the a-tag
+     * @param array                      $configuration optional typolink configuration
+     * @param string                     $content       optional content which is linked
+     * @param bool                       $forceBaseUrl  optional forces %BASE_URL% instead of %TYPO3_URL%
+     *
      * @return string link
      */
     public function render(\Tx_News_Domain_Model_News $newsItem, array $settings = array(), $uriOnly = false, $configuration = array(), $content = '', $forceBaseUrl = false)

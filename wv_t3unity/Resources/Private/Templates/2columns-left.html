@@ -2,10 +2,12 @@
     Template for 2 column magento layout with sidebar left
 </f:comment>
 
-<f:layout name="Default" />
+<f:layout name="Default"/>
 <f:section name="content">
-<div class="col-main">
-    <f:format.raw>{content}</f:format.raw>
-</div>
-<div class="col-left sidebar"><f:format.raw>{sidebar_left}</f:format.raw></div>
+    <div class="col-main">
+        <f:format.raw>{content}</f:format.raw>
+    </div>
+    <div class="col-left sidebar">
+        <f:format.raw>{sidebar_left}</f:format.raw>
+    </div>
 </f:section>

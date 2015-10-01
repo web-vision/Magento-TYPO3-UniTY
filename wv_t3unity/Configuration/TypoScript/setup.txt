@@ -73,13 +73,13 @@ tx_wvt3unity_page {
     10 = FLUIDTEMPLATE
     10 {
         // Define BE Layouts
-		file.stdWrap.cObject = CASE
-		file.stdWrap.cObject {
-			key.data = levelfield:-1, backend_layout_next_level, slide
-			key.override.field = backend_layout
+        file.stdWrap.cObject = CASE
+        file.stdWrap.cObject {
+            key.data = levelfield:-1, backend_layout_next_level, slide
+            key.override.field = backend_layout
 
             default = TEXT
-			default.value = {$plugin.tx_wvt3unity.templatePath}1column.html
+            default.value = {$plugin.tx_wvt3unity.templatePath}1column.html
 
             wv_t3unity__1column = TEXT
             wv_t3unity__1column.value = {$plugin.tx_wvt3unity.templatePath}1column.html
@@ -172,25 +172,31 @@ tx_wvt3unity_menu {
                     NO {
                         wrapItemAndSub = <li class="first">|</li> |*| <li>|</li> |*| <li class="last">|</li>
                     }
+
                     ACT < .NO
                     ACT {
                         wrapItemAndSub = <li class="first active">|</li> |*| <li class="active">|</li> |*| <li class="last active">|</li>
                     }
+
                     IFSUB < .NO
                     IFSUB {
                         wrapItemAndSub = <li class="first hassub">|</li> |*| <li class="hassub">|</li> |*| <li class="last hassub">|</li>
                     }
+
                     ACTIFSUB < .NO
                     ACTIFSUB {
                         wrapItemAndSub = <li class="first active hassub">|</li> |*| <li class="active hassub">|</li> |*| <li class="last active hassub">|</li>
                     }
                 }
+
                 2 < .1
                 2 {
                     wrap = <ul class="t3-menu-sublist">|</ul>
                 }
+
                 3 < .2
             }
+
             list < .default
             list {
                 wrap = <nav class="t3-menu t3-list">|</nav>
@@ -215,6 +221,7 @@ tx_wvt3unity_menu {
                     ACTIFSUB.wrapItemAndSub = <li class="active hassub">|</li>
                 }
             }
+
             list {
                 wrap >
                 1 {

@@ -29,7 +29,6 @@ use WebVision\WvT3unity\Utility\Configuration;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
 class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 {
     public function contentPostProc(&$params, &$that)
@@ -51,7 +50,12 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
     protected function _parseMetaTags(&$content)
     {
-        $content = preg_replace_callback('/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/s', array($this, 'metaCallback'), $content);
+        $content =
+            preg_replace_callback(
+                '/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/s',
+                array($this, 'metaCallback'),
+                $content
+            );
     }
 
     protected function _parseCss(&$content)

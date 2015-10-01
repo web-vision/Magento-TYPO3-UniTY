@@ -34,19 +34,18 @@ use \TYPO3\CMS\Backend\Utility\BackendUtility;
  * This package includes all functions for generating XML sitemaps
  *
  */
-class SitemapController {
-
+class SitemapController
+{
     /**
      * holds all configuration information for rendering the sitemap
+     *
      * @var array
      */
     protected $sitemapConfiguration = array();
-
     /**
      * @var \TYPO3\CMS\Core\Database\DatabaseConnection
      */
     protected $_db;
-
     /**
      * @var array
      */
@@ -55,11 +54,13 @@ class SitemapController {
     /**
      * Generates a XML sitemap from the page structure, entry point for the page
      *
-     * @param string $content the content to be filled, usually empty
-     * @param array $configuration additional configuration parameters given via TypoScript
+     * @param string $content       the content to be filled, usually empty
+     * @param array  $configuration additional configuration parameters given via TypoScript
+     *
      * @return string the XML sitemap ready to render
      */
-    public function renderXMLSitemap($content, $configuration) {
+    public function renderXMLSitemap($content, $configuration)
+    {
         $this->sitemapConfiguration = $configuration;
 
         $this->_db = $GLOBALS['TYPO3_DB'];
@@ -68,7 +69,7 @@ class SitemapController {
         $sysLanguageUid = (int)$this->getFrontendController()->sys_language_uid;
         $treeRecords = $this->_getTreeList($id, $sysLanguageUid);
 
-        if(array_key_exists('excludeUid', $this->sitemapConfiguration)) {
+        if (array_key_exists('excludeUid', $this->sitemapConfiguration)) {
             $excludedPageUids = GeneralUtility::trimExplode(',', $this->sitemapConfiguration['excludeUid'], true);
         } else {
             $excludedPageUids = array();
@@ -92,10 +93,9 @@ class SitemapController {
             }
 
             // get translations if available
-            if(array_key_exists('lang', $item) && $item['lang']) {
+            if (array_key_exists('lang', $item) && $item['lang']) {
                 $item = $item['lang'];
             }
-
 
             $url = $item['canonical_url'] ? $item['canonical_url'] : $item['unity_path'];
             $realUrl = $item['canonical_url'] ? $item['unity_path'] : '';
@@ -104,9 +104,9 @@ class SitemapController {
             $lastmod = date('c', $lastmod);
 
             $usedUrls[$item['uid']] = array(
-                'url' => ltrim($url, '/'),
+                'url'      => ltrim($url, '/'),
                 'real_url' => ltrim($realUrl, '/'),
-                'lastmod' => $lastmod,
+                'lastmod'  => $lastmod,
             );
         }
 
@@ -120,9 +120,11 @@ class SitemapController {
      *
      * @param int $pid
      * @param int $sysLanguageUid
+     *
      * @return array
      */
-    protected function _getTreeList($pid, $sysLanguageUid, $prefix = '') {
+    protected function _getTreeList($pid, $sysLanguageUid, $prefix = '')
+    {
         $fields = 'uid,doktype,crdate,unity_path,canonical_url';
 
         $id = (int)$pid;
@@ -130,21 +132,36 @@ class SitemapController {
             $id = abs($id);
         }
         if ($id) {
-            $resultSet = $this->_db->exec_SELECTquery($fields . ',mount_pid,nav_hide,SYS_LASTCHANGED', 'pages', 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages'));
+            $resultSet =
+                $this->_db->exec_SELECTquery(
+                    $fields . ',mount_pid,nav_hide,SYS_LASTCHANGED',
+                    'pages',
+                    'pid=' . $id . ' ' . BackendUtility::deleteClause('pages')
+                );
             while ($row = $this->_db->sql_fetch_assoc($resultSet)) {
                 $row['unity_path'] = $prefix . $row['unity_path'];
                 $this->_tree[$row['uid']] = $row;
 
-                if($sysLanguageUid) {
+                if ($sysLanguageUid) {
                     // get localized data
-                    $langResultSet = $this->_db->exec_SELECTquery($fields, 'pages_language_overlay', 'pid=' . $row['uid'] . ' ' . BackendUtility::deleteClause('pages_language_overlay') . ' AND sys_language_uid = ' . $sysLanguageUid);
+                    $langResultSet =
+                        $this->_db->exec_SELECTquery(
+                            $fields,
+                            'pages_language_overlay',
+                            'pid='
+                            . $row['uid']
+                            . ' '
+                            . BackendUtility::deleteClause('pages_language_overlay')
+                            . ' AND sys_language_uid = '
+                            . $sysLanguageUid
+                        );
                     $langResult = $this->_db->sql_fetch_assoc($langResultSet);
                     $langResult['unity_path'] = $prefix . $langResult['unity_path'];
                     $this->_tree[$row['uid']]['lang'] = $langResult;
                 }
 
                 // get children
-                if($row['doktype'] == 7 && $row['mount_pid']) {
+                if ($row['doktype'] == 7 && $row['mount_pid']) {
                     $sub_prefix = preg_replace('/\.html$/', '', $row['unity_path']);
                     $this->_getTreeList($row['mount_pid'], $sysLanguageUid, $sub_prefix);
                 } else {
@@ -152,14 +169,17 @@ class SitemapController {
                 }
             }
         }
+
         return $this->_tree;
     }
 
     /**
      * wrapper function for the current TSFE object
+     *
      * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
      */
-    protected function getFrontendController() {
+    protected function getFrontendController()
+    {
         return $GLOBALS['TSFE'];
     }
 }

@@ -28,14 +28,14 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'] = array(
                         'valueMap' => array(
                             'detail' => '',
                         ),
-                        'noMatch'  => 'bypass'
+                        'noMatch'  => 'bypass',
                     ),
                     array(
                         'GETvar'   => 'tx_news_pi1[controller]',
                         'valueMap' => array(
                             'News' => '',
                         ),
-                        'noMatch'  => 'bypass'
+                        'noMatch'  => 'bypass',
                     ),
                     array(
                         'GETvar'      => 'tx_news_pi1[news]',

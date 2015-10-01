@@ -77,171 +77,191 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author Benjamin Kott <info@bk2k.info>
  */
-class BackendLayoutDataProvider implements DataProviderInterface {
+class BackendLayoutDataProvider implements DataProviderInterface
+{
+    /**
+     * Internal Backend Layout stack
+     *
+     * @var array
+     */
+    protected $backendLayouts = array();
+    /**
+     * PageTs Config
+     *
+     * @var array
+     */
+    protected $pageTsConfig = array();
 
-	/**
-	 * Internal Backend Layout stack
-	 *
-	 * @var array
-	 */
-	protected $backendLayouts = array();
+    /**
+     * Set PageTsConfig
+     *
+     * @param array $pageTsConfig
+     *
+     * @return void
+     */
+    protected function setPageTsConfig($pageTsConfig)
+    {
 
-	/**
-	 * PageTs Config
-	 *
-	 * @var array
-	 */
-	protected $pageTsConfig = array();
+        $this->pageTsConfig = $pageTsConfig;
+    }
 
-	/**
-	 * Set PageTsConfig
-	 *
-	 * @param array $pageTsConfig
-	 * @return void
-	 */
-	protected function setPageTsConfig($pageTsConfig) {
+    /**
+     * Get PageTsConfig
+     *
+     * @return array
+     */
+    protected function getPageTsConfig()
+    {
 
-		$this->pageTsConfig = $pageTsConfig;
-	}
+        return $this->pageTsConfig;
+    }
 
-	/**
-	 * Get PageTsConfig
-	 *
-	 * @return array
-	 */
-	protected function getPageTsConfig() {
+    /**
+     * Gets PageTsConfig from DataProviderContext if available,
+     * if not it will be generated for the current Page.
+     *
+     * @param DataProviderContext $dataProviderContext
+     *
+     * @return void
+     */
+    protected function generatePageTsConfig($dataProviderContext = null)
+    {
 
-		return $this->pageTsConfig;
-	}
+        if ($dataProviderContext === null) {
+            $pageId = (int)GeneralUtility::_GP('id');
+            $this->setPageTsConfig((array)BackendUtility::getPagesTSconfig($pageId));
+        } else {
+            $this->setPageTsConfig((array)$dataProviderContext->getPageTsConfig());
+        }
+    }
 
-	/**
-	 * Gets PageTsConfig from DataProviderContext if available,
-	 * if not it will be generated for the current Page.
-	 *
-	 * @param DataProviderContext $dataProviderContext
-	 * @return void
-	 */
-	protected function generatePageTsConfig($dataProviderContext = NULL) {
+    /**
+     * Generate the Backend Layout configs
+     *
+     * @param DataProviderContext $dataProviderContext
+     *
+     * @return void
+     */
+    protected function generateBackendLayouts($dataProviderContext = null)
+    {
 
-		if ($dataProviderContext === NULL) {
-			$pageId = (int)GeneralUtility::_GP('id');
-			$this->setPageTsConfig((array)BackendUtility::getPagesTSconfig($pageId));
-		} else {
-			$this->setPageTsConfig((array)$dataProviderContext->getPageTsConfig());
-		}
-	}
+        $this->generatePageTsConfig($dataProviderContext);
+        $pageTsConfig = $this->getPageTsConfig();
+        if (!empty($pageTsConfig['mod.']['web_layout.']['UnityBackendLayouts.'])) {
+            $backendLayouts = (array)$pageTsConfig['mod.']['web_layout.']['UnityBackendLayouts.'];
+            foreach ($backendLayouts as $identifier => $data) {
+                $backendLayout = $this->generateBackendLayoutFromTsConfig($identifier, $data);
+                $this->attachBackendLayout($backendLayout);
+            }
+        }
+    }
 
-	/**
-	 * Generate the Backend Layout configs
-	 *
-	 * @param DataProviderContext $dataProviderContext
-	 * @return void
-	 */
-	protected function generateBackendLayouts($dataProviderContext = NULL) {
+    /**
+     * Generates a Backend Layout from PageTsConfig array
+     *
+     * @return mixed
+     */
+    protected function generateBackendLayoutFromTsConfig($identifier, $data)
+    {
 
-		$this->generatePageTsConfig($dataProviderContext);
-		$pageTsConfig = $this->getPageTsConfig();
-		if (!empty($pageTsConfig['mod.']['web_layout.']['UnityBackendLayouts.'])) {
-			$backendLayouts = (array)$pageTsConfig['mod.']['web_layout.']['UnityBackendLayouts.'];
-			foreach ($backendLayouts as $identifier => $data) {
-				$backendLayout = $this->generateBackendLayoutFromTsConfig($identifier, $data);
-				$this->attachBackendLayout($backendLayout);
-			}
-		}
-	}
+        if (!empty($data['config.']['backend_layout.']) && is_array($data['config.']['backend_layout.'])) {
+            $backendLayout['uid'] = substr($identifier, 0, -1);
+            $backendLayout['title'] = ($data['title']) ? $data['title'] : $backendLayout['uid'];
+            $backendLayout['icon'] = ($data['icon']) ? $data['icon'] : '';
+            /* Convert PHP array back to plain TypoScript so it can be procecced */
+            $config = \TYPO3\CMS\Core\Utility\ArrayUtility::flatten($data['config.']);
+            $backendLayout['config'] = '';
+            foreach ($config as $row => $value) {
+                $backendLayout['config'] .= $row . " = " . $value . "\r\n";
+            }
 
-	/**
-	 * Generates a Backend Layout from PageTsConfig array
-	 *
-	 * @return mixed
-	 */
-	protected function generateBackendLayoutFromTsConfig($identifier, $data) {
+            return $backendLayout;
+        }
 
-		if (!empty($data['config.']['backend_layout.']) && is_array($data['config.']['backend_layout.'])) {
-			$backendLayout['uid'] = substr($identifier, 0, -1);
-			$backendLayout['title'] = ($data['title']) ? $data['title'] : $backendLayout['uid'];
-			$backendLayout['icon'] = ($data['icon']) ? $data['icon'] : '';
-			/* Convert PHP array back to plain TypoScript so it can be procecced */
-			$config = \TYPO3\CMS\Core\Utility\ArrayUtility::flatten($data['config.']);
-			$backendLayout['config'] = '';
-			foreach ($config as $row => $value) {
-				$backendLayout['config'] .= $row . " = " . $value . "\r\n";
-			}
-			return $backendLayout;
-		}
-		return NULL;
-	}
+        return null;
+    }
 
-	/**
-	 * Attach Backend Layout to internal Stack
-	 *
-	 * @param mixed $backendLayout
-	 */
-	protected function attachBackendLayout($backendLayout = NULL) {
+    /**
+     * Attach Backend Layout to internal Stack
+     *
+     * @param mixed $backendLayout
+     */
+    protected function attachBackendLayout($backendLayout = null)
+    {
 
-		if ($backendLayout) {
-			$this->backendLayouts[$backendLayout['uid']] = $backendLayout;
-		}
-	}
+        if ($backendLayout) {
+            $this->backendLayouts[$backendLayout['uid']] = $backendLayout;
+        }
+    }
 
-	/**
-	 * @param DataProviderContext $dataProviderContext
-	 * @param BackendLayoutCollection $backendLayoutCollection
-	 * @return void
-	 */
-	public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection) {
+    /**
+     * @param DataProviderContext     $dataProviderContext
+     * @param BackendLayoutCollection $backendLayoutCollection
+     *
+     * @return void
+     */
+    public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection)
+    {
 
-		$this->generateBackendLayouts($dataProviderContext);
-		foreach ($this->backendLayouts as $backendLayoutConfig) {
-			$backendLayout = $this->createBackendLayout($backendLayoutConfig);
-			$backendLayoutCollection->add($backendLayout);
-		}
-	}
+        $this->generateBackendLayouts($dataProviderContext);
+        foreach ($this->backendLayouts as $backendLayoutConfig) {
+            $backendLayout = $this->createBackendLayout($backendLayoutConfig);
+            $backendLayoutCollection->add($backendLayout);
+        }
+    }
 
-	/**
-	 * Gets a backend layout by (regular) identifier.
-	 *
-	 * @param string $identifier
-	 * @param integer $pageId
-	 * @return NULL|BackendLayout
-	 */
-	public function getBackendLayout($identifier, $pageId) {
+    /**
+     * Gets a backend layout by (regular) identifier.
+     *
+     * @param string  $identifier
+     * @param integer $pageId
+     *
+     * @return NULL|BackendLayout
+     */
+    public function getBackendLayout($identifier, $pageId)
+    {
 
-		$this->generateBackendLayouts();
-		$backendLayout = NULL;
-		if (array_key_exists($identifier, $this->backendLayouts)) {
-			return $this->createBackendLayout($this->backendLayouts[$identifier]);
-		}
-		return $backendLayout;
-	}
+        $this->generateBackendLayouts();
+        $backendLayout = null;
+        if (array_key_exists($identifier, $this->backendLayouts)) {
+            return $this->createBackendLayout($this->backendLayouts[$identifier]);
+        }
 
-	/**
-	 * Creates a new backend layout using the given record data.
-	 *
-	 * @param array $data
-	 * @return BackendLayout
-	 */
-	protected function createBackendLayout(array $data) {
+        return $backendLayout;
+    }
 
-		$backendLayout = BackendLayout::create($data['uid'], $data['title'], $data['config']);
-		$backendLayout->setIconPath($this->getIconPath($data['icon']));
-		$backendLayout->setData($data);
-		return $backendLayout;
-	}
+    /**
+     * Creates a new backend layout using the given record data.
+     *
+     * @param array $data
+     *
+     * @return BackendLayout
+     */
+    protected function createBackendLayout(array $data)
+    {
 
-	/**
-	 * Gets and sanitizes the icon path.
-	 *
-	 * @param string $icon Name of the icon file
-	 * @return string
-	 */
-	protected function getIconPath($icon) {
+        $backendLayout = BackendLayout::create($data['uid'], $data['title'], $data['config']);
+        $backendLayout->setIconPath($this->getIconPath($data['icon']));
+        $backendLayout->setData($data);
 
-		$iconPath = '';
-		if (!empty($icon)) {
-			$iconPath = $icon;
-		}
-		return $iconPath;
-	}
+        return $backendLayout;
+    }
 
+    /**
+     * Gets and sanitizes the icon path.
+     *
+     * @param string $icon Name of the icon file
+     *
+     * @return string
+     */
+    protected function getIconPath($icon)
+    {
+
+        $iconPath = '';
+        if (!empty($icon)) {
+            $iconPath = $icon;
+        }
+
+        return $iconPath;
+    }
 }

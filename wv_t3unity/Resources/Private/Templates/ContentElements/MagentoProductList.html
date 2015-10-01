@@ -1,0 +1,11 @@
+<f:layout name="Default"/>
+<f:section name="Main">
+    <f:switch expression="{data.layout}">
+        <f:case value="main">
+            <f:render partial="MagentoProductList/Main" arguments="{data: data}"/>
+        </f:case>
+        <f:case default="TRUE">
+            <f:render partial="MagentoProductList/Main" arguments="{data: data}"/>
+        </f:case>
+    </f:switch>
+</f:section>

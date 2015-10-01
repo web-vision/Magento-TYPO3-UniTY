@@ -36,18 +36,18 @@ class Configuration extends ConfigurationManager
             'page',
             'column',
             'element',
-            'menu'
+            'menu',
         );
 
-        if($unityType !== null) {
-            if(in_array($unityType, $unityTypes)) {
+        if ($unityType !== null) {
+            if (in_array($unityType, $unityTypes)) {
                 $unityTypes = array($unityType);
             }
         }
 
         $unityTypeNums = array();
-        foreach($unityTypes as $unityType) {
-            if(($config = $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_' . $unityType . '.']['typeNum']) !== null) {
+        foreach ($unityTypes as $unityType) {
+            if (($config = $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_' . $unityType . '.']['typeNum']) !== null) {
                 $unityTypeNums[] = $config;
             }
         }

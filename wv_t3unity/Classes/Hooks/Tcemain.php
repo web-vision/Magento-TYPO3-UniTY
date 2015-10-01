@@ -41,8 +41,9 @@ class Tcemain
      *
      * @param string $status 'new' (ignoring) or 'update'
      * @param string $tableName
-     * @param int $recordId
-     * @param array $databaseData
+     * @param int    $recordId
+     * @param array  $databaseData
+     *
      * @return void
      */
     public function processDatamap_afterDatabaseOperations($status, $tableName, $recordId, array $databaseData, $dataHandler)
@@ -59,7 +60,7 @@ class Tcemain
         }
 
         // don't generate path for folder, recycler and menu separator
-        if($dataHandler->checkValue_currentRecord['doktype'] >= 199) {
+        if ($dataHandler->checkValue_currentRecord['doktype'] >= 199) {
             return;
         }
 
@@ -109,7 +110,7 @@ class Tcemain
             $output = $this->_addToPath($output, $record);
         }
 
-        if(strlen($output) == 0 && isset($record) && $record['is_siteroot'] == '1') {
+        if (strlen($output) == 0 && isset($record) && $record['is_siteroot'] == '1') {
             $output = '/index.html';
         }
 
@@ -118,7 +119,7 @@ class Tcemain
 
     protected function _updateRecord($uid, $sysLanguageUid, $unityPath)
     {
-        if($unityPath == '/') {
+        if ($unityPath == '/') {
             $unityPath = '';
         }
         $realUrlPath = rtrim(preg_replace('/\.html$/', '', $unityPath), '/');
@@ -128,32 +129,33 @@ class Tcemain
         $where = 'uid = ' . (int)$uid;
         $fields = array(
             'unity_path' => $unityPath,
-            'tx_realurl_pathsegment' => $realUrlPath
+            'tx_realurl_pathsegment' => $realUrlPath,
         );
 
         // overwrite some settings
-        if($sysLanguageUid > 0) {
+        if ($sysLanguageUid > 0) {
             $tableName .= '_language_overlay';
             $where .= ' AND sys_language_uid = ' . (int)$sysLanguageUid;
-        } elseif($realUrlPath) {
+        } elseif ($realUrlPath) {
             $fields['tx_realurl_pathoverride'] = 1;
         }
 
         $this->_db->exec_UPDATEquery($tableName, $where, $fields);
     }
 
-    protected function _updateSubPages($uid, $sysLanguageUid, $path) {
+    protected function _updateSubPages($uid, $sysLanguageUid, $path)
+    {
         // remove previously added .html
         $path = preg_replace('/\.html$/', '', $path) . '/';
 
         // remove index as a special case for the root page
-        if($path == '/index/' || $path == '') {
+        if ($path == '/index/' || $path == '') {
             $path = '/';
         }
 
         $subPages = $this->_getTreeList($uid, $sysLanguageUid);
 
-        foreach($subPages as $subPage) {
+        foreach ($subPages as $subPage) {
             $this->_updateSubPage($subPage, $path);
         }
     }
@@ -161,19 +163,19 @@ class Tcemain
     protected function _updateSubPage($data, $currentPath)
     {
         // if unity path doesn't start with the current path it needs an update
-        if(strpos($data['unity_path'], $currentPath) !== 0 || $currentPath == '/') {
-            if(!$data['tx_realurl_exclude']) {
+        if (strpos($data['unity_path'], $currentPath) !== 0 || $currentPath == '/') {
+            if (!$data['tx_realurl_exclude']) {
                 $unityPath = $this->_addToPath($currentPath, $data);
             } else {
                 $unityPath = $currentPath;
             }
 
-            if(array_key_exists('uid', $data) && $data['doktype'] < 199) {
+            if (array_key_exists('uid', $data) && $data['doktype'] < 199) {
                 $this->_updateRecord($data['uid'], $data['sys_language_uid'], $unityPath);
             }
 
-            if(array_key_exists('children', $data)) {
-                foreach($data['children'] as $subPage) {
+            if (array_key_exists('children', $data)) {
+                foreach ($data['children'] as $subPage) {
                     $this->_updateSubPage($subPage, $unityPath);
                 }
             }
@@ -188,17 +190,32 @@ class Tcemain
         }
         $treeList = array();
         if ($id) {
-            $resultSet = $this->_db->exec_SELECTquery('uid, doktype, title, nav_title, unity_path, tx_realurl_exclude', 'pages', 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages'));
+            $resultSet =
+                $this->_db->exec_SELECTquery(
+                    'uid, doktype, title, nav_title, unity_path, tx_realurl_exclude',
+                    'pages',
+                    'pid=' . $id . ' ' . BackendUtility::deleteClause('pages')
+                );
             while ($row = $this->_db->sql_fetch_assoc($resultSet)) {
                 $uid = $row['uid'];
 
                 $row['sys_language_uid'] = 0;
 
-                if($sysLanguageUid) {
+                if ($sysLanguageUid) {
                     // get localized data
-                    $langResultSet = $this->_db->exec_SELECTquery('uid, doktype, title, nav_title, unity_path', 'pages_language_overlay', 'pid=' . $uid . ' ' . BackendUtility::deleteClause('pages_language_overlay') . ' AND sys_language_uid = ' . $sysLanguageUid);
+                    $langResultSet =
+                        $this->_db->exec_SELECTquery(
+                            'uid, doktype, title, nav_title, unity_path',
+                            'pages_language_overlay',
+                            'pid='
+                            . $uid
+                            . ' '
+                            . BackendUtility::deleteClause('pages_language_overlay')
+                            . ' AND sys_language_uid = '
+                            . $sysLanguageUid
+                        );
                     $langResult = $this->_db->sql_fetch_assoc($langResultSet);
-                    if($langResult) {
+                    if ($langResult) {
                         $row = array_merge($row, $langResult);
                         $row['sys_language_uid'] = $sysLanguageUid;
                     } else {
@@ -210,11 +227,12 @@ class Tcemain
 
                 // get children
                 $children = $this->_getTreeList($uid, $sysLanguageUid);
-                if(!empty($children)) {
+                if (!empty($children)) {
                     $treeList[$uid]['children'] = $children;
                 }
             }
         }
+
         return $treeList;
     }
 
@@ -248,7 +266,7 @@ class Tcemain
         );
 
         // replace german characters and spaces
-        foreach($chars as $search => $replace) {
+        foreach ($chars as $search => $replace) {
             $newElement = str_replace($search, $replace, $newElement);
         }
 
