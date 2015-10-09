@@ -13,6 +13,3 @@ $TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all'
     'WebVision\WvT3unity\Hooks\ContentPostProc->contentPostProc';
 $TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output']['tx_wvt3unity'] =
     'WebVision\WvT3unity\Hooks\ContentPostProc->contentPostProc';
-
-// do not move to ext_tables.php otherwise config will not be found always
-\WebVision\WvCore\Utility\ContentElementUtility::addContentElementTyposcript($_EXTKEY, 'MagentoProductList', 0);

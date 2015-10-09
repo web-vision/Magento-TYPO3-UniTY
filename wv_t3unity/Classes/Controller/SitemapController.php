@@ -5,8 +5,7 @@ namespace WebVision\WvT3unity\Controller;
  *
  *  Copyright notice
  *
- *  (c) 2015 Kai Ole Hartwig <o.hartwig@web-vision.de>, web-vision GmbH
- *           Tim Werdin  <t.werdin@web-vision.de>, web-vision GmbH
+ *  (c) 2015 Tim Werdin  <t.werdin@web-vision.de>, web-vision GmbH
  *
  *  All rights reserved
  *

@@ -18,7 +18,6 @@ CREATE TABLE pages_language_overlay (
 # Table structure for table 'tt_content'
 #
 CREATE TABLE tt_content (
-  magento_skus VARCHAR(255) DEFAULT '' NOT NULL,
   hidden_xs    TINYINT(3) DEFAULT '0'  NOT NULL,
   hidden_sm    TINYINT(3) DEFAULT '0'  NOT NULL,
   hidden_md    TINYINT(3) DEFAULT '0'  NOT NULL,

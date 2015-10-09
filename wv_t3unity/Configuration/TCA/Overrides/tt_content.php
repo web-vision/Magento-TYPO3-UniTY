@@ -32,13 +32,6 @@ $additionalColumns = array(
             'type' => 'check',
         ),
     ),
-    'magento_skus' => array(
-        'exclude' => 0,
-        'label'   => 'LLL:EXT:wv_t3unity/Resources/Private/Language/Backend.xlf:tt_content.magento_skus',
-        'config'  => array(
-            'type' => 'input',
-        ),
-    ),
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tt_content', $additionalColumns);

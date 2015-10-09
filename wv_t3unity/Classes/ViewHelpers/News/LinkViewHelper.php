@@ -7,8 +7,7 @@ use WebVision\WvT3unity\Utility\Configuration;
  *
  *  Copyright notice
  *
- *  (c) 2015 Kai Ole Hartwig <o.hartwig@web-vision.de>, web-vision GmbH
- *           Tim Werdin  <t.werdin@web-vision.de>, web-vision GmbH
+ *  (c) 2015 Tim Werdin  <t.werdin@web-vision.de>, web-vision GmbH
  *           Justus Moroni <j.moroni@web-vision.de>, web-vision GmbH
  *
  *  All rights reserved
