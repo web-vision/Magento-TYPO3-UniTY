@@ -30,43 +30,50 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
- * This package includes all functions for generating XML sitemaps
+ * This class includes all functions for generating XML sitemaps.
  *
+ * @author Tim Werdin <t.werdin@web-vision.de>
  */
 class SitemapController
 {
     /**
-     * holds all configuration information for rendering the sitemap
+     * Holds all configuration information for rendering the sitemap.
      *
      * @var array
      */
     protected $sitemapConfiguration = array();
+
     /**
+     * Holds the database class for easier access throughout the class.
+     *
      * @var \TYPO3\CMS\Core\Database\DatabaseConnection
      */
-    protected $_db;
+    protected $db;
+
     /**
+     * Page tree for the current page.
+     *
      * @var array
      */
-    protected $_tree = array();
+    protected $tree = array();
 
     /**
      * Generates a XML sitemap from the page structure, entry point for the page
      *
-     * @param string $content       the content to be filled, usually empty
-     * @param array  $configuration additional configuration parameters given via TypoScript
+     * @param string $content       The content to be filled, usually empty
+     * @param array  $configuration Additional configuration parameters given via TypoScript
      *
-     * @return string the XML sitemap ready to render
+     * @return string The XML sitemap ready to render
      */
-    public function renderXMLSitemap($content, $configuration)
+    public function renderXmlSitemap($content, array $configuration)
     {
         $this->sitemapConfiguration = $configuration;
 
-        $this->_db = $GLOBALS['TYPO3_DB'];
+        $this->db = $GLOBALS['TYPO3_DB'];
 
         $id = (int)$this->getFrontendController()->id;
         $sysLanguageUid = (int)$this->getFrontendController()->sys_language_uid;
-        $treeRecords = $this->_getTreeList($id, $sysLanguageUid);
+        $treeRecords = $this->getTreeList($id, $sysLanguageUid);
 
         if (array_key_exists('excludeUid', $this->sitemapConfiguration)) {
             $excludedPageUids = GeneralUtility::trimExplode(',', $this->sitemapConfiguration['excludeUid'], true);
@@ -115,14 +122,15 @@ class SitemapController
     }
 
     /**
-     * fetches the pages needed from the tree component
+     * Fetches the pages needed from the tree component.
      *
-     * @param int $pid
-     * @param int $sysLanguageUid
+     * @param int    $pid            The pid to start with.
+     * @param int    $sysLanguageUid The language uid.
+     * @param string $prefix         The prefix for the path.
      *
      * @return array
      */
-    protected function _getTreeList($pid, $sysLanguageUid, $prefix = '')
+    protected function getTreeList($pid, $sysLanguageUid, $prefix = '')
     {
         $fields = 'uid,doktype,crdate,unity_path,canonical_url';
 
@@ -131,49 +139,42 @@ class SitemapController
             $id = abs($id);
         }
         if ($id) {
-            $resultSet =
-                $this->_db->exec_SELECTquery(
-                    $fields . ',mount_pid,nav_hide,SYS_LASTCHANGED',
-                    'pages',
-                    'pid=' . $id . ' ' . BackendUtility::deleteClause('pages')
-                );
-            while ($row = $this->_db->sql_fetch_assoc($resultSet)) {
+            $resultSet = $this->db->exec_SELECTquery(
+                $fields . ',mount_pid,nav_hide,SYS_LASTCHANGED',
+                'pages',
+                'pid=' . $id . ' ' . BackendUtility::deleteClause('pages')
+            );
+            while (($row = $this->db->sql_fetch_assoc($resultSet))) {
                 $row['unity_path'] = $prefix . $row['unity_path'];
-                $this->_tree[$row['uid']] = $row;
+                $this->tree[$row['uid']] = $row;
 
                 if ($sysLanguageUid) {
                     // get localized data
-                    $langResultSet =
-                        $this->_db->exec_SELECTquery(
-                            $fields,
-                            'pages_language_overlay',
-                            'pid='
-                            . $row['uid']
-                            . ' '
-                            . BackendUtility::deleteClause('pages_language_overlay')
-                            . ' AND sys_language_uid = '
-                            . $sysLanguageUid
-                        );
-                    $langResult = $this->_db->sql_fetch_assoc($langResultSet);
+                    $langResultSet = $this->db->exec_SELECTquery(
+                        $fields,
+                        'pages_language_overlay',
+                        'pid=' . $row['uid'] . ' ' . BackendUtility::deleteClause('pages_language_overlay') . ' AND sys_language_uid = ' . $sysLanguageUid
+                    );
+                    $langResult = $this->db->sql_fetch_assoc($langResultSet);
                     $langResult['unity_path'] = $prefix . $langResult['unity_path'];
-                    $this->_tree[$row['uid']]['lang'] = $langResult;
+                    $this->tree[$row['uid']]['lang'] = $langResult;
                 }
 
                 // get children
                 if ($row['doktype'] == 7 && $row['mount_pid']) {
-                    $sub_prefix = preg_replace('/\.html$/', '', $row['unity_path']);
-                    $this->_getTreeList($row['mount_pid'], $sysLanguageUid, $sub_prefix);
+                    $subPrefix = preg_replace('/\.html$/', '', $row['unity_path']);
+                    $this->getTreeList($row['mount_pid'], $sysLanguageUid, $subPrefix);
                 } else {
-                    $this->_getTreeList($row['uid'], $sysLanguageUid, $prefix);
+                    $this->getTreeList($row['uid'], $sysLanguageUid, $prefix);
                 }
             }
         }
 
-        return $this->_tree;
+        return $this->tree;
     }
 
     /**
-     * wrapper function for the current TSFE object
+     * Wrapper function for the current TSFE object.
      *
      * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
      */

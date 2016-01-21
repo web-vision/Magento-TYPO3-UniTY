@@ -13,5 +13,5 @@ tx_wvt3unity_xmlsitemap {
     }
 
     10 = USER
-    10.userFunc = WebVision\WvT3unity\Controller\SitemapController->renderXMLSitemap
+    10.userFunc = WebVision\WvT3unity\Controller\SitemapController->renderXmlSitemap
 }

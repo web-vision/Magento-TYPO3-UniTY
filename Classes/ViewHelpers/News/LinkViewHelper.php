@@ -1,8 +1,6 @@
 <?php
 namespace WebVision\WvT3unity\ViewHelpers\News;
 
-use WebVision\WvT3unity\Utility\Configuration;
-
 /***************************************************************
  *
  *  Copyright notice
@@ -28,21 +26,29 @@ use WebVision\WvT3unity\Utility\Configuration;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use WebVision\WvT3unity\Utility\Configuration;
+
+/**
+ * ViewHelper to render news url for UniTY usage.
+ *
+ * @author Tim Werdin <t.werdin@web-vision.de>
+ */
 class LinkViewHelper extends \Tx_News_ViewHelpers_LinkViewHelper
 {
     /**
      * Render link to news item or internal/external pages
      *
-     * @param \Tx_News_Domain_Model_News $newsItem      current news object
+     * @param \Tx_News_Domain_Model_News $newsItem      Current news object
      * @param array                      $settings
-     * @param bool                       $uriOnly       return only the url without the a-tag
-     * @param array                      $configuration optional typolink configuration
-     * @param string                     $content       optional content which is linked
-     * @param bool                       $forceBaseUrl  optional forces %BASE_URL% instead of %TYPO3_URL%
+     * @param bool                       $uriOnly       Return only the url without the a-tag
+     * @param array                      $configuration Optional typolink configuration
+     * @param string                     $content       Optional content which is linked
+     * @param bool                       $forceBaseUrl  Optional forces %BASE_URL% instead of %TYPO3_URL%
      *
-     * @return string link
+     * @return string Link
      */
-    public function render(\Tx_News_Domain_Model_News $newsItem, array $settings = array(), $uriOnly = false, $configuration = array(), $content = '', $forceBaseUrl = false)
+    public function render(\Tx_News_Domain_Model_News $newsItem, array $settings = array(), $uriOnly = false, array $configuration = array(), $content = '', $forceBaseUrl = false)
     {
         $return = parent::render($newsItem, $settings, $uriOnly, $configuration, $content);
 

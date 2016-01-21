@@ -20,5 +20,4 @@ if (!defined('TYPO3_MODE')) {
 $GLOBALS['TCA']['pages']['palettes']['137']['showitem'] = '';
 
 // register BackendLayoutDataProvider to add own backend layouts
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY] =
-    'WebVision\WvT3unity\Hooks\Options\BackendLayoutDataProvider';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY] = 'WebVision\WvT3unity\Hooks\Options\BackendLayoutDataProvider';

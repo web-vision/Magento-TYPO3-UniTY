@@ -1,8 +1,6 @@
 <?php
 namespace WebVision\WvT3unity\Hooks;
 
-use WebVision\WvT3unity\Utility\Configuration;
-
 /***************************************************************
  *
  *  Copyright notice
@@ -28,41 +26,48 @@ use WebVision\WvT3unity\Utility\Configuration;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use WebVision\WvT3unity\Utility\Configuration;
+
+/**
+ * This class renders all meta data as json
+ *
+ * @author Tim Werdin <t.werdin@web-vision.de>
+ */
 class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 {
-    public function contentPostProc(&$params, &$that)
+    public function hookEntry(&$params, &$that)
     {
         if (Configuration::isMagentoContent($params['pObj']->type, 'head')) {
-            $this->_removeGenerator($params['pObj']->content);
-            $this->_parseMetaTags($params['pObj']->content);
-            $this->_parseCss($params['pObj']->content);
-            $this->_parseJs($params['pObj']->content);
+            $this->removeGenerator($params['pObj']->content);
+            $this->parseMetaTags($params['pObj']->content);
+            $this->parseCss($params['pObj']->content);
+            $this->parseJs($params['pObj']->content);
 
             $params['pObj']->content = preg_replace('/,\s?]/', ']', $params['pObj']->content);
         }
     }
 
-    protected function _removeGenerator(&$content)
+    protected function removeGenerator(&$content)
     {
         $content = preg_replace('/<meta name="generator".*?>/', '', $content);
     }
 
-    protected function _parseMetaTags(&$content)
+    protected function parseMetaTags(&$content)
     {
-        $content =
-            preg_replace_callback(
-                '/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/s',
-                array($this, 'metaCallback'),
-                $content
-            );
+        $content = preg_replace_callback(
+            '/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/s',
+            array($this, 'metaCallback'),
+            $content
+        );
     }
 
-    protected function _parseCss(&$content)
+    protected function parseCss(&$content)
     {
         $content = preg_replace('/<link rel=".*?" type=".*?" href="(.*?)" media=".*?"\s*\/{0,1}>/', '"$1",', $content);
     }
 
-    protected function _parseJs(&$content)
+    protected function parseJs(&$content)
     {
         $content = preg_replace('/<script( src="(.*?)")? type=".*?" ?\/?>(<\/script>)?/', '"$2",', $content);
     }

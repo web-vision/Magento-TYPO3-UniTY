@@ -1,10 +1,10 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-    die ('Access denied.');
+    die('Access denied.');
 }
 
 $additioncalColumns = array(
-    'unity_path' => array(
+    'unity_path'    => array(
         'exclude' => 1,
         'label'   => 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_db.xlf:tx_wvt3unity_domain_model_pagelanguageoverlay.path',
         'config'  => array(
