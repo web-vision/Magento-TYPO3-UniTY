@@ -10,5 +10,8 @@
         "psr-4": {
             "WebVision\\WvT3unity\\": "Classes"
         }
+    },
+    "require": {
+        "realurl": "1.13.*"
     }
 }

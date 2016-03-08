@@ -30,7 +30,8 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
- * Class Tcemain
+ * This class will make sure that on save of a page the path for the page will be generated and saved for the saved page
+ * and all subpages.
  *
  * @author Tim Werdin <t.werdin@web-vision.de>
  */
@@ -93,10 +94,10 @@ class Tcemain
     }
 
     /**
-     * This method returns the path for the given uid and language uid
+     * This method returns the path for the given uid and language uid.
      *
-     * @param int $uid
-     * @param int $sysLanguageUid
+     * @param int $uid The uid of the page to generate the path for.
+     * @param int $sysLanguageUid The language uid for path generation.
      *
      * @return array|string
      */
@@ -123,6 +124,13 @@ class Tcemain
         return $output;
     }
 
+    /**
+     * This method will update the record with the given uid and sysLanguageUid with the given unityPath.
+     *
+     * @param int $uid The uid of the page to update.
+     * @param int $sysLanguageUid The language uid of the page to update.
+     * @param string $unityPath The unity path to set.
+     */
     protected function updateRecord($uid, $sysLanguageUid, $unityPath)
     {
         if ($unityPath == '/') {
@@ -149,6 +157,13 @@ class Tcemain
         $this->db->exec_UPDATEquery($tableName, $where, $fields);
     }
 
+    /**
+     * This method will find all subpages of the page with the given uid and will update these pages if needed.
+     *
+     * @param int $uid The uid to find the children for.
+     * @param int $sysLanguageUid The language uid for the generation of the child tree.
+     * @param string $path The current path.
+     */
     protected function updateSubPages($uid, $sysLanguageUid, $path)
     {
         // remove previously added .html
@@ -166,14 +181,20 @@ class Tcemain
         }
     }
 
+    /**
+     * This method will check if the sub page given in $data needs an update and if so it will update the record.
+     * If the sub page has children this method will recursively call itself for each child.
+     *
+     * @param array $data The subpage to update.
+     * @param string $currentPath The current path.
+     */
     protected function updateSubPage($data, $currentPath)
     {
         // if unity path doesn't start with the current path it needs an update
         if (strpos($data['unity_path'], $currentPath) !== 0 || $currentPath == '/') {
+            $unityPath = $currentPath;
             if (!$data['tx_realurl_exclude']) {
                 $unityPath = $this->addToPath($currentPath, $data);
-            } else {
-                $unityPath = $currentPath;
             }
 
             if (array_key_exists('uid', $data) && $data['doktype'] < 199) {
@@ -188,18 +209,27 @@ class Tcemain
         }
     }
 
+    /**
+     * This method builds a recursive array representing the page tree beginning with the given pid.
+     * If $sysLanguageUid is given and greater 0 the translation will be used as well.
+     *
+     * @param int $pid The pid to generate the array for.
+     * @param int $sysLanguageUid The language uid to add translations.
+     *
+     * @return array
+     */
     protected function getTreeList($pid, $sysLanguageUid)
     {
-        $id = (int)$pid;
-        if ($id < 0) {
-            $id = abs($id);
+        $pid = (int)$pid;
+        if ($pid < 0) {
+            $pid = abs($pid);
         }
         $treeList = array();
-        if ($id) {
+        if ($pid) {
             $resultSet = $this->db->exec_SELECTquery(
                 'uid, doktype, title, nav_title, unity_path, tx_realurl_exclude',
                 'pages',
-                'pid=' . $id . ' ' . BackendUtility::deleteClause('pages')
+                'pid=' . $pid . ' ' . BackendUtility::deleteClause('pages')
             );
             while (($row = $this->db->sql_fetch_assoc($resultSet))) {
                 $uid = $row['uid'];
@@ -235,6 +265,14 @@ class Tcemain
         return $treeList;
     }
 
+    /**
+     * This method cleans up the $newElement and adds it to the given path.
+     *
+     * @param string $path The current path.
+     * @param string $newElement The new element to add.
+     *
+     * @return string
+     */
     protected function addToPath($path, $newElement)
     {
         // remove previously added .html

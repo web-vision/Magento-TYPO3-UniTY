@@ -45,8 +45,8 @@ tx_wvt3unity_head {
     10 = TEMPLATE
     10.template = TEXT
     10.template.value (
-    "title": "###TITLE###",
-    "canonical": "###CANONICAL###",
+        "title": "###TITLE###",
+        "canonical": "###CANONICAL###",
     )
     10.marks {
         // get Content to make sure the CSS/JS/Meta-Tags included in the content are in the header // NO OUTPUT

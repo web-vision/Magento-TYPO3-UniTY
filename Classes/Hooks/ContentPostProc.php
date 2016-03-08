@@ -36,6 +36,12 @@ use WebVision\WvT3unity\Utility\Configuration;
  */
 class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 {
+    /**
+     * This method get's called by the hook and will parse the html head data into a json.
+     *
+     * @param array $params
+     * @param $that
+     */
     public function hookEntry(&$params, &$that)
     {
         if (Configuration::isMagentoContent($params['pObj']->type, 'head')) {
@@ -48,11 +54,21 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         }
     }
 
+    /**
+     * This method removes the meta tags with name generator.
+     *
+     * @param string $content The content to parse.
+     */
     protected function removeGenerator(&$content)
     {
         $content = preg_replace('/<meta name="generator".*?>/', '', $content);
     }
 
+    /**
+     * This method parses meta tags with a name or property attribute into a json
+     *
+     * @param string $content The content to parse.
+     */
     protected function parseMetaTags(&$content)
     {
         $content = preg_replace_callback(
@@ -62,16 +78,33 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         );
     }
 
+    /**
+     * This method replaces link tags with the value of the href attribute.
+     *
+     * @param string $content The content to parse.
+     */
     protected function parseCss(&$content)
     {
         $content = preg_replace('/<link rel=".*?" type=".*?" href="(.*?)" media=".*?"\s*\/{0,1}>/', '"$1",', $content);
     }
 
+    /**
+     * This method replaces script tags with the value of the src attribute.
+     *
+     * @param string $content The content to parse.
+     */
     protected function parseJs(&$content)
     {
         $content = preg_replace('/<script( src="(.*?)")? type=".*?" ?\/?>(<\/script>)?/', '"$2",', $content);
     }
 
+    /**
+     * Helper method used as callback for preg_replace_callback to parse the matches into a json.
+     *
+     * @param array $matches The matches of the preg_replace_callback method.
+     *
+     * @return string The generated json.
+     */
     public function metaCallback($matches)
     {
         $matches[3] = str_replace(array("\r\n", "\n"), ' ', $matches[3]);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-    <file source-language="de" datatype="plaintext" original="messages" date="2015-01-06T10:09:59Z" product-name="wv_t3unity">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-01-06T10:09:59Z" product-name="wv_t3unity">
         <header />
         <body>
             <trans-unit id="tx_wvt3unity_domain_model_pages">
