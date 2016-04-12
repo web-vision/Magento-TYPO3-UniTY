@@ -2,38 +2,40 @@
 #### BACKENDLAYOUT: Default Sidebar Both Sides ####
 ###################################################
 mod {
-	web_layout {
-		UnityBackendLayouts {
-			3columns {
-				title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.3columns
-				config {
-					backend_layout {
-						colCount = 12
-						rowCount = 1
-						rows {
-							1 {
-								columns {
-								    1 {
-										name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_left
-										colPos = 2
-										colspan = 3
-								    }
-									2 {
-										name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
-										colPos = 1
-										colspan = 6
-									}
-									3 {
-										name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_right
-										colPos = 3
-										colspan = 3
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+    web_layout {
+        UnityBackendLayouts {
+            3columns {
+                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.3columns
+                config {
+                    backend_layout {
+                        colCount = 12
+                        rowCount = 1
+                        rows {
+                            1 {
+                                columns {
+                                    1 {
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_left
+                                        colPos = 2
+                                        colspan = 3
+                                    }
+
+                                    2 {
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
+                                        colPos = 1
+                                        colspan = 6
+                                    }
+
+                                    3 {
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_right
+                                        colPos = 3
+                                        colspan = 3
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -2,28 +2,27 @@
 #### BACKENDLAYOUT: DEFAULT ####
 ################################
 mod {
-	web_layout {
-		UnityBackendLayouts {
-			1column {
-				title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.1column
-				config {
-					backend_layout {
-						colCount = 12
-						rowCount = 1
-						rows {
-							1 {
-								columns {
-									1 {
-										name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
-										colPos = 1
-										colSpan = 12
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+    web_layout {
+        UnityBackendLayouts {
+            1column {
+                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.1column
+                config {
+                    backend_layout {
+                        colCount = 1
+                        rowCount = 1
+                        rows {
+                            1 {
+                                columns {
+                                    1 {
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
+                                        colPos = 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
