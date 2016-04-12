@@ -15,38 +15,39 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-$locallandDb = 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_db.xlf:';
+call_user_func(
+    function() {
+        $locallandDb = 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_db.xlf:';
 
-$additioncalColumns = array(
-    'unity_path'    => array(
-        'exclude' => 1,
-        'label'   => $locallandDb . 'tx_wvt3unity_domain_model_pagelanguageoverlay.path',
-        'config'  => array(
-            'type' => 'input',
-            'size' => 70,
-            'max'  => 70,
-            'eval' => 'trim',
-        ),
-    ),
-    'canonical_url' => array(
-        'exclude' => 1,
-        'label'   => $locallandDb . 'tx_wvt3unity_domain_model_pagelanguageoverlay.canonical_url',
-        'config'  => array(
-            'type' => 'input',
-            'size' => 70,
-            'max'  => 70,
-            'eval' => 'trim',
-        ),
-    ),
+        $additionalColumns = array(
+            'unity_path'    => array(
+                'exclude' => 1,
+                'label'   => $locallandDb . 'tx_wvt3unity_domain_model_pagelanguageoverlay.path',
+                'config'  => array(
+                    'type' => 'input',
+                    'size' => 70,
+                    'max'  => 70,
+                    'eval' => 'trim',
+                ),
+            ),
+            'canonical_url' => array(
+                'exclude' => 1,
+                'label'   => $locallandDb . 'tx_wvt3unity_domain_model_pagelanguageoverlay.canonical_url',
+                'config'  => array(
+                    'type' => 'input',
+                    'size' => 70,
+                    'max'  => 70,
+                    'eval' => 'trim',
+                ),
+            ),
+        );
+
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('pages_language_overlay', $additionalColumns);
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+            'pages_language_overlay',
+            'full_path, path, canonical_url',
+            1,
+            'before:keywords'
+        );
+    }
 );
-
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('pages_language_overlay', $additionalColumns);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
-    'pages_language_overlay',
-    'full_path, path, canonical_url',
-    1,
-    'before:keywords'
-);
-
-unset($additioncalColumns);
-unset($locallandDb);
