@@ -16,7 +16,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 call_user_func(
-    function($_EXTKEY) {
+    function () {
         $locallangDb = 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_db.xlf:';
 
         $additionalColumns = array(
@@ -65,7 +65,7 @@ call_user_func(
         $GLOBALS['TCA']['pages']['palettes']['137']['showitem'] = '';
 
         // register BackendLayoutDataProvider to add own backend layouts
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY] = 'WebVision\WvT3unity\Hooks\Options\BackendLayoutDataProvider';
-    },
-    $_EXTKEY
+        $providerClass = 'WebVision\WvT3unity\Hooks\Options\BackendLayoutDataProvider';
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['wv_t3unity'] = $providerClass;
+    }
 );

@@ -24,6 +24,9 @@ use \TYPO3\CMS\Backend\Utility\BackendUtility;
  */
 class SitemapController
 {
+    const COLUMN_UNITY_PATH    = 'unity_path';
+    const COLUMN_CANONICAL_URL = 'canonical_url';
+
     /**
      * Holds all configuration information for rendering the sitemap.
      *
@@ -91,8 +94,8 @@ class SitemapController
                 $item = $item['lang'];
             }
 
-            $url = $item['canonical_url'] ? $item['canonical_url'] : $item['unity_path'];
-            $realUrl = $item['canonical_url'] ? $item['unity_path'] : '';
+            $url = $item[static::COLUMN_CANONICAL_URL] ? $item[static::COLUMN_CANONICAL_URL] : $item[static::COLUMN_UNITY_PATH];
+            $realUrl = $item[static::COLUMN_CANONICAL_URL] ? $item[static::COLUMN_UNITY_PATH] : '';
             $lastmod = $item['SYS_LASTCHANGED'] ? $item['SYS_LASTCHANGED'] : $item['crdate'];
 
             $lastmod = date('c', $lastmod);
@@ -131,7 +134,7 @@ class SitemapController
                 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages')
             );
             while (($row = $this->db->sql_fetch_assoc($resultSet))) {
-                $row['unity_path'] = $prefix . $row['unity_path'];
+                $row[static::COLUMN_UNITY_PATH] = $prefix . $row[static::COLUMN_UNITY_PATH];
                 $this->tree[$row['uid']] = $row;
 
                 if ($sysLanguageUid) {
@@ -147,13 +150,13 @@ class SitemapController
                         . $sysLanguageUid
                     );
                     $langResult = $this->db->sql_fetch_assoc($langResultSet);
-                    $langResult['unity_path'] = $prefix . $langResult['unity_path'];
+                    $langResult[static::COLUMN_UNITY_PATH] = $prefix . $langResult[static::COLUMN_UNITY_PATH];
                     $this->tree[$row['uid']]['lang'] = $langResult;
                 }
 
                 // get children
                 if ($row['doktype'] == 7 && $row['mount_pid']) {
-                    $subPrefix = preg_replace('/\.html$/', '', $row['unity_path']);
+                    $subPrefix = preg_replace('/\.html$/', '', $row[static::COLUMN_UNITY_PATH]);
                     $this->getTreeList($row['mount_pid'], $sysLanguageUid, $subPrefix);
                 } else {
                     $this->getTreeList($row['uid'], $sysLanguageUid, $prefix);

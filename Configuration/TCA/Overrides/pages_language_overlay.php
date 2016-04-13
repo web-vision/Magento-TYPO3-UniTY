@@ -16,7 +16,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 call_user_func(
-    function() {
+    function () {
         $locallandDb = 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_db.xlf:';
 
         $additionalColumns = array(

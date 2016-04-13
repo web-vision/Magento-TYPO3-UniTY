@@ -70,18 +70,18 @@ class Tcemain
         }
 
         // don't generate path for folder, recycler and menu separator
-        if ($dataHandler->checkValue_currentRecord[self::COLUMN_DOKTYPE] >= 199) {
+        if ($dataHandler->checkValue_currentRecord[static::COLUMN_DOKTYPE] >= 199) {
             return;
         }
 
         switch ($tableName) {
-            case self::TABLE_PAGES:
+            case static::TABLE_PAGES:
                 $pagesUid = $recordId;
                 $sysLanguageUid = 0;
                 break;
-            case self::TABLE_PAGES_LANGUAGE_OVERLAY:
-                $pagesUid = $dataHandler->checkValue_currentRecord[self::COLUMN_PID];
-                $sysLanguageUid = $dataHandler->checkValue_currentRecord[self::COLUMN_SYS_LANGUAGE_UID];
+            case static::TABLE_PAGES_LANGUAGE_OVERLAY:
+                $pagesUid = $dataHandler->checkValue_currentRecord[static::COLUMN_PID];
+                $sysLanguageUid = $dataHandler->checkValue_currentRecord[static::COLUMN_SYS_LANGUAGE_UID];
                 break;
             default:
                 return;
@@ -112,14 +112,14 @@ class Tcemain
         $data = $pageRepo->getRootLine($uid);
         ksort($data);
         foreach ($data as $record) {
-            if ($record[self::COLUMN_IS_SITEROOT] == '1' || $record[self::COLUMN_TX_REALURL_EXCLUDE]) {
+            if ($record[static::COLUMN_IS_SITEROOT] == '1' || $record[static::COLUMN_TX_REALURL_EXCLUDE]) {
                 continue;
             }
 
             $output = $this->addToPath($output, $record);
         }
 
-        if (strlen($output) == 0 && isset($record) && $record[self::COLUMN_IS_SITEROOT] == '1') {
+        if (strlen($output) == 0 && isset($record) && $record[static::COLUMN_IS_SITEROOT] == '1') {
             $output = '/index.html';
         }
 
@@ -139,22 +139,22 @@ class Tcemain
         if ($unityPath == '/') {
             $unityPath = '';
         }
-        $realUrlPath = rtrim(preg_replace(self::HTML_REGEX, '', $unityPath), '/');
+        $realUrlPath = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
 
         // set default values for update query
-        $tableName = self::TABLE_PAGES;
-        $where = self::COLUMN_UID . ' = ' . (int)$uid;
+        $tableName = static::TABLE_PAGES;
+        $where = static::COLUMN_UID . ' = ' . (int)$uid;
         $fields = array(
-            self::COLUMN_UNITY_PATH             => $unityPath,
-            self::COLUMN_TX_REALURL_PATHSEGMENT => $realUrlPath,
+            static::COLUMN_UNITY_PATH             => $unityPath,
+            static::COLUMN_TX_REALURL_PATHSEGMENT => $realUrlPath,
         );
 
         // overwrite some settings
         if ($sysLanguageUid > 0) {
-            $tableName = self::TABLE_PAGES_LANGUAGE_OVERLAY;
-            $where .= ' AND ' . self::COLUMN_SYS_LANGUAGE_UID . ' = ' . (int)$sysLanguageUid;
+            $tableName = static::TABLE_PAGES_LANGUAGE_OVERLAY;
+            $where .= ' AND ' . static::COLUMN_SYS_LANGUAGE_UID . ' = ' . (int)$sysLanguageUid;
         } elseif ($realUrlPath) {
-            $fields[self::COLUMN_TX_REALURL_PATHOVERRIDE] = 1;
+            $fields[static::COLUMN_TX_REALURL_PATHOVERRIDE] = 1;
         }
 
         $this->db->exec_UPDATEquery($tableName, $where, $fields);
@@ -171,7 +171,7 @@ class Tcemain
     protected function updateSubPages($uid, $sysLanguageUid, $path)
     {
         // remove previously added .html
-        $path = preg_replace(self::HTML_REGEX, '', $path) . '/';
+        $path = preg_replace(static::HTML_REGEX, '', $path) . '/';
 
         // remove index as a special case for the root page
         if ($path == '/index/' || $path == '') {
@@ -197,18 +197,18 @@ class Tcemain
     protected function updateSubPage(array $data, $currentPath)
     {
         // if unity path doesn't start with the current path it needs an update
-        if (strpos($data[self::COLUMN_UNITY_PATH], $currentPath) !== 0 || $currentPath == '/') {
+        if (strpos($data[static::COLUMN_UNITY_PATH], $currentPath) !== 0 || $currentPath == '/') {
             $unityPath = $currentPath;
-            if (!$data[self::COLUMN_TX_REALURL_EXCLUDE]) {
+            if (!$data[static::COLUMN_TX_REALURL_EXCLUDE]) {
                 $unityPath = $this->addToPath($currentPath, $data);
             }
 
-            if (array_key_exists(self::COLUMN_UID, $data) && $data[self::COLUMN_DOKTYPE] < 199) {
-                $this->updateRecord($data[self::COLUMN_UID], $data[self::COLUMN_SYS_LANGUAGE_UID], $unityPath);
+            if (array_key_exists(static::COLUMN_UID, $data) && $data[static::COLUMN_DOKTYPE] < 199) {
+                $this->updateRecord($data[static::COLUMN_UID], $data[static::COLUMN_SYS_LANGUAGE_UID], $unityPath);
             }
 
-            if (array_key_exists(self::KEY_CHILDREN, $data)) {
-                foreach ($data[self::KEY_CHILDREN] as $subPage) {
+            if (array_key_exists(static::KEY_CHILDREN, $data)) {
+                foreach ($data[static::KEY_CHILDREN] as $subPage) {
                     $this->updateSubPage($subPage, $unityPath);
                 }
             }
@@ -238,30 +238,30 @@ class Tcemain
 
         $resultSet = $this->db->exec_SELECTquery(
             'uid, doktype, title, nav_title, unity_path, tx_realurl_exclude',
-            self::TABLE_PAGES,
-            self::COLUMN_PID . ' = ' . $pid . ' ' . BackendUtility::deleteClause(self::TABLE_PAGES)
+            static::TABLE_PAGES,
+            static::COLUMN_PID . ' = ' . $pid . ' ' . BackendUtility::deleteClause(static::TABLE_PAGES)
         );
 
         while (($row = $this->db->sql_fetch_assoc($resultSet))) {
-            $uid = $row[self::COLUMN_UID];
+            $uid = $row[static::COLUMN_UID];
 
-            $row[self::COLUMN_SYS_LANGUAGE_UID] = 0;
+            $row[static::COLUMN_SYS_LANGUAGE_UID] = 0;
 
             if ($sysLanguageUid) {
                 // get localized data
                 $langResultSet = $this->db->exec_SELECTquery(
                     'uid, doktype, title, nav_title, unity_path',
-                    self::TABLE_PAGES_LANGUAGE_OVERLAY,
-                    self::COLUMN_PID . ' = ' . $uid . ' ' . BackendUtility::deleteClause(
-                        self::TABLE_PAGES_LANGUAGE_OVERLAY
-                    ) . ' AND ' . self::COLUMN_SYS_LANGUAGE_UID . ' = ' . $sysLanguageUid
+                    static::TABLE_PAGES_LANGUAGE_OVERLAY,
+                    static::COLUMN_PID . ' = ' . $uid . ' ' . BackendUtility::deleteClause(
+                        static::TABLE_PAGES_LANGUAGE_OVERLAY
+                    ) . ' AND ' . static::COLUMN_SYS_LANGUAGE_UID . ' = ' . $sysLanguageUid
                 );
                 $langResult = $this->db->sql_fetch_assoc($langResultSet);
                 if ($langResult) {
                     $row = array_merge($row, $langResult);
-                    $row[self::COLUMN_SYS_LANGUAGE_UID] = $sysLanguageUid;
+                    $row[static::COLUMN_SYS_LANGUAGE_UID] = $sysLanguageUid;
                 } else {
-                    unset($row[self::COLUMN_UID]);
+                    unset($row[static::COLUMN_UID]);
                 }
             }
 
@@ -270,7 +270,7 @@ class Tcemain
             // get children
             $children = $this->getTreeList($uid, $sysLanguageUid);
             if (!empty($children)) {
-                $treeList[$uid][self::KEY_CHILDREN] = $children;
+                $treeList[$uid][static::KEY_CHILDREN] = $children;
             }
         }
 
@@ -288,16 +288,16 @@ class Tcemain
     protected function addToPath($path, $newElement)
     {
         // remove previously added .html
-        $path = preg_replace(self::HTML_REGEX, '', $path);
+        $path = preg_replace(static::HTML_REGEX, '', $path);
         // add slash and remove possibly trailing slashes before
         $path = rtrim($path, '/') . '/';
 
         // if array is given use nav_title or title or first element if neiter is given
         if (is_array($newElement)) {
-            if (array_key_exists(self::COLUMN_NAV_TITLE, $newElement) && $newElement[self::COLUMN_NAV_TITLE]) {
-                $newElement = $newElement[self::COLUMN_NAV_TITLE];
-            } elseif (array_key_exists(self::COLUMN_TITLE, $newElement)) {
-                $newElement = $newElement[self::COLUMN_TITLE];
+            if (array_key_exists(static::COLUMN_NAV_TITLE, $newElement) && $newElement[static::COLUMN_NAV_TITLE]) {
+                $newElement = $newElement[static::COLUMN_NAV_TITLE];
+            } elseif (array_key_exists(static::COLUMN_TITLE, $newElement)) {
+                $newElement = $newElement[static::COLUMN_TITLE];
             } else {
                 $newElement = reset($newElement);
             }
