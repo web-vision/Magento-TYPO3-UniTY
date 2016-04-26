@@ -140,7 +140,7 @@ class SitemapController
                 if ($sysLanguageUid) {
                     $where = 'pid=' . $row['uid'] . ' ';
                     $where .= BackendUtility::deleteClause('pages_language_overlay') . ' ';
-                    $where .= 'AND sys_language_uid = '. $sysLanguageUid;
+                    $where .= 'AND sys_language_uid = ' . $sysLanguageUid;
                     // get localized data
                     $langResultSet = $this->db->exec_SELECTquery($fields, 'pages_language_overlay', $where);
                     $langResult = $this->db->sql_fetch_assoc($langResultSet);

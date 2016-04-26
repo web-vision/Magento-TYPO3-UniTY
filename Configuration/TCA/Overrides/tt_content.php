@@ -51,9 +51,9 @@ call_user_func(
                     $type => $check,
                 ),
             ),
-            'hidden_lg' => array(
+            $hiddenLg => array(
                 $exclude => 1,
-                $label   => $locallangDb . 'hidden_lg',
+                $label   => $locallangDb . $hiddenLg,
                 $config  => array(
                     $type => $check,
                 ),
