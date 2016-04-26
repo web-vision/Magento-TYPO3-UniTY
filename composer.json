@@ -1,0 +1,17 @@
+{
+    "name": "web-vision/wv_t3unity",
+    "type": "typo3-cms-extension",
+    "description": "TYPO3 part of the UniTY extension pack. Adds Templates and classes for basic functionality.",
+    "homepage": "http://www.web-vision.de",
+    "license": [
+        "GPL-2.0+"
+    ],
+    "autoload": {
+        "psr-4": {
+            "WebVision\\WvT3unity\\": "Classes"
+        }
+    },
+    "require": {
+        "typo3-ter/realurl": "1.13.*"
+    }
+}
