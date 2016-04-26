@@ -1,27 +1,9 @@
 <?xml version="1.0"?>
 <ruleset name="TYPO3 Coding Guideline">
-    <rule ref="Wvtypo3cms">
-        <exclude-pattern>TYPO3SniffPool.ControlStructures.SwitchDeclaration</exclude-pattern>
-        <exclude-pattern>TYPO3SniffPool.WhiteSpace.ScopeClosingBrace.BreakIdent</exclude-pattern>
-    </rule>
-
     <file>.</file>
     <exclude-pattern type="relative">*.js$</exclude-pattern>
     <exclude-pattern type="relative">*.css$</exclude-pattern>
 
     <!-- External Code -->
     <exclude-pattern>Classes/Hooks/Options/BackendLayoutDataProvider.php</exclude-pattern>
-
-    <rule ref="TYPO3SniffPool.Commenting.FunctionComment.MissingReturn">
-        <exclude-pattern>Classes/Hooks/ContentPostProc.php</exclude-pattern>
-        <exclude-pattern>Classes/Hooks/Tcemain.php</exclude-pattern>
-    </rule>
-
-    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
-        <exclude-pattern>Classes/Hooks/Tcemain.php</exclude-pattern>
-    </rule>
-
-    <rule ref="TYPO3SniffPool.NamingConventions.ValidFunctionName.UnderscoresInFunctionName">
-        <exclude-pattern>Classes/Hooks/Tcemain.php</exclude-pattern>
-    </rule>
 </ruleset>

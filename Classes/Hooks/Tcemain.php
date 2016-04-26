@@ -57,6 +57,7 @@ class Tcemain
      *
      * @return void
      */
+    //@codingStandardsIgnoreLine
     public function processDatamap_afterDatabaseOperations($status, $tableName, $recordId, array $databaseData, $dataHandler)
     {
         // new entry via drag & drop don't process
@@ -133,6 +134,8 @@ class Tcemain
      * @param int    $uid            The uid of the page to update.
      * @param int    $sysLanguageUid The language uid of the page to update.
      * @param string $unityPath      The unity path to set.
+     *
+     * @return void
      */
     protected function updateRecord($uid, $sysLanguageUid, $unityPath)
     {
@@ -167,6 +170,8 @@ class Tcemain
      * @param int    $uid            The uid to find the children for.
      * @param int    $sysLanguageUid The language uid for child tree.
      * @param string $path           The current path.
+     *
+     * @return void
      */
     protected function updateSubPages($uid, $sysLanguageUid, $path)
     {
@@ -193,6 +198,8 @@ class Tcemain
      *
      * @param array  $data        The subpage to update.
      * @param string $currentPath The current path.
+     *
+     * @return void
      */
     protected function updateSubPage(array $data, $currentPath)
     {

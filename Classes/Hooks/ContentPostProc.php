@@ -29,6 +29,8 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      *
      * @param array $params
      * @param mixed $that
+     *
+     * @return void
      */
     public function hookEntry(array &$params, &$that)
     {
@@ -46,6 +48,8 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      * This method removes the meta tags with name generator.
      *
      * @param string $content The content to parse.
+     *
+     * @return void
      */
     protected function removeGenerator(&$content)
     {
@@ -56,6 +60,8 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      * This method parses meta tags with a name or property attribute into a json
      *
      * @param string $content The content to parse.
+     *
+     * @return void
      */
     protected function parseMetaTags(&$content)
     {
@@ -70,6 +76,8 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      * This method replaces link tags with the value of the href attribute.
      *
      * @param string $content The content to parse.
+     *
+     * @return void
      */
     protected function parseCss(&$content)
     {
@@ -80,6 +88,8 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      * This method replaces script tags with the value of the src attribute.
      *
      * @param string $content The content to parse.
+     *
+     * @return void
      */
     protected function parseJs(&$content)
     {

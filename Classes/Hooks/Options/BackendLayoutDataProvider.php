@@ -191,6 +191,8 @@ class BackendLayoutDataProvider implements DataProviderInterface
      * Attach Backend Layout to internal Stack
      *
      * @param mixed $backendLayout
+     *
+     * @return void
      */
     protected function attachBackendLayout($backendLayout = null)
     {
