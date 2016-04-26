@@ -165,7 +165,7 @@ class Tcemain
      * update these pages if needed.
      *
      * @param int    $uid            The uid to find the children for.
-     * @param int    $sysLanguageUid The language uid for the generation of the child tree.
+     * @param int    $sysLanguageUid The language uid for child tree.
      * @param string $path           The current path.
      */
     protected function updateSubPages($uid, $sysLanguageUid, $path)
@@ -186,10 +186,10 @@ class Tcemain
     }
 
     /**
-     * This method will check if the sub page given in $data needs an update and if so
-     * it will update the record.
-     * If the sub page has children this method will recursively call itself for each
-     * child.
+     * This method will check if the sub page given in $data needs an update and if
+     * so it will update the record.
+     * If the sub page has children this method will recursively call itself for
+     * each child.
      *
      * @param array  $data        The subpage to update.
      * @param string $currentPath The current path.
@@ -218,7 +218,8 @@ class Tcemain
     /**
      * This method builds a recursive array representing the page tree beginning with
      * the given pid.
-     * If $sysLanguageUid is given and greater 0 the translation will be used as well.
+     * If $sysLanguageUid is given and greater 0 the translation will be used as
+     * well.
      *
      * @param int $pid            The pid to generate the array for.
      * @param int $sysLanguageUid The language uid to add translations.

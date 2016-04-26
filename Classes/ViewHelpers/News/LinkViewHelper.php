@@ -28,15 +28,21 @@ class LinkViewHelper extends \Tx_News_ViewHelpers_LinkViewHelper
      *
      * @param \Tx_News_Domain_Model_News $newsItem      Current news object
      * @param array                      $settings
-     * @param bool                       $uriOnly       Return only the url without the a-tag
-     * @param array                      $configuration Optional typolink configuration
-     * @param string                     $content       Optional content which is linked
-     * @param bool                       $forceBaseUrl  Optional forces %BASE_URL% instead of %TYPO3_URL%
+     * @param bool                       $uriOnly       Return only the url
+     * @param array                      $configuration Optional typolink config
+     * @param string                     $content       Optional content to link
+     * @param bool                       $forceBaseUrl  Optional forces %BASE_URL%
      *
      * @return string Link
      */
-    public function render(\Tx_News_Domain_Model_News $newsItem, array $settings = array(), $uriOnly = false, array $configuration = array(), $content = '', $forceBaseUrl = false)
-    {
+    public function render(
+        \Tx_News_Domain_Model_News $newsItem,
+        array $settings = array(),
+        $uriOnly = false,
+        array $configuration = array(),
+        $content = '',
+        $forceBaseUrl = false
+    ) {
         $return = parent::render($newsItem, $settings, $uriOnly, $configuration, $content);
 
         if ($forceBaseUrl && Configuration::isMagentoContent()) {

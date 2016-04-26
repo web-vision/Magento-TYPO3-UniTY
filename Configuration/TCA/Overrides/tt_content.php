@@ -19,50 +19,57 @@ call_user_func(
     function () {
         $locallangDb = 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_db.xlf:tt_content.';
 
+        $exclude = 'exclude';
+        $label = 'label';
+        $config = 'config';
+        $type = 'type';
+        $check = 'check';
+        $hiddenXs = 'hidden_xs';
+        $hiddenSm = 'hidden_sm';
+        $hiddenMd = 'hidden_md';
+        $hiddenLg = 'hidden_lg';
+
         $additionalColumns = array(
-            'hidden_xs' => array(
-                'exclude' => 1,
-                'label'   => $locallangDb . 'hidden_xs',
-                'config'  => array(
-                    'type' => 'check',
+            $hiddenXs   => array(
+                $exclude => 1,
+                $label   => $locallangDb . $hiddenXs,
+                $config  => array(
+                    $type => $check,
                 ),
             ),
-            'hidden_sm' => array(
-                'exclude' => 1,
-                'label'   => $locallangDb . 'hidden_sm',
-                'config'  => array(
-                    'type' => 'check',
+            $hiddenSm   => array(
+                $exclude => 1,
+                $label   => $locallangDb . $hiddenSm,
+                $config  => array(
+                    $type => $check,
                 ),
             ),
-            'hidden_md' => array(
-                'exclude' => 1,
-                'label'   => $locallangDb . 'hidden_md',
-                'config'  => array(
-                    'type' => 'check',
+            $hiddenMd   => array(
+                $exclude => 1,
+                $label   => $locallangDb . $hiddenMd,
+                $config  => array(
+                    $type => $check,
                 ),
             ),
             'hidden_lg' => array(
-                'exclude' => 1,
-                'label'   => $locallangDb . 'hidden_lg',
-                'config'  => array(
-                    'type' => 'check',
+                $exclude => 1,
+                $label   => $locallangDb . 'hidden_lg',
+                $config  => array(
+                    $type => $check,
                 ),
             ),
         );
+
+        $addFields = $hiddenXs . ';' . $locallangDb . $hiddenXs . ', ';
+        $addFields .= $hiddenSm . ';' . $locallangDb . $hiddenSm . ', ';
+        $addFields .= $hiddenMd . ';' . $locallangDb . $hiddenMd . ', ';
+        $addFields .= $hiddenLg . ';' . $locallangDb . $hiddenLg;
 
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tt_content', $additionalColumns);
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette(
             'tt_content',
             'responsive',
-            'hidden_xs;'
-            . $locallangDb
-            . 'hidden_xs, hidden_sm;'
-            . $locallangDb
-            . 'hidden_sm, hidden_md;'
-            . $locallangDb
-            . 'hidden_md, hidden_lg;'
-            . $locallangDb
-            . 'hidden_lg'
+            $addFields
         );
 
         // WVTODO add palett responsive to all types after frames

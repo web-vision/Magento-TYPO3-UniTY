@@ -79,6 +79,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class BackendLayoutDataProvider implements DataProviderInterface
 {
+    const CONFIG     = 'config';
+    const CONFIG_DOT = 'config.';
+    const TITLE      = 'title';
+    const ICON       = 'icon';
+    const UID        = 'uid';
+
     /**
      * Internal Backend Layout stack
      *
@@ -160,15 +166,19 @@ class BackendLayoutDataProvider implements DataProviderInterface
      */
     protected function generateBackendLayoutFromTsConfig($identifier, $data)
     {
-        if (!empty($data['config.']['backend_layout.']) && is_array($data['config.']['backend_layout.'])) {
-            $backendLayout['uid'] = substr($identifier, 0, -1);
-            $backendLayout['title'] = ($data['title']) ? $data['title'] : $backendLayout['uid'];
-            $backendLayout['icon'] = ($data['icon']) ? $data['icon'] : '';
+        if (!empty($data[static::CONFIG_DOT]['backend_layout.'])
+            && is_array(
+                $data[static::CONFIG_DOT]['backend_layout.']
+            )
+        ) {
+            $backendLayout[static::UID] = substr($identifier, 0, -1);
+            $backendLayout[static::TITLE] = ($data[static::TITLE]) ? $data[static::TITLE] : $backendLayout[static::UID];
+            $backendLayout[static::ICON] = ($data[static::ICON]) ? $data[static::ICON] : '';
             /* Convert PHP array back to plain TypoScript so it can be procecced */
-            $config = \TYPO3\CMS\Core\Utility\ArrayUtility::flatten($data['config.']);
-            $backendLayout['config'] = '';
+            $config = \TYPO3\CMS\Core\Utility\ArrayUtility::flatten($data[static::CONFIG_DOT]);
+            $backendLayout[static::CONFIG] = '';
             foreach ($config as $row => $value) {
-                $backendLayout['config'] .= $row . " = " . $value . "\r\n";
+                $backendLayout[static::CONFIG] .= $row . " = " . $value . "\r\n";
             }
 
             return $backendLayout;
@@ -185,7 +195,7 @@ class BackendLayoutDataProvider implements DataProviderInterface
     protected function attachBackendLayout($backendLayout = null)
     {
         if ($backendLayout) {
-            $this->backendLayouts[$backendLayout['uid']] = $backendLayout;
+            $this->backendLayouts[$backendLayout[static::UID]] = $backendLayout;
         }
     }
 
@@ -232,8 +242,8 @@ class BackendLayoutDataProvider implements DataProviderInterface
      */
     protected function createBackendLayout(array $data)
     {
-        $backendLayout = BackendLayout::create($data['uid'], $data['title'], $data['config']);
-        $backendLayout->setIconPath($this->getIconPath($data['icon']));
+        $backendLayout = BackendLayout::create($data[static::UID], $data[static::TITLE], $data[static::CONFIG]);
+        $backendLayout->setIconPath($this->getIconPath($data[static::ICON]));
         $backendLayout->setData($data);
 
         return $backendLayout;

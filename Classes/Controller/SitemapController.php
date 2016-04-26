@@ -52,7 +52,7 @@ class SitemapController
      * Generates a XML sitemap from the page structure, entry point for the page
      *
      * @param string $content       The content to be filled, usually empty
-     * @param array  $configuration Additional configuration parameters given via TypoScript
+     * @param array  $configuration Additional configuration parameters
      *
      * @return string The XML sitemap ready to render
      */
@@ -138,17 +138,11 @@ class SitemapController
                 $this->tree[$row['uid']] = $row;
 
                 if ($sysLanguageUid) {
+                    $where = 'pid=' . $row['uid'] . ' ';
+                    $where .= BackendUtility::deleteClause('pages_language_overlay') . ' ';
+                    $where .= 'AND sys_language_uid = '. $sysLanguageUid;
                     // get localized data
-                    $langResultSet = $this->db->exec_SELECTquery(
-                        $fields,
-                        'pages_language_overlay',
-                        'pid='
-                        . $row['uid']
-                        . ' '
-                        . BackendUtility::deleteClause('pages_language_overlay')
-                        . ' AND sys_language_uid = '
-                        . $sysLanguageUid
-                    );
+                    $langResultSet = $this->db->exec_SELECTquery($fields, 'pages_language_overlay', $where);
                     $langResult = $this->db->sql_fetch_assoc($langResultSet);
                     $langResult[static::COLUMN_UNITY_PATH] = $prefix . $langResult[static::COLUMN_UNITY_PATH];
                     $this->tree[$row['uid']]['lang'] = $langResult;
