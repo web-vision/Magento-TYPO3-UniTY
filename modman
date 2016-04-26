@@ -1,1 +1,6 @@
-wv_t3unity/ typo3conf/ext/wv_t3unity/
+# wv_t3unity definition
+Classes         typo3conf/ext/wv_t3unity/Classes
+Configuration   typo3conf/ext/wv_t3unity/Configuration
+Resources       typo3conf/ext/wv_t3unity/Resources
+*.php           typo3conf/ext/wv_t3unity/
+*.sql           typo3conf/ext/wv_t3unity/
