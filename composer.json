@@ -12,6 +12,6 @@
         }
     },
     "require": {
-        "typo3-ter/realurl": "2.*"
+        "typo3-ter/realurl": "~2.0"
     }
 }
