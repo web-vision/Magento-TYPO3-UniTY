@@ -21,25 +21,25 @@ use WebVision\WvT3unity\Utility\Configuration;
  *
  * @author Tim Werdin <t.werdin@web-vision.de>
  */
-class LinkViewHelper extends \Tx_News_ViewHelpers_LinkViewHelper
+class LinkViewHelper extends GeorgRinger\News\ViewHelpers\LinkViewHelper
 {
     /**
      * Render link to news item or internal/external pages
      *
-     * @param \Tx_News_Domain_Model_News $newsItem      Current news object
-     * @param array                      $settings
-     * @param bool                       $uriOnly       Return only the url
-     * @param array                      $configuration Optional typolink config
-     * @param string                     $content       Optional content to link
-     * @param bool                       $forceBaseUrl  Optional forces %BASE_URL%
+     * @param \GeorgRinger\News\Domain\Model\News $newsItem current news object
+     * @param array $settings
+     * @param bool $uriOnly return only the url without the a-tag
+     * @param array $configuration optional typolink configuration
+     * @param string $content optional content which is linked
+     * @param bool $forceBaseUrl Optional forces %BASE_URL%
      *
      * @return string Link
      */
     public function render(
-        \Tx_News_Domain_Model_News $newsItem,
-        array $settings = array(),
+        \GeorgRinger\News\Domain\Model\News $newsItem,
+        array $settings = [],
         $uriOnly = false,
-        array $configuration = array(),
+        $configuration = [],
         $content = '',
         $forceBaseUrl = false
     ) {
