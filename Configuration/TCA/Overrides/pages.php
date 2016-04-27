@@ -69,9 +69,5 @@ call_user_func(
 
         // remove tx_realurl_pathoverride from backend
         $GLOBALS['TCA'][$pages]['palettes']['137']['showitem'] = '';
-
-        // register BackendLayoutDataProvider to add own backend layouts
-        $providerClass = 'WebVision\WvT3unity\Hooks\Options\BackendLayoutDataProvider';
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['wv_t3unity'] = $providerClass;
     }
 );
