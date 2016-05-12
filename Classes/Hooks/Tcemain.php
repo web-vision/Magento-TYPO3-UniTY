@@ -240,7 +240,7 @@ class Tcemain
             $pid = abs($pid);
         }
         $treeList = array();
-        if ($pid) {
+        if (!$pid) {
             return $treeList;
         }
 

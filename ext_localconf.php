@@ -15,7 +15,7 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-$GLOBALS['TYPO3_CONF_VARS']['FE']['pageOverlayFields'] .= ',unity_path,canonical_url';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['pageOverlayFields'] .= ',canonical_url';
 
 \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'],
