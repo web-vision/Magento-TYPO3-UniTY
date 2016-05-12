@@ -161,6 +161,8 @@ tx_wvt3unity_menu {
             default {
                 special = directory
                 special.value.data = GP:special-value
+                excludeUidList.value.data = GP:exclude-uid-list
+                entryLevel.value.data = GP:entry-level
 
                 wrap = <nav class="t3-menu t3-directory">|</nav>
 
