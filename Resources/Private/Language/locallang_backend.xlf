@@ -17,13 +17,13 @@
             </trans-unit>
 
             <trans-unit id="backend_layout.column.content">
-                <source>Content</source>
+                <source>Content [1]</source>
             </trans-unit>
             <trans-unit id="backend_layout.column.sidebar_left">
-                <source>Sidebar left</source>
+                <source>Sidebar left [2]</source>
             </trans-unit>
             <trans-unit id="backend_layout.column.sidebar_right">
-                <source>Sidebar right</source>
+                <source>Sidebar right [3]</source>
             </trans-unit>
         </body>
     </file>
