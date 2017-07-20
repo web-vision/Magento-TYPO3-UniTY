@@ -1,3 +1,40 @@
+page {
+    meta {
+        X-UA-Compatible >
+    }
+
+    10 {
+        templateName.stdWrap {
+            ifEmpty = 1column
+        }
+
+        templateRootPaths {
+            10 = EXT:wv_t3unity/Resources/Private/Templates/
+        }
+
+        partialRootPaths {
+            10 = EXT:wv_t3unity/Resources/Private/Partials/
+        }
+
+        layoutRootPaths {
+            10 = EXT:wv_t3unity/Resources/Private/Layouts/
+        }
+
+        // Set variables in templates and render content
+        // Variables in template
+        variables {
+            content < styles.content.get
+            content.select.where = colPos=1
+
+            sidebarLeft < styles.content.get
+            sidebarLeft.select.where = colPos=2
+
+            sidebarRight < styles.content.get
+            sidebarRight.select.where = colPos=3
+        }
+    }
+}
+
 tx_wvt3unity_abstract = PAGE
 tx_wvt3unity_abstract.config {
     disableAllHeaderCode = 1
@@ -66,51 +103,11 @@ tx_wvt3unity_head {
 }
 
 // mode page
-tx_wvt3unity_page < tx_wvt3unity_abstract
+tx_wvt3unity_page < page
 tx_wvt3unity_page {
     typeNum = 3211
 
-    10 = FLUIDTEMPLATE
-    10 {
-        // Define BE Layouts
-        file.stdWrap.cObject = CASE
-        file.stdWrap.cObject {
-            key.data = levelfield:-1, backend_layout_next_level, slide
-            key.override.field = backend_layout
-
-            default = TEXT
-            default.value = {$plugin.tx_wvt3unity.templatePath}1column.html
-
-            pagets__1column = TEXT
-            pagets__1column.value = {$plugin.tx_wvt3unity.templatePath}1column.html
-
-            pagets__2columns-left = TEXT
-            pagets__2columns-left.value = {$plugin.tx_wvt3unity.templatePath}2columns-left.html
-
-            pagets__2columns-right = TEXT
-            pagets__2columns-right.value = {$plugin.tx_wvt3unity.templatePath}2columns-right.html
-
-            pagets__3columns = TEXT
-            pagets__3columns.value = {$plugin.tx_wvt3unity.templatePath}3columns.html
-        }
-
-        // Define paths for templates
-        partialRootPath = EXT:wv_t3unity/Resources/Private/Partials/
-        layoutRootPath = EXT:wv_t3unity/Resources/Private/Layouts/
-
-        // Set variables in templates and render content
-        // Variables in template
-        variables {
-            content < styles.content.get
-            content.select.where = colPos=1
-
-            sidebar_left < styles.content.get
-            sidebar_left.select.where = colPos=2
-
-            sidebar_right < styles.content.get
-            sidebar_right.select.where = colPos=3
-        }
-    }
+    config < tx_wvt3unity_abstract.config
 }
 
 // mode column
