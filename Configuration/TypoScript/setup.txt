@@ -24,13 +24,13 @@ page {
         // Variables in template
         variables {
             content < styles.content.get
-            content.select.where = colPos=0
+            content.select.where = colPos=1
 
             sidebarLeft < styles.content.get
-            sidebarLeft.select.where = colPos=1
+            sidebarLeft.select.where = colPos=2
 
             sidebarRight < styles.content.get
-            sidebarRight.select.where = colPos=2
+            sidebarRight.select.where = colPos=3
         }
     }
 }

@@ -12,7 +12,7 @@ mod {
                                 columns {
                                     1 {
                                         name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
-                                        colPos = 0
+                                        colPos = 1
                                     }
                                 }
                             }
@@ -32,13 +32,13 @@ mod {
                                 columns {
                                     1 {
                                         name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_left
-                                        colPos = 1
+                                        colPos = 2
                                         colspan = 1
                                     }
 
                                     2 {
                                         name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
-                                        colPos = 0
+                                        colPos = 1
                                         colspan = 2
                                     }
                                 }
@@ -59,13 +59,13 @@ mod {
                                 columns {
                                     1 {
                                         name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
-                                        colPos = 0
+                                        colPos = 1
                                         colspan = 2
                                     }
 
                                     2 {
                                         name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_right
-                                        colPos = 2
+                                        colPos = 3
                                         colspan = 1
                                     }
                                 }
@@ -86,19 +86,19 @@ mod {
                                 columns {
                                     1 {
                                         name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_left
-                                        colPos = 1
+                                        colPos = 2
                                         colspan = 1
                                     }
 
                                     2 {
                                         name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
-                                        colPos = 0
+                                        colPos = 1
                                         colspan = 2
                                     }
 
                                     3 {
                                         name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_right
-                                        colPos = 2
+                                        colPos = 3
                                         colspan = 1
                                     }
                                 }
