@@ -15,13 +15,14 @@ namespace WebVision\WvT3unity\Hooks;
  */
 
 use WebVision\WvT3unity\Utility\Configuration;
+use \TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 
 /**
  * This class renders all meta data as json
  *
  * @author Tim Werdin <t.werdin@web-vision.de>
  */
-class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
+class ContentPostProc extends AbstractPlugin
 {
     /**
      * This method get's called by the hook and will parse the html head data into a
@@ -67,7 +68,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
     {
         $content = preg_replace_callback(
             '/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/s',
-            array($this, 'metaCallback'),
+            [$this, 'metaCallback'],
             $content
         );
     }
@@ -106,7 +107,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      */
     public function metaCallback(array $matches)
     {
-        $matches[3] = str_replace(array("\r\n", "\n"), ' ', $matches[3]);
+        $matches[3] = str_replace(["\r\n", "\n"], ' ', $matches[3]);
 
         return '{"' . $matches[1] . '": "' . $matches[2] . '", "content":"' . $matches[3] . '"},';
     }

@@ -1,4 +1,3 @@
-// mode sitemap
 tx_wvt3unity_xmlsitemap = PAGE
 tx_wvt3unity_xmlsitemap {
     typeNum = 3215
@@ -13,5 +12,7 @@ tx_wvt3unity_xmlsitemap {
     }
 
     10 = USER
-    10.userFunc = WebVision\WvT3unity\Controller\SitemapController->renderXmlSitemap
+    10 {
+        userFunc = WebVision\WvT3unity\Controller\SitemapController->renderXmlSitemap
+    }
 }

@@ -24,7 +24,7 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 class Configuration extends ConfigurationManager
 {
     /**
-     * @param null|int    $pageType
+     * @param null|int $pageType
      * @param null|string $unityType
      *
      * @return bool
@@ -35,19 +35,19 @@ class Configuration extends ConfigurationManager
             $pageType = $GLOBALS['TSFE']->type;
         }
 
-        $unityTypes = array(
+        $unityTypes = [
             'head',
             'page',
             'column',
             'element',
             'menu',
-        );
+        ];
 
         if ($unityType !== null && in_array($unityType, $unityTypes)) {
-            $unityTypes = array($unityType);
+            $unityTypes = [$unityType];
         }
 
-        $unityTypeNums = array();
+        $unityTypeNums = [];
         foreach ($unityTypes as $unityType) {
             if (($config = $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_' . $unityType . '.']['typeNum']) !== null) {
                 $unityTypeNums[] = $config;

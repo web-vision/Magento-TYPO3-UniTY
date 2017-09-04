@@ -1,10 +1,14 @@
-<f:layout name="Default"/>
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+    <f:layout name="Default"/>
 
-<f:section name="content">
-    <div class="col-main">
-        <f:format.raw>{content}</f:format.raw>
-    </div>
-    <div class="col-right sidebar">
-        <f:format.raw>{sidebarRight}</f:format.raw>
-    </div>
-</f:section>
+    <f:section name="content">
+        <div class="col-main">
+            <f:format.raw>{content}</f:format.raw>
+        </div>
+        <div class="col-right sidebar">
+            <f:format.raw>{sidebarRight}</f:format.raw>
+        </div>
+    </f:section>
+</html>

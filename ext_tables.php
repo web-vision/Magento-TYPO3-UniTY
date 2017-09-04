@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -11,19 +12,10 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
-if (!defined('TYPO3_MODE')) {
-    die('Access denied.');
-}
 
-// load PageTSConfig
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
-    '<INCLUDE_TYPOSCRIPT: source="DIR:EXT:' . $_EXTKEY . '/Configuration/PageTS">'
-);
+call_user_func(
+    function ($extKey) {
 
-// add static Typoscript
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'Unity Basic');
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    $_EXTKEY,
-    'Configuration/TypoScript/XmlSitemap',
-    'Unity XML Sitemap'
+    },
+    $_EXTKEY
 );

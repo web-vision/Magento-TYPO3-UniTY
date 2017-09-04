@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -11,24 +12,25 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
-$EM_CONF[$_EXTKEY] = array(
-    'title'            => 'Unity',
-    'description'      => 'Connects TYPO3 with Magento',
-    'category'         => 'services',
-    'author'           => 'Tim Werdin ',
-    'author_email'     => 't.werdin@web-vision.de',
-    'state'            => 'alpha',
-    'internal'         => '',
-    'uploadfolder'     => '0',
-    'createDirs'       => '',
+
+$EM_CONF[$_EXTKEY] = [
+    'title' => 'Unity',
+    'description' => 'Connects TYPO3 with Magento',
+    'category' => 'services',
+    'author' => 'Tim Werdin ',
+    'author_email' => 't.werdin@web-vision.de',
+    'state' => 'alpha',
+    'internal' => '',
+    'uploadfolder' => '0',
+    'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'version'          => '3.1.0',
-    'constraints'      => array(
-        'depends'   => array(
-            'typo3'   => '7.0.0-8.99.99',
+    'version' => '3.1.0',
+    'constraints' => [
+        'depends' => [
+            'typo3' => '7.0.0-8.99.99',
             'realurl' => '2.0.0-2.99.99',
-        ),
-        'conflicts' => array(),
-        'suggests'  => array(),
-    ),
+        ],
+        'conflicts' => [],
+        'suggests'  => [],
+    ],
 );

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -11,51 +12,52 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'] = array(
-    '_DEFAULT' => array(
-        'init'        => array(
-            'appendMissingSlash'  => 'ifNotFile,redirect',
+
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'] = [
+    '_DEFAULT' => [
+        'init' => [
+            'appendMissingSlash' => 'ifNotFile,redirect',
             'emptyUrlReturnValue' => '/cms/',
-        ),
-        'pagePath'    => array(
-            'rootpage_id'    => '1',
-        ),
-        'fileName'    => array(
+        ],
+        'pagePath' => [
+            'rootpage_id' => '1',
+        ],
+        'fileName' => [
             'defaultToHTMLsuffixOnPrev' => 1,
-            'acceptHTMLsuffix'          => 1,
-        ),
-        'postVarSets' => array(
-            '_DEFAULT' => array(
-                'news' => array(
-                    array(
-                        'GETvar'   => 'tx_news_pi1[action]',
-                        'valueMap' => array(
+            'acceptHTMLsuffix' => 1,
+        ],
+        'postVarSets' => [
+            '_DEFAULT' => [
+                'news' => [
+                    [
+                        'GETvar' => 'tx_news_pi1[action]',
+                        'valueMap' => [
                             'detail' => '',
-                        ),
-                        'noMatch'  => 'bypass',
-                    ),
-                    array(
-                        'GETvar'   => 'tx_news_pi1[controller]',
-                        'valueMap' => array(
+                        ],
+                        'noMatch' => 'bypass',
+                    ],
+                    [
+                        'GETvar' => 'tx_news_pi1[controller]',
+                        'valueMap' => [
                             'News' => '',
-                        ),
-                        'noMatch'  => 'bypass',
-                    ),
-                    array(
-                        'GETvar'      => 'tx_news_pi1[news]',
-                        'lookUpTable' => array(
-                            'table'               => 'tx_news_domain_model_news',
-                            'id_field'            => 'uid',
-                            'alias_field'         => 'concat(title,"-",uid)',
-                            'useUniqueCache'      => 1,
-                            'useUniqueCache_conf' => array(
-                                'strtolower'     => 1,
+                        ],
+                        'noMatch' => 'bypass',
+                    ],
+                    [
+                        'GETvar' => 'tx_news_pi1[news]',
+                        'lookUpTable' => [
+                            'table' => 'tx_news_domain_model_news',
+                            'id_field' => 'uid',
+                            'alias_field' => 'concat(title,"-",uid)',
+                            'useUniqueCache' => 1,
+                            'useUniqueCache_conf' => [
+                                'strtolower' => 1,
                                 'spaceCharacter' => '-',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 );

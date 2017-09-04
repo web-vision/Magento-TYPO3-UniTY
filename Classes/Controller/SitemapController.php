@@ -32,7 +32,7 @@ class SitemapController
      *
      * @var array
      */
-    protected $sitemapConfiguration = array();
+    protected $sitemapConfiguration = [];
 
     /**
      * Holds the database class for easier access throughout the class.
@@ -46,13 +46,13 @@ class SitemapController
      *
      * @var array
      */
-    protected $tree = array();
+    protected $tree = [];
 
     /**
      * Generates a XML sitemap from the page structure, entry point for the page
      *
-     * @param string $content       The content to be filled, usually empty
-     * @param array  $configuration Additional configuration parameters
+     * @param string $content The content to be filled, usually empty
+     * @param array configuration Additional configuration parameters
      *
      * @return string The XML sitemap ready to render
      */
@@ -69,10 +69,10 @@ class SitemapController
         if (array_key_exists('excludeUid', $this->sitemapConfiguration)) {
             $excludedPageUids = GeneralUtility::trimExplode(',', $this->sitemapConfiguration['excludeUid'], true);
         } else {
-            $excludedPageUids = array();
+            $excludedPageUids = [];
         }
 
-        $usedUrls = array();
+        $usedUrls = [];
         foreach ($treeRecords as $item) {
             // don't render spacers, sysfolders etc
             if ($item['doktype'] >= 199) {
@@ -94,17 +94,22 @@ class SitemapController
                 $item = $item['lang'];
             }
 
-            $url = $item[static::COLUMN_CANONICAL_URL] ? $item[static::COLUMN_CANONICAL_URL] : $item[static::COLUMN_UNITY_PATH];
+            if ($item[static::COLUMN_CANONICAL_URL]) {
+                $url = $item[static::COLUMN_CANONICAL_URL];
+            } else {
+                $url = $item[static::COLUMN_UNITY_PATH];
+            }
+
             $realUrl = $item[static::COLUMN_CANONICAL_URL] ? $item[static::COLUMN_UNITY_PATH] : '';
             $lastmod = $item['SYS_LASTCHANGED'] ? $item['SYS_LASTCHANGED'] : $item['crdate'];
 
             $lastmod = date('c', $lastmod);
 
-            $usedUrls[$item['uid']] = array(
+            $usedUrls[$item['uid']] = [
                 'url'      => ltrim($url, '/'),
                 'real_url' => ltrim($realUrl, '/'),
                 'lastmod'  => $lastmod,
-            );
+            ];
         }
 
         return json_encode($usedUrls);
@@ -113,9 +118,9 @@ class SitemapController
     /**
      * Fetches the pages needed from the tree component.
      *
-     * @param int    $pid            The pid to start with.
-     * @param int    $sysLanguageUid The language uid.
-     * @param string $prefix         The prefix for the path.
+     * @param int $pid The pid to start with.
+     * @param int $sysLanguageUid The language uid.
+     * @param string $prefix The prefix for the path.
      *
      * @return array
      */
