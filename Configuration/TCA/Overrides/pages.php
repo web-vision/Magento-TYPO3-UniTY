@@ -16,7 +16,7 @@
 call_user_func(
     function ($extKey, $table) {
         // Localization paths
-        $locallang = 'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_db.xlf:';
+        $locallang = 'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang.xlf:';
 
         // Configuration keys
         $config = 'config';
@@ -62,6 +62,12 @@ call_user_func(
 
         // Remove tx_realurl_pathoverride from backend
         $GLOBALS['TCA'][$pages]['palettes']['137']['showitem'] = '';
+
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
+            $extKey,
+            'Configuration/PageTS/Include.ts',
+            'web-vision UniTY - Config'
+        );
     },
     'wv_t3unity',
     'pages'

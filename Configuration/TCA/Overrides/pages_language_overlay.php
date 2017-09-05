@@ -11,14 +11,11 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
-if (!defined('TYPO3_MODE')) {
-    die('Access denied.');
-}
 
 call_user_func(
     function ($extKey, $table) {
         // Localization paths
-        $locallang = 'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_db.xlf:';
+        $locallang = 'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang.xlf:';
 
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns(
             $table,

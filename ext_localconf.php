@@ -25,14 +25,14 @@ call_user_func(
                 'SC_OPTIONS' => [
                     't3lib/class.t3lib_tcemain.php' => [
                         'processDatamapClass' => [
-                            $extKey => 'WebVision\WvT3unity\Hooks\Tcemain',
+                            $extKey => WebVision\WvT3unity\Hooks\Tcemain::class,
                         ],
-                        'processCmdmapClass'  => [
-                            $extKey => 'WebVision\WvT3unity\Hooks\Tcemain',
+                        'processCmdmapClass' => [
+                            $extKey => WebVision\WvT3unity\Hooks\Tcemain::class,
                         ],
                     ],
-                    'tslib/class.tslib_fe.php'      => [
-                        'contentPostProc-all'    => [
+                    'tslib/class.tslib_fe.php' => [
+                        'contentPostProc-all' => [
                             $extKey => 'WebVision\WvT3unity\Hooks\ContentPostProc->hookEntry',
                         ],
                         'contentPostProc-output' => [

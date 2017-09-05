@@ -1,6 +1,6 @@
 // Element mode
-tx_wvt3unity_element < tx_wvt3unity_abstract
-tx_wvt3unity_element {
+UnityElement < UnityAbstractConfig
+UnityElement {
     typeNum = 3213
 
     10 = TEMPLATE

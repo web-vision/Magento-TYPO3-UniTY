@@ -1,5 +1,5 @@
-tx_wvt3unity_xmlsitemap = PAGE
-tx_wvt3unity_xmlsitemap {
+UnityXmlSitemap = PAGE
+UnityXmlSitemap {
     typeNum = 3215
 
     config {

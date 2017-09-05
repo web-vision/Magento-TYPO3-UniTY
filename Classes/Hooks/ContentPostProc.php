@@ -14,7 +14,7 @@ namespace WebVision\WvT3unity\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use WebVision\WvT3unity\Utility\Configuration;
+use \WebVision\WvT3unity\Utility\Configuration;
 use \TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 
 /**

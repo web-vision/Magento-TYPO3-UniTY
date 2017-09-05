@@ -1,6 +1,6 @@
 // Header data
-tx_wvt3unity_head < page
-tx_wvt3unity_head {
+UnityHead < UnityAbstractConfig
+UnityHead {
     typeNum = 3210
 
     config {

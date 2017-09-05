@@ -1,0 +1,34 @@
+// Column mode
+UnityColumn < UnityAbstractConfig
+UnityColumn {
+    typeNum = 3212
+
+    10 = TEMPLATE
+    10 {
+        template = TEXT
+        template {
+            value = ###CONTENT###
+        }
+
+        marks {
+            CONTENT < styles.content.get
+            CONTENT {
+                select {
+                    where = colPos = {GP:colPos}
+                    where {
+                        insertData = 1
+
+                        override = colPos = 1
+                        override {
+                            if {
+                                isFalse {
+                                    data = GP:colPos
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

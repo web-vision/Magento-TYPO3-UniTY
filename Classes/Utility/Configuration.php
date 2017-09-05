@@ -14,7 +14,7 @@ namespace WebVision\WvT3unity\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use \TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 
 /**
  * This class provides some helper functions for configuration values.
@@ -36,11 +36,11 @@ class Configuration extends ConfigurationManager
         }
 
         $unityTypes = [
-            'head',
-            'page',
-            'column',
-            'element',
-            'menu',
+            'Head',
+            'Page',
+            'Column',
+            'Element',
+            'Menu',
         ];
 
         if ($unityType !== null && in_array($unityType, $unityTypes)) {
@@ -49,7 +49,7 @@ class Configuration extends ConfigurationManager
 
         $unityTypeNums = [];
         foreach ($unityTypes as $unityType) {
-            if (($config = $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_' . $unityType . '.']['typeNum']) !== null) {
+            if (($config = $GLOBALS['TSFE']->tmpl->setup['Unity' . $unityType . '.']['typeNum']) !== null) {
                 $unityTypeNums[] = $config;
             }
         }

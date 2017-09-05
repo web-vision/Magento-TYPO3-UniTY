@@ -1,0 +1,84 @@
+# Temporary default page configuration
+temp {
+    UnityDefaultPage = PAGE
+    UnityDefaultPage {
+        10 = FLUIDTEMPLATE
+        10 {
+            templateName = TEXT
+            templateName {
+                stdWrap {
+                    cObject = TEXT
+                    cObject {
+                        data = levelfield:-2, backend_layout_next_level, slide
+                        override {
+                            field = backend_layout
+                        }
+
+                        split {
+                            token = pagets__
+                            1 {
+                                current = 1
+                                wrap = |
+                            }
+                        }
+                    }
+
+                    ifEmpty = 1column
+                }
+            }
+
+            templateRootPaths {
+                10 = EXT:wv_t3unity/Resources/Private/Templates/
+            }
+
+            partialRootPaths {
+                10 = EXT:wv_t3unity/Resources/Private/Partials/
+            }
+
+            layoutRootPaths {
+                10 = EXT:wv_t3unity/Resources/Private/Layouts/
+            }
+
+            // Set variables in templates and render content
+            // Variables in template
+            variables {
+                content < styles.content.get
+                content {
+                    select {
+                        where = colPos = 1
+                    }
+                }
+
+                sidebarLeft < styles.content.get
+                sidebarLeft {
+                    select {
+                        where = colPos = 2
+                    }
+                }
+
+                sidebarRight < styles.content.get
+                sidebarRight {
+                    select {
+                        where = colPos = 3
+                    }
+                }
+            }
+        }
+
+        meta {
+            viewport = width=device-width, initial-scale=1
+
+            description {
+                field = description
+            }
+
+            author {
+                field = author
+            }
+
+            keywords {
+                field = keywords
+            }
+        }
+    }
+}

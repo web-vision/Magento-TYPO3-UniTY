@@ -1,6 +1,6 @@
 // Abstract mode
-tx_wvt3unity_abstract = PAGE
-tx_wvt3unity_abstract {
+UnityAbstractConfig < temp.UnityDefaultPage
+UnityAbstractConfig {
     config {
         disableAllHeaderCode = 1
         metaCharset = UTF-8
