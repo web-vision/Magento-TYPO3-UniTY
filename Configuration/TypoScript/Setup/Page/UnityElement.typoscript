@@ -1,18 +1,15 @@
 // Element mode
-UnityElement < UnityAbstractConfig
+UnityElement < temp.UnityDefaultPage
 UnityElement {
     typeNum = 3213
 
-    10 = TEMPLATE
     10 {
-        template = TEXT
-        template {
-            value = ###CONTENT###
-        }
+        templateName >
+        templateName = Element
 
-        marks {
-            CONTENT = RECORDS
-            CONTENT {
+        variables {
+            content = RECORDS
+            content {
                 tables = tt_content
                 dontCheckPid = 1
                 source {

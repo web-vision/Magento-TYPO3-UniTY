@@ -1,5 +1,5 @@
 // Menu mode
-UnityMenu < UnityAbstractConfig
+UnityMenu < temp.UnityDefaultPage
 UnityMenu {
     typeNum = 3214
 
@@ -42,6 +42,7 @@ UnityMenu {
                 1 {
                     expAll = 1
                     wrap = <ul class="t3-menu-list">|</ul>
+
                     NO = 1
                     NO {
                         wrapItemAndSub(
@@ -123,6 +124,7 @@ UnityMenu {
             list {
                 wrap = <nav class="t3-menu t3-list">|</nav>
                 special = list
+
                 1 {
                     expAll = 1
                     IFSUB < .NO
@@ -135,8 +137,10 @@ UnityMenu {
         menuItem {
             default {
                 wrap >
+
                 1 {
                     wrap >
+
                     NO {
                         wrapItemAndSub = <li>|</li>
                     }
@@ -157,8 +161,10 @@ UnityMenu {
 
             list {
                 wrap >
+
                 1 {
                     wrap >
+
                     NO {
                         wrapItemAndSub = <li>|</li>
                     }

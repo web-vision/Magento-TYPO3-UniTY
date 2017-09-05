@@ -2,6 +2,13 @@
 temp {
     UnityDefaultPage = PAGE
     UnityDefaultPage {
+        config {
+            disableAllHeaderCode = 1
+            metaCharset = UTF-8
+            absRefPrefix = %BASE_URL%/
+            tx_realurl_enable = 1
+        }
+
         10 = FLUIDTEMPLATE
         10 {
             templateName = TEXT
@@ -10,6 +17,7 @@ temp {
                     cObject = TEXT
                     cObject {
                         data = levelfield:-2, backend_layout_next_level, slide
+
                         override {
                             field = backend_layout
                         }
@@ -23,13 +31,14 @@ temp {
                         }
                     }
 
-                    ifEmpty = 1column
+                    ifEmpty = OneColumn
                 }
             }
 
             templateRootPaths {
                 10 = {$plugin.tx_wvt3unity.paths.templates.pageRenderer}
-                20 = {$plugin.tx_wvt3unity.paths.templates}
+                20 = {$plugin.tx_wvt3unity.paths.templates.pageRenderer.unity}
+                30 = {$plugin.tx_wvt3unity.paths.templates}
             }
 
             partialRootPaths {
@@ -67,8 +76,6 @@ temp {
         }
 
         meta {
-            viewport = width=device-width, initial-scale=1
-
             description {
                 field = description
             }

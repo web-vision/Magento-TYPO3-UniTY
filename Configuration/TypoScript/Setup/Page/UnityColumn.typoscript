@@ -1,18 +1,15 @@
 // Column mode
-UnityColumn < UnityAbstractConfig
+UnityColumn < temp.UnityDefaultPage
 UnityColumn {
     typeNum = 3212
 
-    10 = TEMPLATE
     10 {
-        template = TEXT
-        template {
-            value = ###CONTENT###
-        }
+        templateName >
+        templateName = Column
 
-        marks {
-            CONTENT < styles.content.get
-            CONTENT {
+        variables {
+            content < styles.content.get
+            content {
                 select {
                     where = colPos = {GP:colPos}
                     where {

@@ -29,10 +29,10 @@ call_user_func(
                     ],
                     'tslib/class.tslib_fe.php' => [
                         'contentPostProc-all' => [
-                            $extKey => 'WebVision\WvT3unity\Hooks\ContentPostProc->hookEntry',
+                            $extKey => WebVision\WvT3unity\Hooks\ContentPostProc::class . '->hookEntry',
                         ],
                         'contentPostProc-output' => [
-                            $extKey => 'WebVision\WvT3unity\Hooks\ContentPostProc->hookEntry',
+                            $extKey => WebVision\WvT3unity\Hooks\ContentPostProc::class . '->hookEntry',
                         ],
                     ],
                 ],

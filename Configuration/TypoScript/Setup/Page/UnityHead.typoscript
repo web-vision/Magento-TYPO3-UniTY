@@ -1,5 +1,5 @@
 // Header data
-UnityHead < UnityAbstractConfig
+UnityHead < temp.UnityDefaultPage
 UnityHead {
     typeNum = 3210
 
@@ -55,7 +55,7 @@ UnityHead {
 
     10 {
         templateName >
-        templateName = PageRendererContent
+        templateName = Head
 
         variables {
             title = TEXT
