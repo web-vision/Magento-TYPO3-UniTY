@@ -28,15 +28,16 @@ temp {
             }
 
             templateRootPaths {
-                10 = EXT:wv_t3unity/Resources/Private/Templates/
+                10 = {$plugin.tx_wvt3unity.paths.templates.pageRenderer}
+                20 = {$plugin.tx_wvt3unity.paths.templates}
             }
 
             partialRootPaths {
-                10 = EXT:wv_t3unity/Resources/Private/Partials/
+                10 = {$plugin.tx_wvt3unity.paths.partials}
             }
 
             layoutRootPaths {
-                10 = EXT:wv_t3unity/Resources/Private/Layouts/
+                10 = {$plugin.tx_wvt3unity.paths.layouts}
             }
 
             // Set variables in templates and render content
