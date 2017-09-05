@@ -6,7 +6,12 @@ UnityHead {
     config {
         absRefPrefix = %TYPO3_URL%/
         // set proper content type
-        additionalHeaders = Content-Type: application/json; charset=utf-8
+        additionalHeaders {
+            10 {
+                header = Content-Type: application/json; charset=utf-8
+                replace = 1
+            }
+        }
         // disable parsetime output
         debug = 0
         // make sure that header data is fetched
@@ -14,7 +19,7 @@ UnityHead {
         // disable body tag
         disableBodyTag = 1
         // change template for rendering the whole page
-        pageRendererTemplateFile = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/PageRenderer.html
+        pageRendererTemplateFile = {$plugin.tx_wvt3unity.paths.templates}PageRenderer/PageRenderer.html
         // write inline CSS/JS in file
         removeDefaultCss = external
         removeDefaultJS = external
@@ -48,47 +53,18 @@ UnityHead {
         }
     }
 
-    10 = TEMPLATE
     10 {
-        template = TEXT
-        template {
-            value (
-                "title": "###TITLE###",
-                "canonical": "###CANONICAL###",
-            )
-        }
+        templateName >
+        templateName = PageRendererContent
 
-        marks {
-            // Get Content to make sure the CSS/JS/Meta-Tags included in the content are in the header // NO OUTPUT
-            content < styles.content.get
-            content {
-                select {
-                    where = colPos = 1
-                }
-            }
-
-            sidebar_left < styles.content.get
-            sidebar_left {
-                select {
-                    where = colPos = 2
-                }
-            }
-
-            sidebar_right < styles.content.get
-            sidebar_right {
-                select {
-                    where = colPos = 3
-                }
-            }
-
-            // relevant data
-            TITLE = TEXT
-            TITLE {
+        variables {
+            title = TEXT
+            title {
                 data = page:title
             }
 
-            CANONICAL = TEXT
-            CANONICAL {
+            canonical = TEXT
+            canonical {
                 data = page:canonical_url
             }
         }
