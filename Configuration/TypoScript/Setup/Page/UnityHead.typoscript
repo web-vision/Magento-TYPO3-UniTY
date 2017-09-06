@@ -23,25 +23,11 @@ UnityHead {
         // write inline CSS/JS in file
         removeDefaultCss = external
         removeDefaultJS = external
-        // enable realurl
-        tx_realurl_enable = 1
     }
 
     meta {
         abstract {
             field = abstract
-        }
-
-        keywords {
-            field = keywords
-        }
-
-        description {
-            field = description
-        }
-
-        author {
-            field = author
         }
 
         author_email {
