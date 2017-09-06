@@ -2,19 +2,15 @@
 namespace WebVision\WvT3unity\Utility;
 
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is part of the wv_t3unity Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
+ * @WVTODO: Add license
  *
  * The TYPO3 project - inspiring people to share!
+ * Copyright (c) 2017 web-vision GmbH
  */
 
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use \TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 
 /**
  * This class provides some helper functions for configuration values.
@@ -24,7 +20,7 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 class Configuration extends ConfigurationManager
 {
     /**
-     * @param null|int    $pageType
+     * @param null|int $pageType
      * @param null|string $unityType
      *
      * @return bool
@@ -35,21 +31,21 @@ class Configuration extends ConfigurationManager
             $pageType = $GLOBALS['TSFE']->type;
         }
 
-        $unityTypes = array(
-            'head',
-            'page',
-            'column',
-            'element',
-            'menu',
-        );
+        $unityTypes = [
+            'Head',
+            'Page',
+            'Column',
+            'Element',
+            'Menu',
+        ];
 
         if ($unityType !== null && in_array($unityType, $unityTypes)) {
-            $unityTypes = array($unityType);
+            $unityTypes = [$unityType];
         }
 
-        $unityTypeNums = array();
+        $unityTypeNums = [];
         foreach ($unityTypes as $unityType) {
-            if (($config = $GLOBALS['TSFE']->tmpl->setup['tx_wvt3unity_' . $unityType . '.']['typeNum']) !== null) {
+            if (($config = $GLOBALS['TSFE']->tmpl->setup['Unity' . $unityType . '.']['typeNum']) !== null) {
                 $unityTypeNums[] = $config;
             }
         }

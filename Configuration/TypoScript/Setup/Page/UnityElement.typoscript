@@ -1,0 +1,21 @@
+// Element mode
+UnityElement < temp.UnityDefaultPage
+UnityElement {
+    typeNum = 3213
+
+    10 {
+        templateName >
+        templateName = Element
+
+        variables {
+            content = RECORDS
+            content {
+                tables = tt_content
+                dontCheckPid = 1
+                source {
+                    data = GP:uid
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+// Sitemap mode
+UnityXmlSitemap < temp.UnityDefaultPage
+UnityXmlSitemap {
+    typeNum = 3215
+
+    config {
+        renderCharset = utf-8
+
+        additionalHeaders {
+            10 {
+                header = Content-Type: application/json; charset=utf-8
+                replace = 1
+            }
+        }
+
+        debug = 0
+    }
+
+    10 = USER
+    10 {
+        userFunc = WebVision\WvT3unity\Controller\SitemapController->renderXmlSitemap
+    }
+}

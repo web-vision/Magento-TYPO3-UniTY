@@ -1,0 +1,14 @@
+plugin {
+    tx_wvt3unity {
+        paths {
+            templates = EXT:wv_t3unity/Resources/Private/Templates/
+            templates {
+                pageRenderer = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/
+                unity = EXT:wv_t3unity/Resources/Private/Templates/Unity/
+            }
+
+            layouts = EXT:wv_t3unity/Resources/Private/Layouts/
+            partials = EXT:wv_t3unity/Resources/Private/Partials/
+        }
+    }
+}

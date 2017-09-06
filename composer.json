@@ -12,6 +12,14 @@
         }
     },
     "require": {
-        "typo3-ter/realurl": "~2.0"
-    }
+        "typo3-ter/realurl": "~2.0",
+        "typo3/cms-core": ">=8.0.0,<8.7.999",
+        "php": ">=7.0.0"
+    },
+    "authors": [
+        {
+            "name": "Yannick Hermes",
+            "email": "y.hermes@web-vision.de"
+        }
+    ]
 }

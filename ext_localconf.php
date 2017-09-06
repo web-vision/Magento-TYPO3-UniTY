@@ -1,45 +1,43 @@
 <?php
+
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is part of the wv_t3unity Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
+ * @WVTODO: Add license
  *
  * The TYPO3 project - inspiring people to share!
+ * Copyright (c) 2017 web-vision GmbH
  */
-if (!defined('TYPO3_MODE')) {
-    die('Access denied.');
-}
 
-$GLOBALS['TYPO3_CONF_VARS']['FE']['pageOverlayFields'] .= ',canonical_url';
+call_user_func(
+    function ($extKey) {
+        $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
 
-\TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'],
-    array(
-        't3lib/class.t3lib_tcemain.php' => array(
-            'processDatamapClass' => array(
-                $_EXTKEY => 'WebVision\WvT3unity\Hooks\Tcemain',
-            ),
-            'processCmdmapClass'  => array(
-                $_EXTKEY => 'WebVision\WvT3unity\Hooks\Tcemain',
-            ),
-        ),
-        'tslib/class.tslib_fe.php'      => array(
-            'contentPostProc-all'    => array(
-                $_EXTKEY => 'WebVision\WvT3unity\Hooks\ContentPostProc->hookEntry',
-            ),
-            'contentPostProc-output' => array(
-                $_EXTKEY => 'WebVision\WvT3unity\Hooks\ContentPostProc->hookEntry',
-            ),
-        ),
-    )
-);
+        $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
 
-// add backend layouts
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
-    '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:' . $_EXTKEY . '/Configuration/PageTS/Mod/web_layout.txt">'
+        \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+            $GLOBALS[$typo3ConfigurationVariables],
+            [
+                'SC_OPTIONS' => [
+                    't3lib/class.t3lib_tcemain.php' => [
+                        'processDatamapClass' => [
+                            $extKey => WebVision\WvT3unity\Hooks\Tcemain::class,
+                        ],
+                        'processCmdmapClass' => [
+                            $extKey => WebVision\WvT3unity\Hooks\Tcemain::class,
+                        ],
+                    ],
+                    'tslib/class.tslib_fe.php' => [
+                        'contentPostProc-all' => [
+                            $extKey => WebVision\WvT3unity\Hooks\ContentPostProc::class . '->hookEntry',
+                        ],
+                        'contentPostProc-output' => [
+                            $extKey => WebVision\WvT3unity\Hooks\ContentPostProc::class . '->hookEntry',
+                        ],
+                    ],
+                ],
+            ]
+        );
+    },
+    $_EXTKEY
 );

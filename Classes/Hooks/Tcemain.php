@@ -2,20 +2,17 @@
 namespace WebVision\WvT3unity\Hooks;
 
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is part of the wv_t3unity Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
+ * @WVTODO: Add license
  *
  * The TYPO3 project - inspiring people to share!
+ * Copyright (c) 2017 web-vision GmbH
  */
 
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Backend\Utility\BackendUtility;
+use \TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * This class will make sure that on save of a page the path for the page will be
@@ -25,21 +22,21 @@ use \TYPO3\CMS\Backend\Utility\BackendUtility;
  */
 class Tcemain
 {
-    const HTML_REGEX                     = '/\.html$/';
-    const KEY_CHILDREN                   = 'children';
-    const COLUMN_UID                     = 'uid';
-    const COLUMN_PID                     = 'pid';
-    const COLUMN_TITLE                   = 'title';
-    const COLUMN_DOKTYPE                 = 'doktype';
-    const COLUMN_NAV_TITLE               = 'nav_title';
-    const COLUMN_UNITY_PATH              = 'unity_path';
-    const COLUMN_IS_SITEROOT             = 'is_siteroot';
-    const COLUMN_SYS_LANGUAGE_UID        = 'sys_language_uid';
-    const COLUMN_TX_REALURL_EXCLUDE      = 'tx_realurl_exclude';
-    const COLUMN_TX_REALURL_PATHSEGMENT  = 'tx_realurl_pathsegment';
+    const HTML_REGEX = '/\.html$/';
+    const KEY_CHILDREN = 'children';
+    const COLUMN_UID = 'uid';
+    const COLUMN_PID = 'pid';
+    const COLUMN_TITLE = 'title';
+    const COLUMN_DOKTYPE = 'doktype';
+    const COLUMN_NAV_TITLE = 'nav_title';
+    const COLUMN_UNITY_PATH = 'unity_path';
+    const COLUMN_IS_SITEROOT = 'is_siteroot';
+    const COLUMN_SYS_LANGUAGE_UID = 'sys_language_uid';
+    const COLUMN_TX_REALURL_EXCLUDE = 'tx_realurl_exclude';
+    const COLUMN_TX_REALURL_PATHSEGMENT = 'tx_realurl_pathsegment';
     const COLUMN_TX_REALURL_PATHOVERRIDE = 'tx_realurl_pathoverride';
-    const TABLE_PAGES                    = 'pages';
-    const TABLE_PAGES_LANGUAGE_OVERLAY   = 'pages_language_overlay';
+    const TABLE_PAGES = 'pages';
+    const TABLE_PAGES_LANGUAGE_OVERLAY = 'pages_language_overlay';
 
     /**
      * @var \TYPO3\CMS\Core\Database\DatabaseConnection
@@ -51,15 +48,19 @@ class Tcemain
      *
      * @param string $status
      * @param string $tableName
-     * @param int    $recordId
-     * @param array  $databaseData
+     * @param int $recordId
+     * @param array $databaseData
      * @param object $dataHandler
      *
      * @return void
      */
-    //@codingStandardsIgnoreLine
-    public function processDatamap_afterDatabaseOperations($status, $tableName, $recordId, array $databaseData, $dataHandler)
-    {
+    public function processDatamap_afterDatabaseOperations(
+        $status,
+        $tableName,
+        $recordId,
+        array $databaseData,
+        $dataHandler
+    ) {
         // new entry via drag & drop don't process
         if ($recordId === 'NEW12345') {
             return;
@@ -100,7 +101,7 @@ class Tcemain
     /**
      * This method returns the path for the given uid and language uid.
      *
-     * @param int $uid            The uid of the page to generate the path for.
+     * @param int $uid The uid of the page to generate the path for.
      * @param int $sysLanguageUid The language uid for path generation.
      *
      * @return string
@@ -108,7 +109,7 @@ class Tcemain
     protected function getRecordPath($uid, $sysLanguageUid)
     {
         $output = '';
-        $pageRepo = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
+        $pageRepo = GeneralUtility::makeInstance(PageRepository::class);
         $pageRepo->sys_language_uid = $sysLanguageUid;
         $data = $pageRepo->getRootLine($uid);
         ksort($data);
@@ -131,9 +132,9 @@ class Tcemain
      * This method will update the record with the given uid and sysLanguageUid with
      * the given unityPath.
      *
-     * @param int    $uid            The uid of the page to update.
-     * @param int    $sysLanguageUid The language uid of the page to update.
-     * @param string $unityPath      The unity path to set.
+     * @param int $uid The uid of the page to update.
+     * @param int $sysLanguageUid The language uid of the page to update.
+     * @param string $unityPath The unity path to set.
      *
      * @return void
      */
@@ -147,10 +148,10 @@ class Tcemain
         // set default values for update query
         $tableName = static::TABLE_PAGES;
         $where = static::COLUMN_UID . ' = ' . (int)$uid;
-        $fields = array(
+        $fields = [
             static::COLUMN_UNITY_PATH             => $unityPath,
             static::COLUMN_TX_REALURL_PATHSEGMENT => $realUrlPath,
-        );
+        ];
 
         // overwrite some settings
         if ($sysLanguageUid > 0) {
@@ -167,9 +168,9 @@ class Tcemain
      * This method will find all subpages of the page with the given uid and will
      * update these pages if needed.
      *
-     * @param int    $uid            The uid to find the children for.
-     * @param int    $sysLanguageUid The language uid for child tree.
-     * @param string $path           The current path.
+     * @param int $uid The uid to find the children for.
+     * @param int $sysLanguageUid The language uid for child tree.
+     * @param string $path The current path.
      *
      * @return void
      */
@@ -196,7 +197,7 @@ class Tcemain
      * If the sub page has children this method will recursively call itself for
      * each child.
      *
-     * @param array  $data        The subpage to update.
+     * @param array $data The subpage to update.
      * @param string $currentPath The current path.
      *
      * @return void
@@ -228,7 +229,7 @@ class Tcemain
      * If $sysLanguageUid is given and greater 0 the translation will be used as
      * well.
      *
-     * @param int $pid            The pid to generate the array for.
+     * @param int $pid The pid to generate the array for.
      * @param int $sysLanguageUid The language uid to add translations.
      *
      * @return array
@@ -239,7 +240,7 @@ class Tcemain
         if ($pid < 0) {
             $pid = abs($pid);
         }
-        $treeList = array();
+        $treeList = [];
         if (!$pid) {
             return $treeList;
         }
@@ -288,7 +289,7 @@ class Tcemain
     /**
      * This method cleans up the $newElement and adds it to the given path.
      *
-     * @param string $path       The current path.
+     * @param string $path The current path.
      * @param string $newElement The new element to add.
      *
      * @return string
@@ -314,13 +315,13 @@ class Tcemain
         // remove html tags and make string lower case
         $newElement = mb_convert_case(strip_tags($newElement), MB_CASE_LOWER, 'utf-8');
 
-        $chars = array(
+        $chars = [
             'ä' => 'ae',
             'ö' => 'oe',
             'ü' => 'ue',
             'ß' => 'ss',
             ' ' => '-',
-        );
+        ];
 
         // replace german characters and spaces
         foreach ($chars as $search => $replace) {
