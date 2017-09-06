@@ -2,26 +2,23 @@
 namespace WebVision\WvT3unity\Hooks;
 
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is part of the wv_t3unity Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
+ * @WVTODO: Add license
  *
  * The TYPO3 project - inspiring people to share!
+ * Copyright (c) 2017 web-vision GmbH
  */
 
-use WebVision\WvT3unity\Utility\Configuration;
+use \WebVision\WvT3unity\Utility\Configuration;
+use \TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 
 /**
  * This class renders all meta data as json
  *
  * @author Tim Werdin <t.werdin@web-vision.de>
  */
-class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
+class ContentPostProc extends AbstractPlugin
 {
     /**
      * This method get's called by the hook and will parse the html head data into a
@@ -67,7 +64,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
     {
         $content = preg_replace_callback(
             '/<meta (name|property)="(.*?)" content="(.*?)" ?\/?>/s',
-            array($this, 'metaCallback'),
+            [$this, 'metaCallback'],
             $content
         );
     }
@@ -106,7 +103,7 @@ class ContentPostProc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
      */
     public function metaCallback(array $matches)
     {
-        $matches[3] = str_replace(array("\r\n", "\n"), ' ', $matches[3]);
+        $matches[3] = str_replace(["\r\n", "\n"], ' ', $matches[3]);
 
         return '{"' . $matches[1] . '": "' . $matches[2] . '", "content":"' . $matches[3] . '"},';
     }

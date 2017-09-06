@@ -1,8 +1,8 @@
 mod {
     web_layout {
         BackendLayouts {
-            1column {
-                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.1column
+            OneColumn {
+                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.OneColumn
                 config {
                     backend_layout {
                         colCount = 1
@@ -11,7 +11,7 @@ mod {
                             1 {
                                 columns {
                                     1 {
-                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.column.content
                                         colPos = 1
                                     }
                                 }
@@ -21,8 +21,8 @@ mod {
                 }
             }
 
-            2columns-left {
-                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.2columns-left
+            TwoColumnsLeft {
+                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.TwoColumnsLeft
                 config {
                     backend_layout {
                         colCount = 3
@@ -31,13 +31,13 @@ mod {
                             1 {
                                 columns {
                                     1 {
-                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_left
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.column.left
                                         colPos = 2
                                         colspan = 1
                                     }
 
                                     2 {
-                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.column.content
                                         colPos = 1
                                         colspan = 2
                                     }
@@ -48,8 +48,8 @@ mod {
                 }
             }
 
-            2columns-right {
-                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.2columns-right
+            TwoColumnsRight {
+                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.TwoColumnsRight
                 config {
                     backend_layout {
                         colCount = 3
@@ -58,13 +58,13 @@ mod {
                             1 {
                                 columns {
                                     1 {
-                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.column.content
                                         colPos = 1
                                         colspan = 2
                                     }
 
                                     2 {
-                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_right
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.column.right
                                         colPos = 3
                                         colspan = 1
                                     }
@@ -75,8 +75,8 @@ mod {
                 }
             }
 
-            3columns {
-                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.3columns
+            ThreeColumns {
+                title = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.ThreeColumns
                 config {
                     backend_layout {
                         colCount = 4
@@ -85,19 +85,19 @@ mod {
                             1 {
                                 columns {
                                     1 {
-                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_left
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.column.left
                                         colPos = 2
                                         colspan = 1
                                     }
 
                                     2 {
-                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.content
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.column.content
                                         colPos = 1
                                         colspan = 2
                                     }
 
                                     3 {
-                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang_backend.xlf:backend_layout.column.sidebar_right
+                                        name = LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:backend_layout.column.right
                                         colPos = 3
                                         colspan = 1
                                     }

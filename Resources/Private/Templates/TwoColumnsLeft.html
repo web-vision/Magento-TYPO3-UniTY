@@ -1,0 +1,14 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true"
+>
+    <f:layout name="Wrapper"/>
+
+    <f:section name="content">
+        <div class="col-main">
+            {content -> f:format.raw()}
+        </div>
+        <div class="col-left sidebar">
+            {sidebarLeft -> f:format.raw()}
+        </div>
+    </f:section>
+</html>

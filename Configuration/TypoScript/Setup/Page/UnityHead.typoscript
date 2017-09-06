@@ -1,0 +1,58 @@
+// Header data mode
+UnityHead < temp.UnityDefaultPage
+UnityHead {
+    typeNum = 3210
+
+    config {
+        absRefPrefix = %TYPO3_URL%/
+        // set proper content type
+        additionalHeaders {
+            10 {
+                header = Content-Type: application/json; charset=utf-8
+                replace = 1
+            }
+        }
+        // disable parsetime output
+        debug = 0
+        // make sure that header data is fetched
+        disableAllHeaderCode = 0
+        // disable body tag
+        disableBodyTag = 1
+        // change template for rendering the whole page
+        pageRendererTemplateFile = {$plugin.tx_wvt3unity.paths.templates}PageRenderer/PageRenderer.html
+        // write inline CSS/JS in file
+        removeDefaultCss = external
+        removeDefaultJS = external
+    }
+
+    meta {
+        abstract {
+            field = abstract
+        }
+
+        author_email {
+            field = author_email
+        }
+
+        last_updated {
+            field = lastUpdated
+        }
+    }
+
+    10 {
+        templateName >
+        templateName = Head
+
+        variables {
+            title = TEXT
+            title {
+                data = page:title
+            }
+
+            canonical = TEXT
+            canonical {
+                data = page:canonical_url
+            }
+        }
+    }
+}
