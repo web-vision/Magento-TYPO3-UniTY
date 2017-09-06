@@ -37,7 +37,7 @@ temp {
 
             templateRootPaths {
                 10 = {$plugin.tx_wvt3unity.paths.templates.pageRenderer}
-                20 = {$plugin.tx_wvt3unity.paths.templates.pageRenderer.unity}
+                20 = {$plugin.tx_wvt3unity.paths.templates.unity}
                 30 = {$plugin.tx_wvt3unity.paths.templates}
             }
 

@@ -4,9 +4,7 @@ plugin {
             templates = EXT:wv_t3unity/Resources/Private/Templates/
             templates {
                 pageRenderer = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/
-                pageRenderer {
-                    unity = EXT:wv_t3unity/Resources/Private/Templates/PageRenderer/Unity/
-                }
+                unity = EXT:wv_t3unity/Resources/Private/Templates/Unity/
             }
 
             layouts = EXT:wv_t3unity/Resources/Private/Layouts/
