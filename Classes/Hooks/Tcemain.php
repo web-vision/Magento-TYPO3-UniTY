@@ -109,10 +109,11 @@ class Tcemain
     protected function getRecordPath($uid, $sysLanguageUid)
     {
         $output = '';
-        $pageRepo = GeneralUtility::makeInstance(PageRepository::class);
-        $pageRepo->sys_language_uid = $sysLanguageUid;
-        $data = $pageRepo->getRootLine($uid);
+
+        $data = GeneralUtility::makeInstance(PageRepository::class)->getRootLine($uid);
+
         ksort($data);
+
         foreach ($data as $record) {
             if ($record[static::COLUMN_IS_SITEROOT] == '1' || $record[static::COLUMN_TX_REALURL_EXCLUDE]) {
                 continue;
@@ -143,13 +144,14 @@ class Tcemain
         if ($unityPath == '/') {
             $unityPath = '';
         }
+
         $realUrlPath = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
 
         // set default values for update query
         $tableName = static::TABLE_PAGES;
         $where = static::COLUMN_UID . ' = ' . (int)$uid;
         $fields = [
-            static::COLUMN_UNITY_PATH             => $unityPath,
+            static::COLUMN_UNITY_PATH => $unityPath,
             static::COLUMN_TX_REALURL_PATHSEGMENT => $realUrlPath,
         ];
 
