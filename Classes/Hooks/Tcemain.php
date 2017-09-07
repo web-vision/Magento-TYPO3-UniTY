@@ -15,8 +15,11 @@ use \TYPO3\CMS\Backend\Utility\BackendUtility;
 use \TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
- * This class will make sure that on save of a page the path for the page will be
- * generated and saved for the saved page and all subpages.
+ * This class makes sure that on save of a page the path for the page will be
+ * generated and saved for page and all subpages.
+ *
+ * Also prevents SQL errors for $fields when trying to insert null or empty
+ * values as TEXT fields do not allow default values.
  *
  * @author Tim Werdin <t.werdin@web-vision.de>
  */
@@ -42,6 +45,91 @@ class Tcemain
      * @var \TYPO3\CMS\Core\Database\DatabaseConnection
      */
     protected $db;
+
+    /**
+     * Fieldnames that trigger the handler.
+     *
+     * @var array
+     */
+    protected $fields = [
+        'unity_path',
+        'canonical_url',
+    ];
+
+    /**
+     * Actions that are allowed to trigger the handler.
+     *
+     * @var array
+     */
+    protected $actions = [
+        'new',
+        'update'
+    ];
+
+    /**
+     * Tables to work on. Only those tables will be processed.
+     *
+     * @var string
+     */
+    protected $tablesToProcess = [
+        'pages',
+        'pages_language_overlay'
+    ];
+
+    /**
+     * Hook to set an empty string for fields that use text as data type and
+     * are not required to prevent a SQL warning / error.
+     * This occurs when using MySQL in strict mode.
+     * It is required as some fields in the unity are filled later on and are
+     * not definable in TCA as "empty".
+     *
+     * @param string $action The action to perform, e.g. 'new'.
+     * @param string $table The table affected by action, e.g. 'pages'.
+     * @param int $uid The uid of the record affected by action.
+     * @param array $modifiedFields The modified fields of the record.
+     *
+     * @return void
+     */
+    public function processDatamap_postProcessFieldArray( // @codingStandardsIgnoreLine
+        $action, $table, $uid, array &$modifiedFields
+    ) {
+        if (! $this->checkProcessing($table, $action, $modifiedFields)) {
+            return;
+        }
+
+        foreach ($this->fields as $field) {
+            if (! isset($modifiedFields[$field]) || $modifiedFields[$field] === null) {
+                $modifiedFields[$field] = '';
+            }
+        }
+    }
+
+    /**
+     * Check whether to continue with the handler or not.
+     *
+     * @param string $table
+     * @param string $action
+     * @param array $modifiedFields
+     *
+     * @return bool
+     */
+    protected function checkProcessing($table, $action, array $modifiedFields)
+    {
+        // Do not process if foreign table, unintended action,
+        // or fields were changed explicitly.
+        if (!(in_array($table, $this->tablesToProcess)) || !(in_array($action, $this->actions))) {
+            return false;
+        }
+
+        // Only process if one of the fields was updated or containing new information.
+        foreach (array_keys($modifiedFields) as $modifiedFieldName) {
+            if (in_array($modifiedFieldName, $this->fields)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * A TCEmain hook to expire old records and add new ones
