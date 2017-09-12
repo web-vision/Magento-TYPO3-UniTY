@@ -34,7 +34,7 @@ class ClearCacheService
      */
     public function clearCacheForSinglePage($pageUid)
     {
-        if($this->extConf['SupportSingleCacheInvalidation'] == 1) {
+        if ($this->extConf['SupportSingleCacheInvalidation'] == 1) {
             $pagePath = $this->getPagePath($pageUid);
             $this->sendClearCacheSignalToMagento($pagePath);
         } else {
@@ -57,12 +57,12 @@ class ClearCacheService
     protected function sendClearCacheSignalToMagento($pagePath = NULL)
     {
 
-        if(empty($this->extConf['MagentoUrl'])) {
+        if (empty($this->extConf['MagentoUrl'])) {
             $this->displayFlashMessage('No Magento Instance defined in ExtManager', FlashMessage::ERROR);
             return;
         }
-        
-        if(!empty($pagePath)) {
+
+        if (!empty($pagePath)) {
             $this->displayFlashMessage('Magento Cache invalidated for Page: ' . $pagePath);
             // @todo implement Magento Cache for one page
         } else {
@@ -107,7 +107,8 @@ class ClearCacheService
             ->from('pages')
             ->where(
                 $queryBuilder->expr()->eq('uid', (int)$pageUid)
-            )->execute()->fetchAll();
+            )->execute()
+            ->fetchAll();
 
         return $result[0]['unity_path'];
     }
