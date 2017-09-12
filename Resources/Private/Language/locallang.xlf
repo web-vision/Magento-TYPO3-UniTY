@@ -33,6 +33,22 @@
             <trans-unit id="pages_language_overlay.canonical_url">
                 <source>Canonical URL</source>
             </trans-unit>
+
+            <trans-unit id="ext_conf_template.MagentoUrl">
+                <source>URI of Magento Instance</source>
+            </trans-unit>
+
+            <trans-unit id="ext_conf_template.SupportSingleCacheInvalidation">
+                <source>Activate single page cache invalidation</source>
+            </trans-unit>
+
+            <trans-unit id="toolbar.clearCacheTitle">
+                <source>Clear Magento Cache</source>
+            </trans-unit>
+
+            <trans-unit id="toolbar.clearCacheDescription">
+                <source>Clears the associated Magento cache</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
