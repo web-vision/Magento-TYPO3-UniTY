@@ -77,6 +77,16 @@ class Tcemain
     ];
 
     /**
+     * Fields that should not be null on 'new' action.
+     *
+     * @var array
+     */
+    protected $preventFieldsFromNull = [
+        'unity_path',
+        'canonical_url',
+    ];
+
+    /**
      * Hook to set an empty string for fields that use text as data type and
      * are not required to prevent a SQL warning / error.
      * This occurs when using MySQL in strict mode.
@@ -119,6 +129,16 @@ class Tcemain
         // or fields were changed explicitly.
         if (!(in_array($table, $this->tablesToProcess)) || !(in_array($action, $this->actions))) {
             return false;
+        }
+
+        // Process if at least one field of $preventFieldsFromNull 
+        // is not set or is null on 'new' action.
+        if ($action == 'new') {
+            foreach ($this->preventFieldsFromNull as $field) {
+                if (! isset($modifiedFields[$field]) || $modifiedFields[$field] === null) {
+                    return true;
+                }
+            }
         }
 
         // Only process if one of the fields was updated or containing new information.
