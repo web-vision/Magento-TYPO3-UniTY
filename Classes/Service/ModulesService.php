@@ -132,11 +132,34 @@ class ModulesService
     }
 
     /**
+     * @param string $module
+     *
+     * @return string
+     * @throws \InvalidArgumentException if the requested module is no
+     * configured alias for a module.
+     */
+    public function getRealModuleNameFromMapping($module) {
+        $moduleConfiguration = $this->getModuleRequestConfiguration();
+
+        if (isset($moduleConfiguration['moduleMapping'])) {
+            foreach ($moduleConfiguration['moduleMapping'] as $realModule => $moduleAlias) {
+                if (in_array($module, $moduleAlias)) {
+                    return $realModule;
+                }
+            }
+        }
+
+        throw new \InvalidArgumentException(
+            'Requested module "' . $module . '" has no mapping for a real module key.'
+        );
+    }
+
+    /**
      * Wrapper for MODULE_REQUESTS configuration.
      *
      * @return array 
      */
-    protected function getModuleRequestConfiguration() 
+    public function getModuleRequestConfiguration() 
     {
         return (is_array($GLOBALS['MODULE_REQUESTS']) ? $GLOBALS['MODULE_REQUESTS'] : []);
     }

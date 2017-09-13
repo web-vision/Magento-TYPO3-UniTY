@@ -21,6 +21,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\PageTreeView;
+use WebVision\WvT3unity\Service\ModulesService;
 
 /**
  */
@@ -39,8 +40,15 @@ class BackendController extends T3BackendController
     {
         //if (! empty($request->getQueryParams()['module'])) {
         if (isset($_COOKIE['module'])) {
+            $modulesService = GeneralUtility::makeInstance(ModulesService::class);
+
             HttpUtility::redirect(
-                BackendUtility::getModuleUrl('web_layout')
+                BackendUtility::getModuleUrl(
+                    $modulesService->getRealModuleNameFromMapping($_COOKIE['module']),
+                    [
+                        'standalone' => true,
+                    ]
+                )
             );
         } else {
             return parent::mainAction($request, $response);

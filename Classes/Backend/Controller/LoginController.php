@@ -36,7 +36,7 @@ class LoginController extends T3LoginController
     {
         $modulesService = GeneralUtility::makeInstance(ModulesService::class);
         $modulesService->handleModuleRequest($this, $request);
-
+        
         return parent::formAction($request, $response);
     }
 

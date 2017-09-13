@@ -37,6 +37,19 @@ call_user_func(
                         ],
                     ],
                 ],
+                'SYS' => [
+                    'Objects' => [
+                        'TYPO3\\CMS\\Backend\\Controller\\PageLayoutController' => [
+                            'className' => 'WebVision\\WvT3unity\\Backend\\Controller\\PageLayoutController'
+                        ],
+                        'TYPO3\\CMS\\Backend\\Template\\ModuleTemplate' => [
+                            'className' => 'WebVision\\WvT3unity\\Backend\\Template\\ModuleTemplate'
+                        ],
+                        'TYPO3\\CMS\\Backend\\Tree\\View\\PageTreeView' => [
+                            'className' => 'WebVision\\WvT3unity\\Backend\\Tree\\View\\StandalonePageTreeView'
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -49,7 +62,15 @@ call_user_func(
             [
                 'allowedModules' => [
                     'page',
-                    'list'
+                    'list',
+                ],
+                'moduleMapping' => [
+                    'web_layout' => [
+                        'page',
+                    ],
+                    'web_list' => [
+                        'list',
+                    ],
                 ],
             ]
         );
