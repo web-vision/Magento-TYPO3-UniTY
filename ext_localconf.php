@@ -38,6 +38,19 @@ call_user_func(
                 ],
             ]
         );
+
+        // Add the service
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService($extKey, 'auth', \WebVision\WvT3unity\Service\UnityAuthenticationService::class, [
+            'title' => 'Unity Authentication',
+            'description' => 'Authenticates with Unity',
+            'subtype' => 'getUserBE,authUserBE',
+            'available' => true,
+            'priority' => 80,
+            'quality' => 80,
+            'os' => '',
+            'exec' => '',
+            'className' => \WebVision\WvT3unity\Service\UnityAuthenticationService::class,
+        ]);
     },
     $_EXTKEY
 );
