@@ -42,6 +42,29 @@
                 <source>Canonical URL</source>
                 <target>Kanonische URL</target>
             </trans-unit>
+
+
+            <trans-unit id="ext_conf_template.MagentoUrl">
+                <source>URI of Magento Instance</source>
+                <target>URL der magneto Instanz</target>
+            </trans-unit>
+
+            <trans-unit id="ext_conf_template.SupportSingleCacheInvalidation">
+                <source>Activate single page cache invalidation</source>
+                <target>Löschen von einzelenen Seiten Caches aktivieren</target>
+            </trans-unit>
+
+
+            <trans-unit id="toolbar.clearCacheTitle">
+                <source>Flush Magento Cache</source>
+                <target>Magento Cache leeren</target>
+            </trans-unit>
+
+            <trans-unit id="toolbar.clearCacheDescription">
+                <source>Clears the associated Magento cache</source>
+                <target>Leert den zugehörigen Magneto Cache</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

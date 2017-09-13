@@ -26,6 +26,9 @@ call_user_func(
                         'processCmdmapClass' => [
                             $extKey => WebVision\WvT3unity\Hooks\Tcemain::class,
                         ],
+                        'clearCachePostProc' => [
+                            $extKey => WebVision\WvT3unity\Hooks\DataHandler::class . '->clearAdditionalCache',
+                        ],
                     ],
                     'tslib/class.tslib_fe.php' => [
                         'contentPostProc-all' => [
@@ -35,9 +38,16 @@ call_user_func(
                             $extKey => WebVision\WvT3unity\Hooks\ContentPostProc::class . '->hookEntry',
                         ],
                     ],
+                    'additionalBackendItems' => [
+                        'cacheActions' => [
+                            $extKey => WebVision\WvT3unity\Hooks\Backend\Toolbar\ClearCacheActionsHook::class
+                        ]
+                    ]
                 ],
             ]
         );
     },
     $_EXTKEY
 );
+
+//$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['additionalBackendItems']['cacheActions'][] = 'SKTYPO3\SkTools\Hooks\Backend\Toolbar\ClearCacheActionsHook';
