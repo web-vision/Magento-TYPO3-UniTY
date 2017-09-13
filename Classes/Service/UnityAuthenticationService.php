@@ -4,7 +4,6 @@ namespace WebVision\WvT3unity\Service;
 
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Sv\AuthenticationService;
 
 /**
@@ -87,7 +86,11 @@ class UnityAuthenticationService extends AuthenticationService
             return 100;
         }
 
-        if (!$this->validateSession($user['username'], $this->login['uident'])) {
+        if (!GeneralUtility::_GET('token')) {
+            return 100;
+        }
+
+        if (!$this->validateSession($user['username'], GeneralUtility::_GET('token'))) {
             return 0;
         }
 
@@ -101,19 +104,15 @@ class UnityAuthenticationService extends AuthenticationService
      */
     protected function validateSession(string $username, string $token): bool
     {
-        return true;
+        $token = 'eada39ca7915baad041f28fc1a9c2072e69c89d7a5467fb8c9307f35cbab4a42';
+        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wv_t3unity']);
+        $domain = rtrim($extensionConfiguration['MagentoUrl'], '/');
 
-        list($session, $hash) = explode(':', $token, 2);
+        $requestUrl = $domain . '/rest/V1/unity/validateToken/username/' . urlencode($username) . '/token/' . urlencode($token);
 
         $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
-        $response = $requestFactory->request('/to/be/defined', 'POST', [
-            'body' => [
-                'username' => $username,
-                'session' => $session,
-                'hash' => $hash,
-            ],
-        ]);
+        $response = $requestFactory->request($requestUrl);
 
-        return $response->getStatusCode() < HttpUtility::HTTP_STATUS_300;
+        return (string)$response->getBody()->getContents() === 'true';
     }
 }
