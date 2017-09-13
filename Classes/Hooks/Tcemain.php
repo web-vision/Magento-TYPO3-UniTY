@@ -486,7 +486,6 @@ class Tcemain
     protected function getPagesOverlayWithoutFERestriction(array $pagesInput, $lUid) {
         $page_ids = [];
 
-        $origPage = reset($pagesInput);
         foreach ($pagesInput as $origPage) {
             if (is_array($origPage)) {
                 // Was the whole record
