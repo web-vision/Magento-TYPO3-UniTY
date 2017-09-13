@@ -56,7 +56,7 @@
 
 
             <trans-unit id="toolbar.clearCacheTitle">
-                <source>Clear Magento Cache</source>
+                <source>Flush Magento Cache</source>
                 <target>Magento Cache leeren</target>
             </trans-unit>
 
