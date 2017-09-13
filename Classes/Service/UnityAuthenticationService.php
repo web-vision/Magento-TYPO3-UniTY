@@ -101,18 +101,10 @@ class UnityAuthenticationService extends AuthenticationService
      */
     protected function validateSession(string $username, string $token): bool
     {
-        return true;
-
-        list($session, $hash) = explode(':', $token, 2);
+        $requestUrl = 'http://dev.mag2stage.de/rest/V1/unity/validateToken/username/' . urlencode($username) . '/token/' . urlencode($token);
 
         $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
-        $response = $requestFactory->request('/to/be/defined', 'POST', [
-            'body' => [
-                'username' => $username,
-                'session' => $session,
-                'hash' => $hash,
-            ],
-        ]);
+        $response = $requestFactory->request($requestUrl);
 
         return $response->getStatusCode() < HttpUtility::HTTP_STATUS_300;
     }
