@@ -48,6 +48,9 @@ call_user_func(
                         'TYPO3\\CMS\\Backend\\Tree\\View\\PageTreeView' => [
                             'className' => 'WebVision\\WvT3unity\\Backend\\Tree\\View\\StandalonePageTreeView'
                         ],
+                        'TYPO3\\CMS\\Backend\\Routing\\UriBuilder' => [
+                            'className' => 'WebVision\\WvT3unity\\Backend\\Routing\\UriBuilder'
+                        ],
                     ],
                 ],
             ]

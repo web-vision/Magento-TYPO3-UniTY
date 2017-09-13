@@ -1,29 +1,65 @@
-<f:if condition="{pageTree}">
-    <div class="standone pagetree">
-        {pageTree -> f:format.raw()}
-    </div>
-</f:if>
-<div class="standalone module" data-module-id="{moduleId}" data-module-name="{moduleName}">
-    <f:if condition="{formTag}">
-        <f:then>
-            <f:format.raw>{formTag}</f:format.raw>
-        </f:then>
-    </f:if>
-    <f:if condition="{docHeader.enabled}">
+<style>
+    #standalone-module {
+        float: right; 
+        left: initial; 
+        width: 69%;
+    }
+
+    #standalone-module-content {
+        position: relative;
+    }
+
+    #standalone-module-docHeader {
+        position: relative;
+        height: 7%;
+    }
+
+    #standalone-pagetree {
+        display: block;
+        padding-top: 10px;
+    }
+
+    #standalone-wrapper {
+        position: initial !important;
+        height: 100%;
+    }
+
+    .module-body {
+        padding-top: 10px !important;
+    }
+</style>
+<div class="scaffold-content t3js-scaffold-content" id="standalone-wrapper">
+    <div id="standalone-module-docHeader">
         <f:render partial="DocHeader" arguments="{docHeader:docHeader}" />
-    </f:if>
-    <div class="module-body t3js-module-body">
-        <f:if condition="{uiBlock}">
-            <div id="t3js-ui-block" class="ui-block">
-                <core:icon identifier="spinner-circle-light" size="large" />
+    </div>
+    <div id="standalone-module-content">
+        <f:if condition="{pageTree}">
+            <div class="scaffold-content-navigation t3js-scaffold-content-navigation" id="standalone-pagetree">
+                <div id="typo3-pagetree-treeContainer">
+                    {pageTree -> f:format.raw()}
+                </div>
             </div>
         </f:if>
-        <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
-        <f:format.raw>{content}</f:format.raw>
+        <div class="scaffold-content-module t3js-scaffold-content-module" id="standalone-module">
+            <f:if condition="{formTag}">
+                <f:then>
+                    <f:format.raw>{formTag}</f:format.raw>
+                </f:then>
+            </f:if>
+            <div class="module-body t3js-module-body">
+                <f:if condition="{uiBlock}">
+                    <div id="t3js-ui-block" class="ui-block">
+                        <core:icon identifier="spinner-circle-light" size="large" />
+                    </div>
+                </f:if>
+                <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
+                <f:format.raw>{content}</f:format.raw>
+            </div>
+            <f:if condition="{formTag}">
+                <f:then>
+                    </form>
+                </f:then>
+            </f:if>
+        </div>
     </div>
-    <f:if condition="{formTag}">
-        <f:then>
-            </form>
-        </f:then>
-    </f:if>
 </div>
