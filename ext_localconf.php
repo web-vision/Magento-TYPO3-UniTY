@@ -12,6 +12,7 @@
 call_user_func(
     function ($extKey) {
         $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
+        $typo3ModulesRequestVariables = 'MODULE_REQUESTS';
 
         $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
 
@@ -35,6 +36,20 @@ call_user_func(
                             $extKey => WebVision\WvT3unity\Hooks\ContentPostProc::class . '->hookEntry',
                         ],
                     ],
+                ],
+            ]
+        );
+
+        if (! is_array($GLOBALS[$typo3ModulesRequestVariables])) {
+            $GLOBALS[$typo3ModulesRequestVariables] = [];
+        }
+
+        \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+            $GLOBALS[$typo3ModulesRequestVariables],
+            [
+                'allowedModules' => [
+                    'page',
+                    'list'
                 ],
             ]
         );
