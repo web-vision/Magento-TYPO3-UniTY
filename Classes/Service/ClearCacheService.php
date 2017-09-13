@@ -63,11 +63,12 @@ class ClearCacheService
         }
 
         if (!empty($pagePath)) {
+            // @todo: until single cache invalidation is implemented, we kill the whole cache instead
+            GeneralUtility::getUrl($this->extConf['MagentoUrl']. '/rest/V1/unity/clearAllCaches');
             $this->displayFlashMessage('Magento Cache invalidated for Page: ' . $pagePath);
-            // @todo implement Magento Cache for one page
         } else {
-            $this->displayFlashMessage('Whole Magento Cache was invalidated');
-            // @todo implement invalidation of whole cache
+            GeneralUtility::getUrl($this->extConf['MagentoUrl']. '/rest/V1/unity/clearAllCaches');
+            $this->displayFlashMessage('Whole Magento Cache was invalidated.');
         }
 
         return;
