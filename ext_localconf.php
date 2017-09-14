@@ -13,6 +13,9 @@ call_user_func(
     function ($extKey) {
         $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
 
+        // EID Call for clearing the TYPO3 Cache
+        $GLOBALS[$typo3ConfigurationVariables]['FE']['eID_include'][$extKey . '_clearCache'] = WebVision\WvT3unity\Controller\Eid\ClearCacheFromRemote::class .'::clearCacheAction';
+
         $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
 
         \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
@@ -50,4 +53,4 @@ call_user_func(
     $_EXTKEY
 );
 
-//$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['additionalBackendItems']['cacheActions'][] = 'SKTYPO3\SkTools\Hooks\Backend\Toolbar\ClearCacheActionsHook';
+
