@@ -1,12 +1,18 @@
 <?php
 namespace WebVision\WvT3unity\Authentication;
 
+/*
+ * This file is part of the wv_t3unity Extension for TYPO3 CMS.
+ *
+ * @WVTODO: Add license
+ *
+ * The TYPO3 project - inspiring people to share!
+ * Copyright (c) 2017 web-vision GmbH
+ */
+
 /**
- * TYPO3 backend user authentication
- * Contains most of the functions used for checking permissions, authenticating users,
- * setting up the user, and API for user from outside.
- * This class contains the configuration of the database fields used plus some
- * functions for the authentication process of backend users.
+ * Unity SSO user authentication
+ * Enables authentication via GET parameter
  */
 class BackendUserAuthentication extends \TYPO3\CMS\Core\Authentication\BackendUserAuthentication
 {
