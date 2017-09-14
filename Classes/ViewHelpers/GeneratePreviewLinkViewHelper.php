@@ -16,8 +16,8 @@ namespace WebVision\WvT3unity\ViewHelpers;
 
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Viewhelper to generate preview URL if backend user is logged in.
@@ -25,23 +25,25 @@ use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @author Yannick Hermes <y.hermes@web-vision.de>
  */
-class GeneratePreviewLinkViewHelper extends AbstractTagBasedViewHelper
+class GeneratePreviewLinkViewHelper extends AbstractViewHelper
 {
     /**
      * @var string
      */
     protected $extConf = null;
 
+    protected $escapeOutput = false;
+
+    protected $escapeChildren = false;
+
     public function initializeArguments()
     {
         parent::initializeArguments();
-        //$this->registerArgument('data', 'array', 'Page data.');
+        $this->registerArgument('data', 'array', 'Page data.');
     }
 
     /**
-     * @param array $data Page data.
-     *
-     * @return void
+     * @return string
      */
     public function render() {
         if (! empty($GLOBALS['BE_USER']->user['username'])) {
@@ -57,6 +59,8 @@ class GeneratePreviewLinkViewHelper extends AbstractTagBasedViewHelper
 
             return $this->renderChildren();
         }
+
+        return '';
     }
 
     /**
@@ -67,7 +71,9 @@ class GeneratePreviewLinkViewHelper extends AbstractTagBasedViewHelper
     protected function generatePreviewLink() {
         $url = $this->extConf['MagentoUrl'];
 
-        $urlHasProtocol = (strpos($url, 'https://') > -1 ? true : (strpos($url, 'http://') > -1));
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        $urlHasProtocol = isset($scheme) && ($scheme === 'http' || $scheme === 'https');
 
         $urlHasLastSlash = strpos(strrev($url), '/') == 0;
         // Remove last slash from url as the basePath always has one as first.
@@ -82,10 +88,11 @@ class GeneratePreviewLinkViewHelper extends AbstractTagBasedViewHelper
 
         $return = '';
         if(GeneralUtility::isValidUrl($previewUrl)) {
-            $pattern = '<script>window.location.href = "%s"</script>';
-            $return = sprintf($pattern, $previewUrl);
+            $pattern = '<script>window.location.href = "%s"</script>' . chr(10) .
+                '<a href="%s" style="font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;">Magento preview</a>';
+            $return = sprintf($pattern, $previewUrl, $previewUrl);
         }
-        
+
         return $return;
     }
 

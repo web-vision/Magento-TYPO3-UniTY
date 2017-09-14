@@ -1,7 +1,3 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:wvs="https://typo3.org/ns/WebVision/WvT3unity/ViewHelpers" data-namespace-typo3-fluid="true">
-    <f:format.raw>
-        <wvs:generatePreviewLink data="{data}">
-            {previewLink}
-        </wvs:generatePreviewLink>
-    </f:format.raw>
-</html>
+{namespace wvs=WebVision\WvT3unity\ViewHelpers}
+
+<wvs:generatePreviewLink data="{data}">{previewLink}</wvs:generatePreviewLink>
