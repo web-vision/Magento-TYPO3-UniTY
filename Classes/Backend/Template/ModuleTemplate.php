@@ -17,9 +17,17 @@ namespace WebVision\WvT3unity\Backend\Template;
 use TYPO3\CMS\Backend\Template\ModuleTemplate as BackendModuleTemplate;
 
 /**
+ * Extends Backend's ModuleTemplate to override template paths
+ * and update view according to those changes.
  */
 class ModuleTemplate extends BackendModuleTemplate
 {
+    /**
+     * @param string $to
+     * @param array $paths
+     *
+     * @return void
+     */
     private function addPaths($to, array $paths) {
         if (property_exists($this, $to . 'RootPaths')) {
             foreach ($paths as $path) {
@@ -28,44 +36,117 @@ class ModuleTemplate extends BackendModuleTemplate
         }
     }
 
-    protected function addTemplateRootPaths(array $templatePaths) {
+    /**
+     * @param array $templatePaths
+     *
+     * @return array | ModuleTemplate
+     */
+    public function templateRootPaths(array $templatePaths = []) {
+        if (empty($templatePaths)) {
+            return $this->templateRootPaths;
+        }
+
         $this->addPaths('template', $templatePaths);
+
+        return $this;
     }
 
-    protected function addPartialRootPaths(array $partialPaths) {
+    /**
+     * @param array $partialRootPaths
+     *
+     * @return array | ModuleTemplate
+     */
+    public function partialRootPaths(array $partialPaths = []) {
+        if (empty($partialPaths)) {
+            return $this->partialRootPaths;
+        }
+
         $this->addPaths('partial', $partialPaths);
+        
+        return $this;
     }
 
-    protected function addLayoutRootPaths(array $layoutPaths) {
+    /**
+     * @param array $layoutRootPaths
+     *
+     * @return array | ModuleTemplate
+     */
+    public function layoutRootPaths(array $layoutPaths = []) {
+        if (empty($layoutPaths)) {
+            return $this->layoutRootPaths;
+        }
+
         $this->addPaths('layout', $layoutPaths);
+
+        return $this;
     }
 
-    protected function setTemplateFile($templateFile) {
-        $this->templateFile = $templateFile;
+    /**
+     * @param string $templateFile
+     *
+     * @return string | ModuleTemplate
+     */
+    public function templateFile($templateFile = '') {
+        if ($templateFile) {
+            $this->templateFile = $templateFile;
+            
+            return $this;
+        }
+
+        return $this->templateFile;
     }
 
-    private function modifyProperty(&$modify, array $params) {
+    /**
+     * @param mixed $modify
+     * @param array $params
+     *
+     * @throws \InvalidArgumentException If key of $params is no method of $modify
+     * @return mixed
+     */
+    private function modifyProperty($modify, array $params) {
         foreach ($params as $method => $arguments) {
             if (method_exists($modify, $method)) {
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump([$arguments], '[$arguments]');
-                call_user_func_array([$modify, $method], [$arguments]);
+                $modify = $modify->{$method}(...$arguments);
             } else {
                 throw new \InvalidArgumentException(
                     '"' . $method . '" do not exist in "' . get_class($modify) . '".'
                 );
             }
         }
+
+        return $modify;
     }
 
-    public function modifyModuleTemplate(array $params) {
+    /**
+     * @param array $params
+     *
+     * @return ModuleTemplate
+     */
+    public function modifyModuleTemplates(array $params) {
         $this->modifyProperty($this, $params);
 
         return $this;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return ModuleTemplate
+     */
     public function modifyModuleTemplateView(array $params) {
         $this->modifyProperty($this->view, $params);
+        $this->updateView();
 
         return $this;
+    }
+
+    /**
+     * @return void
+     */
+    protected function updateView() {
+        $this->view->setTemplateRootPaths($this->templateRootPaths);
+        $this->view->setLayoutRootPaths($this->layoutRootPaths);
+        $this->view->setPartialRootPaths($this->partialRootPaths);
+        $this->view->setTemplate($this->templateFile);
     }
 }

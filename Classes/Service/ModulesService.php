@@ -93,6 +93,7 @@ class ModulesService
             $loginController->setRedirectUrl($sanitizedLocalUrl);
             $loginController->setRedirectToURL($sanitizedLocalUrl);
 
+            // @WVTODO: Handle request by request instead of cookie
             setcookie('module', $module, 0, '/typo3/');
 
             return true;

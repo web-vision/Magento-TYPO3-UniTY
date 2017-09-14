@@ -16,13 +16,18 @@ namespace WebVision\WvT3unity\Service;
 
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use \TYPO3\CMS\Backend\Tree\View\PageTreeView;
+use WebVision\WvT3unity\Backend\Tree\View\StandalonePageTreeView;
 
 /**
  * Service for handling standalone modules.
  */
 class StandaloneModulesService
 {
+    /**
+     * @var StandalonePageTreeView
+     */
+    protected $standalonePageTreeView = null;
+
     /**
      * @var array
      */
@@ -44,28 +49,33 @@ class StandaloneModulesService
     protected $templateFile = 'StandaloneModule.html';
 
     /**
+     * Constructor.
+     */
+    public function __construct() {
+        $this->standalonePageTreeView = GeneralUtility::makeInstance(standalonePageTreeView::class);
+        $this->standalonePageTreeView->setStandaloneMode(true)->init();
+        $this->standalonePageTreeView->getTree(0);
+    }
+
+    /**
      * @param ModuleTemplate $moduleTemplate
      * 
      * @return ModuleTemplate
      */
-    public function setStandaloneParams(ModuleTemplate &$moduleTemplate) 
+    public function setStandaloneParams(ModuleTemplate $moduleTemplate) 
     {
-        $pageTreeView = GeneralUtility::makeInstance(PageTreeView::class);
-        $pageTreeView->setStandaloneMode(true)->init();
-        $pageTreeView->getTree(0);
-
-        $moduleTemplate->modifyModuleTemplate(
+        return $moduleTemplate->modifyModuleTemplates(
             [
-                'addTemplateRootPaths' => $this->templateRootPaths,
-                'addLayoutRootPaths' => $this->layoutRootPaths,
-                'addPartialRootPaths' => $this->partialRootPaths,
-                'setTemplateFile' => $this->templateFile
+                'templateRootPaths' => [$this->templateRootPaths],
+                'layoutRootPaths' => [$this->layoutRootPaths],
+                'partialRootPaths' => [$this->partialRootPaths],
+                'templateFile' => [$this->templateFile]
             ]
         )->modifyModuleTemplateView(
             [
                 'assign' => [
                     'pageTree', 
-                    $pageTreeView->printTree(),
+                    $this->standalonePageTreeView->printTree(),
                 ]
             ]
         );

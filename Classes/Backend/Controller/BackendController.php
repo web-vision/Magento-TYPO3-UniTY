@@ -38,7 +38,7 @@ class BackendController extends T3BackendController
      */
     public function mainAction(ServerRequestInterface $request, ResponseInterface $response)
     {
-        //if (! empty($request->getQueryParams()['module'])) {
+        // @WVTODO: Check for "$request->getQueryParams()['module']"
         if (isset($_COOKIE['module'])) {
             $modulesService = GeneralUtility::makeInstance(ModulesService::class);
 

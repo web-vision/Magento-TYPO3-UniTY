@@ -19,18 +19,17 @@ use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \WebVision\WvT3unity\Service\StandaloneModulesService;
+use \TYPO3\CMS\Backend\Tree\View\PageTreeView;
 
 /**
- * Script Class for Web > Layout module
+ * Renders Web > Page module standalone with pagetree.
  */
 class PageLayoutController extends BackendPageLayoutController
 {
     /**
-     * Injects the request object for the current request or subrequest
-     * As this controller goes only through the main() method, it is rather simple for now
-     *
      * @param ServerRequestInterface $request the current request
      * @param ResponseInterface $response
+     *
      * @return ResponseInterface the response with the content
      */
     public function mainAction(ServerRequestInterface $request, ResponseInterface $response)
@@ -41,10 +40,11 @@ class PageLayoutController extends BackendPageLayoutController
         if ($request->getQueryParams()['standalone'] == 1) {
             $standaloneModulesService = GeneralUtility::makeInstance(StandaloneModulesService::class);
             $standaloneModulesService->setStandaloneParams($this->moduleTemplate);
-        }        
+        }
 
         $this->clearCache();
         $this->main();
+        
         $response->getBody()->write(
             $this->moduleTemplate->renderContent()
         );

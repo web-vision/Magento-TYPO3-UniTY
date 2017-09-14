@@ -19,6 +19,8 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
+ * Extends Backend's UriBuilder to append standalone parameter
+ * to generated module URLs.
  */
 class UriBuilder extends BackendUriBuilder
 {
@@ -26,7 +28,7 @@ class UriBuilder extends BackendUriBuilder
      * @param array $parameters An array of GET parameters
      * @param string $referenceType The type of reference to be generated (one of the constants)
      *
-     * @return Uri
+     * @return string
      */
     protected function buildUri($parameters, $referenceType)
     {

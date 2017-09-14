@@ -18,6 +18,7 @@ use TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
+ * Extends Backend's PageTreeView to handle standalone module requests.
  */
 class StandalonePageTreeView extends PageTreeView
 {
@@ -44,7 +45,6 @@ class StandalonePageTreeView extends PageTreeView
     public function wrapTitle($title, $row, $bank = 0)
     {
         if ($this->renderStandalone) {
-
             return '<a href="' . $this->pageTreeUrl . $this->getJumpToParam($row) . '">' . $title . '</a>';
         }
 

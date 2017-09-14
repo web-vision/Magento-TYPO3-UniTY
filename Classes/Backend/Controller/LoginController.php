@@ -21,13 +21,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WebVision\WvT3unity\Service\ModulesService;
 
 /**
+ * Extends Backend's LoginController to handle requests for
+ * standalone modules.
  */
 class LoginController extends T3LoginController
 {
     /**
-     * Injects the request and response objects for the current request or subrequest
-     * As this controller goes only through the main() method, it is rather simple for now
-     *
      * @param ServerRequestInterface $request the current request
      * @param ResponseInterface $response the current response
      * @return ResponseInterface the finished response with the content
