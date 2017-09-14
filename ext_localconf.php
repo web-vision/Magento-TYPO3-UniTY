@@ -45,14 +45,14 @@ call_user_func(
                         'TYPO3\\CMS\\Backend\\Template\\ModuleTemplate' => [
                             'className' => 'WebVision\\WvT3unity\\Backend\\Template\\ModuleTemplate'
                         ],
-                        'TYPO3\\CMS\\Backend\\Template\\DocumentTemplate' => [
-                            'className' => 'WebVision\\WvT3unity\\Backend\\Template\\DocumentTemplate'
-                        ],
                         'TYPO3\\CMS\\Backend\\Tree\\View\\PageTreeView' => [
                             'className' => 'WebVision\\WvT3unity\\Backend\\Tree\\View\\StandalonePageTreeView'
                         ],
                         'TYPO3\\CMS\\Backend\\Routing\\UriBuilder' => [
                             'className' => 'WebVision\\WvT3unity\\Backend\\Routing\\UriBuilder'
+                        ],
+                        'TYPO3\\CMS\\Recordlist\\RecordList' => [
+                            'className' => 'WebVision\\WvT3unity\\Recordlist\\RecordList'
                         ],
                     ],
                 ],
