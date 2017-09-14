@@ -17,7 +17,6 @@ namespace WebVision\WvT3unity\Backend\Controller;
 use \TYPO3\CMS\Backend\Controller\PageLayoutController as BackendPageLayoutController;
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
-use \TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \WebVision\WvT3unity\Service\StandaloneModulesService;
 
@@ -40,20 +39,8 @@ class PageLayoutController extends BackendPageLayoutController
         $this->init();
 
         if ($request->getQueryParams()['standalone'] == 1) {
-            $this->moduleTemplate = GeneralUtility::makeInstance(
-                StandaloneModulesService::class
-            )->setStandaloneParams($this->moduleTemplate);
-
-            $pageTreeView = GeneralUtility::makeInstance(PageTreeView::class);
-            $pageTreeView->setStandaloneMode(true)->init();
-            $pageTreeView->getTree(0);
-
-            $view = $this->moduleTemplate->getView();
-            $view->assign(
-                'pageTree', $pageTreeView->printTree()
-            );
-
-            $this->moduleTemplate->setView($view);
+            $standaloneModulesService = GeneralUtility::makeInstance(StandaloneModulesService::class);
+            $standaloneModulesService->setStandaloneParams($this->moduleTemplate);
         }        
 
         $this->clearCache();

@@ -144,7 +144,14 @@ class ModulesService
         if (isset($moduleConfiguration['moduleMapping'])) {
             foreach ($moduleConfiguration['moduleMapping'] as $realModule => $moduleAlias) {
                 if (in_array($module, $moduleAlias)) {
-                    return $realModule;
+                    if (BackendUtility::isModuleSetInTBE_MODULES($realModule)) {
+                        return $realModule;
+                    }
+
+                    throw new \InvalidArgumentException(
+                        'Requested module "' . $module . 
+                            '" is not set or found as a main- or submodule in $TBE_MODULES array.'
+                    );
                 }
             }
         }

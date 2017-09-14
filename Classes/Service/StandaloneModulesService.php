@@ -16,6 +16,7 @@ namespace WebVision\WvT3unity\Service;
 
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use \TYPO3\CMS\Backend\Tree\View\PageTreeView;
 
 /**
  * Service for handling standalone modules.
@@ -25,24 +26,21 @@ class StandaloneModulesService
     /**
      * @var array
      */
-    protected $templateRootPaths = [
-        'EXT:wv_t3unity/Resources/Private/Templates/Backend/',
-    ];
+    protected $templateRootPaths = [ 'EXT:wv_t3unity/Resources/Private/Templates/Backend/' ];
 
     /**
      * @var array
      */
-    protected $layoutRootPaths = [
-        'EXT:wv_t3unity/Resources/Private/Layouts/Backend/',
-    ];
+    protected $layoutRootPaths = [ 'EXT:wv_t3unity/Resources/Private/Layouts/Backend/' ];
 
     /**
      * @var array
      */
-    protected $partialRootPaths = [
-        'EXT:wv_t3unity/Resources/Private/Partials/Backend/',
-    ];
+    protected $partialRootPaths = [ 'EXT:wv_t3unity/Resources/Private/Partials/Backend/' ];
 
+    /**
+     * @var string
+     */
     protected $templateFile = 'StandaloneModule.html';
 
     /**
@@ -50,24 +48,26 @@ class StandaloneModulesService
      * 
      * @return ModuleTemplate
      */
-    public function setStandaloneParams(ModuleTemplate $moduleTemplate) 
+    public function setStandaloneParams(ModuleTemplate &$moduleTemplate) 
     {
-        foreach ($this->templateRootPaths as $templateRootPath) {
-            $moduleTemplate->addTemplateRootPath($templateRootPath);
-        }
+        $pageTreeView = GeneralUtility::makeInstance(PageTreeView::class);
+        $pageTreeView->setStandaloneMode(true)->init();
+        $pageTreeView->getTree(0);
 
-        foreach ($this->layoutRootPaths as $layoutRootPath) {
-            $moduleTemplate->addLayoutRootPath($layoutRootPath);
-        }
-
-        foreach ($this->partialRootPaths as $partialRootPath) {
-            $moduleTemplate->addPartialRootPath($partialRootPath);
-        }
-
-        $moduleTemplate->setTemplateFile($this->templateFile);
-
-        $moduleTemplate->updateView();
-
-        return $moduleTemplate;
+        $moduleTemplate->modifyModuleTemplate(
+            [
+                'addTemplateRootPaths' => $this->templateRootPaths,
+                'addLayoutRootPaths' => $this->layoutRootPaths,
+                'addPartialRootPaths' => $this->partialRootPaths,
+                'setTemplateFile' => $this->templateFile
+            ]
+        )->modifyModuleTemplateView(
+            [
+                'assign' => [
+                    'pageTree', 
+                    $pageTreeView->printTree(),
+                ]
+            ]
+        );
     }
 }

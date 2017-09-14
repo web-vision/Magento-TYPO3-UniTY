@@ -20,39 +20,51 @@ use TYPO3\CMS\Backend\Template\ModuleTemplate as BackendModuleTemplate;
  */
 class ModuleTemplate extends BackendModuleTemplate
 {
-    public function addTemplateRootPath($templatePath) {
-        array_push($this->templateRootPaths, $templatePath);
-
-        return $this;
+    private function addPaths($to, array $paths) {
+        if (property_exists($this, $to . 'RootPaths')) {
+            foreach ($paths as $path) {
+                array_push($this->{$to . 'RootPaths'}, $path);
+            }
+        }
     }
 
-    public function addPartialRootPath($partialPath) {
-        array_push($this->partialRootPaths, $partialPath);
-
-        return $this;
+    protected function addTemplateRootPaths(array $templatePaths) {
+        $this->addPaths('template', $templatePaths);
     }
 
-    public function addLayoutRootPath($layoutPath) {
-        array_push($this->layoutRootPaths, $layoutPath);
-        
-        return $this;
+    protected function addPartialRootPaths(array $partialPaths) {
+        $this->addPaths('partial', $partialPaths);
     }
 
-    public function setTemplateFile($templateFile) {
+    protected function addLayoutRootPaths(array $layoutPaths) {
+        $this->addPaths('layout', $layoutPaths);
+    }
+
+    protected function setTemplateFile($templateFile) {
         $this->templateFile = $templateFile;
-        
+    }
+
+    private function modifyProperty(&$modify, array $params) {
+        foreach ($params as $method => $arguments) {
+            if (method_exists($modify, $method)) {
+                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump([$arguments], '[$arguments]');
+                call_user_func_array([$modify, $method], [$arguments]);
+            } else {
+                throw new \InvalidArgumentException(
+                    '"' . $method . '" do not exist in "' . get_class($modify) . '".'
+                );
+            }
+        }
+    }
+
+    public function modifyModuleTemplate(array $params) {
+        $this->modifyProperty($this, $params);
+
         return $this;
     }
 
-    public function updateView() {
-        $this->view->setPartialRootPaths($this->partialRootPaths);
-        $this->view->setTemplateRootPaths($this->templateRootPaths);
-        $this->view->setLayoutRootPaths($this->layoutRootPaths);
-        $this->view->setTemplate($this->templateFile);
-    }
-
-    public function setView($view) {
-        $this->view = $view;
+    public function modifyModuleTemplateView(array $params) {
+        $this->modifyProperty($this->view, $params);
 
         return $this;
     }
