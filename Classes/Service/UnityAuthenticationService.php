@@ -104,7 +104,6 @@ class UnityAuthenticationService extends AuthenticationService
      */
     protected function validateSession(string $username, string $token): bool
     {
-        $token = 'eada39ca7915baad041f28fc1a9c2072e69c89d7a5467fb8c9307f35cbab4a42';
         $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wv_t3unity']);
         $domain = rtrim($extensionConfiguration['MagentoUrl'], '/');
 
