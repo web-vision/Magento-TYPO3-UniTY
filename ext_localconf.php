@@ -69,6 +69,9 @@ call_user_func(
                 'className' => $unityAuthenticationService,
             ]
         );
+
+        // Register icon for clearing cache
+        \WebVision\WvT3unity\Utility\IconRegistry::registerIcons();
     },
     $_EXTKEY
 );

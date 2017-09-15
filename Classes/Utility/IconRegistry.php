@@ -12,7 +12,7 @@ namespace WebVision\WvT3unity\Utility;
 
 use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Imaging\IconRegistry as CoreIconRegistry;
 
 /**
  * Class IconRegistry
@@ -23,7 +23,7 @@ class IconRegistry
 {
     public static function registerIcons()
     {
-        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+        $iconRegistry = GeneralUtility::makeInstance(CoreIconRegistry::class);
         $contentElementIconFilePrefix = 'EXT:wv_t3unity/Resources/Public/Icons/';
 
         $iconRegistry->registerIcon(
