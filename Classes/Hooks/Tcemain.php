@@ -13,6 +13,8 @@ namespace WebVision\WvT3unity\Hooks;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Backend\Utility\BackendUtility;
 use \TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 
 /**
  * This class makes sure that on save of a page the path for the page will be
@@ -85,6 +87,11 @@ class Tcemain
         'unity_path',
         'canonical_url',
     ];
+
+    /**
+     * @var PageRepository
+     */
+    protected $pageRepository = null;
 
     /**
      * Hook to set an empty string for fields that use text as data type and
@@ -218,7 +225,15 @@ class Tcemain
     {
         $output = '';
 
-        $data = GeneralUtility::makeInstance(PageRepository::class)->getRootLine($uid);
+        $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
+        $pages = $this->pageRepository->getRootLine($uid);
+        $data = [];
+
+        if ($sysLanguageUid > 0) {
+            $data = $this->getPagesOverlayWithoutFERestriction($pages, $sysLanguageUid);
+        } else {
+            $data = $pages;
+        }
 
         ksort($data);
 
@@ -456,5 +471,82 @@ class Tcemain
 
         // urlencode to be absolute sure that it is a valid url
         return $path . urlencode($newElement) . '.html';
+    }
+
+    /**
+     * This method is almost the same as PageRepository::getPagesOverlay
+     * but does not set the frontend editing restriction as in the
+     * backend are no user groups and it throws an exception.
+     *
+     * @param array $pagesInput The pages input.
+     * @param int $lUid The language uid.
+     *
+     * @return array
+     */
+    protected function getPagesOverlayWithoutFERestriction(array $pagesInput, $lUid) {
+        $page_ids = [];
+
+        foreach ($pagesInput as $origPage) {
+            if (is_array($origPage)) {
+                // Was the whole record
+                $page_ids[] = $origPage['uid'];
+            } else {
+                // Was the id
+                $page_ids[] = $origPage;
+            }
+        }
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('pages_language_overlay');
+
+        $result = $queryBuilder->select('*')
+            ->from('pages_language_overlay')
+            ->where(
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter($page_ids, Connection::PARAM_INT_ARRAY)
+                ),
+                $queryBuilder->expr()->eq(
+                    'sys_language_uid',
+                    $queryBuilder->createNamedParameter($lUid, \PDO::PARAM_INT)
+                )
+            )
+            ->execute();
+
+        $overlays = [];
+        while ($row = $result->fetch()) {
+            $this->pageRepository->versionOL('pages_language_overlay', $row);
+            if (is_array($row)) {
+                $row['_PAGES_OVERLAY'] = true;
+                $row['_PAGES_OVERLAY_UID'] = $row['uid'];
+                $row['_PAGES_OVERLAY_LANGUAGE'] = $lUid;
+                $origUid = $row['pid'];
+                // Unset vital fields that are NOT allowed to be overlaid:
+                unset($row['uid']);
+                unset($row['pid']);
+                $overlays[$origUid] = $row;
+            }
+        }
+
+        // Create output:
+        $pagesOutput = [];
+        foreach ($pagesInput as $key => $origPage) {
+            if (is_array($origPage)) {
+                $pagesOutput[$key] = $origPage;
+                if (isset($overlays[$origPage['uid']])) {
+                    // Overwrite the original field with the overlay
+                    foreach ($overlays[$origPage['uid']] as $fieldName => $fieldValue) {
+                        if ($fieldName !== 'uid' && $fieldName !== 'pid') {
+                            $pagesOutput[$key][$fieldName] = $fieldValue;
+                        }
+                    }
+                }
+            } else {
+                if (isset($overlays[$origPage])) {
+                    $pagesOutput[$key] = $overlays[$origPage];
+                }
+            }
+        }
+        return $pagesOutput;
     }
 }

@@ -14,6 +14,8 @@ call_user_func(
         $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
         $typo3ModulesRequestVariables = 'MODULE_REQUESTS';
 
+        $unityAuthenticationService = WebVision\WvT3unity\Service\UnityAuthenticationService::class;
+
         $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
 
         \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
@@ -78,6 +80,24 @@ call_user_func(
                         'list',
                     ],
                 ],
+            ]
+        );
+
+        // Add the service
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
+            $extKey, 
+            'auth', 
+            $unityAuthenticationService, 
+            [
+                'title' => 'Unity Authentication',
+                'description' => 'Authenticates with Unity',
+                'subtype' => 'getUserBE,authUserBE',
+                'available' => true,
+                'priority' => 80,
+                'quality' => 80,
+                'os' => '',
+                'exec' => '',
+                'className' => $unityAuthenticationService,
             ]
         );
     },

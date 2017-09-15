@@ -33,6 +33,10 @@
             <trans-unit id="pages_language_overlay.canonical_url">
                 <source>Canonical URL</source>
             </trans-unit>
+
+            <trans-unit id="be_users.tx_t3unity_standalone">
+                <source>Standalone user</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
