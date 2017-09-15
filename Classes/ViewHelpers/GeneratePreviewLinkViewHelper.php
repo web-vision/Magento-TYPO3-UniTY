@@ -70,9 +70,8 @@ class GeneratePreviewLinkViewHelper extends AbstractViewHelper
 
         $urlHasProtocol = isset($scheme) && ($scheme === 'http' || $scheme === 'https');
 
-        $urlHasLastSlash = strpos(strrev($url), '/') == 0;
         // Remove last slash from url as the basePath always has one as first.
-        $url = ($urlHasLastSlash ? $this->removeLastOccurence('/', '', $url) : $url);
+        $url = rtrim($url, '/');
 
         $urlPathSegment = $this->arguments['data']['unity_path'];
 
@@ -97,27 +96,5 @@ class GeneratePreviewLinkViewHelper extends AbstractViewHelper
      */
     protected function getProtocol() {
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://');
-    }
-
-    /**
-     * Removes last occurence of string in a string.
-     *
-     * @param string $search
-     * @param string $replace
-     * @param string $subject
-     *
-     * @return string
-     */
-    protected function removeLastOccurence($search, $replace, $subject) {
-        return strrev(
-            implode(
-                strrev($replace),
-                explode(
-                    strrev($search),
-                    strrev($subject),
-                    2
-                )
-            )
-        );
     }
 }
