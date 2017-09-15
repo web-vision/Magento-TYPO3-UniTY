@@ -14,6 +14,11 @@
         height: 7%;
     }
 
+    #standalone-pagetree {
+        display: block;
+        padding-top: 10px;
+    }
+
     #standalone-wrapper {
         position: initial !important;
         height: 100%;
@@ -30,7 +35,11 @@
     </div>
     <div id="standalone-module-content">
         <f:if condition="{pageTree}">
-            <f:render partial="StandalonePagetree" arguments="{pageTree: pageTree}" />
+            <div class="scaffold-content-navigation t3js-scaffold-content-navigation" id="standalone-pagetree">
+                <div id="typo3-pagetree-treeContainer">
+                    {pageTree -> f:format.raw()}
+                </div>
+            </div>
         </f:if>
         <div class="scaffold-content-module t3js-scaffold-content-module" id="standalone-module">
             <f:if condition="{formTag}">

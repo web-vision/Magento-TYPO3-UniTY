@@ -10,7 +10,7 @@ namespace WebVision\WvT3unity\Recordlist;
  * Copyright (c) 2017 web-vision GmbH
  */
 
-use TYPO3\CMS\RecordList\RecordList as CoreRecordList;
+use TYPO3\CMS\Recordlist\RecordList as CoreRecordList;
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
