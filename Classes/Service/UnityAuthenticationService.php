@@ -2,6 +2,15 @@
 declare(strict_types=1);
 namespace WebVision\WvT3unity\Service;
 
+/*
+ * This file is part of the wv_t3unity Extension for TYPO3 CMS.
+ *
+ * @WVTODO: Add license
+ *
+ * The TYPO3 project - inspiring people to share!
+ * Copyright (c) 2017 web-vision GmbH
+ */
+
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Sv\AuthenticationService;
@@ -46,23 +55,70 @@ class UnityAuthenticationService extends AuthenticationService
 
         $user = $this->fetchUserRecord($this->login['uname']);
 
-        if ($user['tx_t3unity_standalone'] && (string)$this->login['uident_text'] === '') {
+        if (
+            $user['tx_t3unity_standalone'] && 
+            (string)$this->login['uident_text'] === ''
+        ) {
             // Failed Login attempt (no password given)
-            $this->writelog(255, 3, 3, 2, 'Login-attempt from %s (%s) for username \'%s\' with an empty password!', [
-                $this->authInfo['REMOTE_ADDR'], $this->authInfo['REMOTE_HOST'], $this->login['uname']
-            ]);
-            GeneralUtility::sysLog(sprintf('Login-attempt from %s (%s), for username \'%s\' with an empty password!', $this->authInfo['REMOTE_ADDR'], $this->authInfo['REMOTE_HOST'], $this->login['uname']), 'Core', GeneralUtility::SYSLOG_SEVERITY_WARNING);
+            $this->writelog(
+                255, 3, 3, 2, 
+                'Login-attempt from %s (%s) for username \'%s\' with an empty password!', 
+                [
+                    $this->authInfo['REMOTE_ADDR'], 
+                    $this->authInfo['REMOTE_HOST'], 
+                    $this->login['uname']
+                ]
+            );
+
+            GeneralUtility::sysLog(
+                sprintf(
+                    'Login-attempt from %s (%s), for username \'%s\' with an empty password!', 
+                    $this->authInfo['REMOTE_ADDR'], 
+                    $this->authInfo['REMOTE_HOST'], 
+                    $this->login['uname']
+                ), 
+                'Core', 
+                GeneralUtility::SYSLOG_SEVERITY_WARNING
+            );
+
             return false;
         }
 
-        if (!is_array($user)) {
+        if (! is_array($user)) {
             // Failed login attempt (no username found)
-            $this->writelog(255, 3, 3, 2, 'Login-attempt from %s (%s), username \'%s\' not found!!', [$this->authInfo['REMOTE_ADDR'], $this->authInfo['REMOTE_HOST'], $this->login['uname']]);
+            $this->writelog(
+                255, 3, 3, 2, 
+                'Login-attempt from %s (%s), username \'%s\' not found!!', 
+                [
+                    $this->authInfo['REMOTE_ADDR'], 
+                    $this->authInfo['REMOTE_HOST'], 
+                    $this->login['uname']
+                ]
+            );
+
             // Logout written to log
-            GeneralUtility::sysLog(sprintf('Login-attempt from %s (%s), username \'%s\' not found!', $this->authInfo['REMOTE_ADDR'], $this->authInfo['REMOTE_HOST'], $this->login['uname']), 'core', GeneralUtility::SYSLOG_SEVERITY_WARNING);
+            GeneralUtility::sysLog(
+                sprintf(
+                    'Login-attempt from %s (%s), username \'%s\' not found!', 
+                    $this->authInfo['REMOTE_ADDR'], 
+                    $this->authInfo['REMOTE_HOST'], 
+                    $this->login['uname']
+                ), 
+                'core', 
+                GeneralUtility::SYSLOG_SEVERITY_WARNING
+            );
         } else {
             if ($this->writeDevLog) {
-                GeneralUtility::devLog('User found: ' . GeneralUtility::arrayToLogString($user, [$this->db_user['userid_column'], $this->db_user['username_column']]), self::class);
+                GeneralUtility::devLog(
+                    'User found: ' . GeneralUtility::arrayToLogString(
+                        $user, 
+                        [
+                            $this->db_user['userid_column'], 
+                            $this->db_user['username_column']
+                        ]
+                    ), 
+                    self::class
+                );
             }
         }
         return $user;
@@ -77,6 +133,7 @@ class UnityAuthenticationService extends AuthenticationService
      * - 200 - the service was able to authenticate the user
      *
      * @param array $user Array containing FE user data of the logged user.
+     *
      * @return int Authentication status code, one of 0,100 and 200
      */
     public function authUser(array $user): int
@@ -90,7 +147,7 @@ class UnityAuthenticationService extends AuthenticationService
             return 100;
         }
 
-        if (!$this->validateSession($user['username'], GeneralUtility::_GET('token'))) {
+        if (! $this->validateSession($user['username'], GeneralUtility::_GET('token'))) {
             return 0;
         }
 
@@ -107,7 +164,8 @@ class UnityAuthenticationService extends AuthenticationService
         $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wv_t3unity']);
         $domain = rtrim($extensionConfiguration['MagentoUrl'], '/');
 
-        $requestUrl = $domain . '/rest/V1/unity/validateToken/username/' . urlencode($username) . '/token/' . urlencode($token);
+        $requestUrl = $domain . '/rest/V1/unity/validateToken/username/' . 
+            urlencode($username) . '/token/' . urlencode($token);
 
         $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
         $response = $requestFactory->request($requestUrl);

@@ -13,6 +13,8 @@ call_user_func(
     function ($extKey) {
         $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
 
+        $unityAuthenticationService = WebVision\WvT3unity\Service\UnityAuthenticationService::class;
+
         $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
 
         \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
@@ -40,17 +42,22 @@ call_user_func(
         );
 
         // Add the service
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService($extKey, 'auth', \WebVision\WvT3unity\Service\UnityAuthenticationService::class, [
-            'title' => 'Unity Authentication',
-            'description' => 'Authenticates with Unity',
-            'subtype' => 'getUserBE,authUserBE',
-            'available' => true,
-            'priority' => 80,
-            'quality' => 80,
-            'os' => '',
-            'exec' => '',
-            'className' => \WebVision\WvT3unity\Service\UnityAuthenticationService::class,
-        ]);
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
+            $extKey, 
+            'auth', 
+            $unityAuthenticationService, 
+            [
+                'title' => 'Unity Authentication',
+                'description' => 'Authenticates with Unity',
+                'subtype' => 'getUserBE,authUserBE',
+                'available' => true,
+                'priority' => 80,
+                'quality' => 80,
+                'os' => '',
+                'exec' => '',
+                'className' => $unityAuthenticationService,
+            ]
+        );
     },
     $_EXTKEY
 );
