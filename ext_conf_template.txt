@@ -1,0 +1,5 @@
+# cat=basic/enable; type=string; label=LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:ext_conf_template.MagentoUrl
+MagentoUrl =
+
+# cat=basic/enable; type=boolean; label=LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:ext_conf_template.SupportSingleCacheInvalidation
+SupportSingleCacheInvalidation =

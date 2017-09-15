@@ -16,6 +16,10 @@ call_user_func(
 
         $unityAuthenticationService = WebVision\WvT3unity\Service\UnityAuthenticationService::class;
 
+        // EID Call for clearing the TYPO3 Cache
+        $GLOBALS[$typo3ConfigurationVariables]['FE']['eID_include'][$extKey . '_clearCache'] = 
+            WebVision\WvT3unity\Controller\Eid\ClearCacheFromRemote::class .'::clearCacheAction';
+
         $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
 
         \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
@@ -29,6 +33,9 @@ call_user_func(
                         'processCmdmapClass' => [
                             $extKey => WebVision\WvT3unity\Hooks\Tcemain::class,
                         ],
+                        'clearCachePostProc' => [
+                            $extKey => WebVision\WvT3unity\Hooks\DataHandler::class . '->clearAdditionalCache',
+                        ],
                     ],
                     'tslib/class.tslib_fe.php' => [
                         'contentPostProc-all' => [
@@ -38,6 +45,11 @@ call_user_func(
                             $extKey => WebVision\WvT3unity\Hooks\ContentPostProc::class . '->hookEntry',
                         ],
                     ],
+                    'additionalBackendItems' => [
+                        'cacheActions' => [
+                            $extKey => WebVision\WvT3unity\Hooks\Backend\Toolbar\ClearCacheActionsHook::class
+                        ]
+                    ]
                 ],
                 'SYS' => [
                     'Objects' => [
@@ -100,6 +112,9 @@ call_user_func(
                 'className' => $unityAuthenticationService,
             ]
         );
+
+        // Register icon for clearing cache
+        \WebVision\WvT3unity\Utility\IconRegistry::registerIcons();
     },
     $_EXTKEY
 );
