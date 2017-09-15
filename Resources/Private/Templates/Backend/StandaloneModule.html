@@ -17,10 +17,13 @@
     #standalone-pagetree {
         display: block;
         top: 65px;
+        overflow: scroll;
+        background-color: #f5f5f5;
     }
 
     #typo3-pagetree-treeContainer {
         padding-top: 10px;
+        padding-left: 25px;
     }
 
     #standalone-wrapper {
@@ -32,8 +35,9 @@
         padding-top: 10px !important;
     }
 
-    .list-tree li:last-child:before {
-        background-color: transparent;
+    .list-tree li:last-child:before,
+    .list-tree-control>.fa:before {
+        background-color: #f5f5f5;
     }
 
 </style>

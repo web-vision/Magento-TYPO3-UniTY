@@ -10,6 +10,8 @@ namespace WebVision\WvT3unity\Service;
  * Copyright (c) 2017 web-vision GmbH
  */
 
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WebVision\WvT3unity\Backend\Template\ModuleTemplate;
 use WebVision\WvT3unity\Backend\Tree\View\StandalonePageTreeView;
@@ -49,8 +51,7 @@ class StandaloneModulesService
      */
     public function __construct() {
         $this->standalonePageTreeView = GeneralUtility::makeInstance(StandalonePageTreeView::class);
-        $this->standalonePageTreeView->setStandaloneMode(true)->init();
-        $this->standalonePageTreeView->getTree(0);
+        $this->standalonePageTreeView->setStandaloneMode(true)->init('AND ' . $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW));
     }
 
     /**
@@ -75,5 +76,13 @@ class StandaloneModulesService
                 ]
             ]
         );
+    }
+
+    /**
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUserAuthentication(): BackendUserAuthentication
+    {
+        return $GLOBALS['BE_USER'];
     }
 }

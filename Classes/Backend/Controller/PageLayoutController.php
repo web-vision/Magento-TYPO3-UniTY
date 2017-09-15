@@ -15,7 +15,6 @@ use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \WebVision\WvT3unity\Service\StandaloneModulesService;
-use \TYPO3\CMS\Backend\Tree\View\PageTreeView;
 
 /**
  * Renders Web > Page module standalone with pagetree.
@@ -40,7 +39,7 @@ class PageLayoutController extends BackendPageLayoutController
 
         $this->clearCache();
         $this->main();
-        
+
         $response->getBody()->write(
             $this->moduleTemplate->renderContent()
         );

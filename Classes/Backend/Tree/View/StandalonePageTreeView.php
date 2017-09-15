@@ -10,13 +10,13 @@ namespace WebVision\WvT3unity\Backend\Tree\View;
  * Copyright (c) 2017 web-vision GmbH
  */
 
-use TYPO3\CMS\Backend\View\PageTreeView;
+use TYPO3\CMS\Backend\Tree\View\BrowseTreeView;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Extends Backend's PageTreeView to handle standalone module requests.
  */
-class StandalonePageTreeView extends PageTreeView
+class StandalonePageTreeView extends BrowseTreeView
 {
     /**
      * @var bool
@@ -61,7 +61,7 @@ class StandalonePageTreeView extends PageTreeView
             $this->pageTreeUrl = 'index.php?';
             $iterator = 0;
 
-            foreach($params as $key => $value) {
+            foreach ($params as $key => $value) {
                 if ($key != 'id') {
                     $this->pageTreeUrl .= ($iterator > 0 ? '&' : '') . $key . '=' . $value;
                 }
@@ -75,5 +75,27 @@ class StandalonePageTreeView extends PageTreeView
         }
 
         return $this;
+    }
+
+    /**
+     * Wrap the plus/minus icon in a link
+     *
+     * @param string $icon HTML string to wrap, probably an image tag.
+     * @param string $cmd Command for 'PM' get var
+     * @param string $bMark If set, the link will have an anchor point (=$bMark) and a name attribute (=$bMark)
+     * @param bool $isOpen
+     * @return string Link-wrapped input string
+     * @access private
+     */
+    public function PM_ATagWrap($icon, $cmd, $bMark = '', $isOpen = false)
+    {
+        if ($this->thisScript) {
+            $aUrl = $this->getThisScript() . 'PM=' . $cmd;
+
+            return '<a class="list-tree-control ' . ($isOpen ? 'list-tree-control-open'
+                    : 'list-tree-control-closed') . '" href="' . htmlspecialchars($aUrl) . '"><i class="fa"></i></a>';
+        }
+
+        return $icon;
     }
 }

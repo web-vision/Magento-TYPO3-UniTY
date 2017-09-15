@@ -16,7 +16,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Backend\View\PageTreeView;
 use WebVision\WvT3unity\Service\ModulesService;
 
 /**
@@ -29,7 +28,7 @@ class BackendController extends T3BackendController
      *
      * @param ServerRequestInterface $request the current request
      * @param ResponseInterface $response
-     * 
+     *
      * @return ResponseInterface the response with the content
      */
     public function mainAction(ServerRequestInterface $request, ResponseInterface $response)
