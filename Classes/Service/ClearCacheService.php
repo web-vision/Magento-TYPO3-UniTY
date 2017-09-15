@@ -1,6 +1,14 @@
 <?php
-
 namespace WebVision\WvT3unity\Service;
+
+/*
+ * This file is part of the wv_t3unity Extension for TYPO3 CMS.
+ *
+ * @WVTODO: Add license
+ *
+ * The TYPO3 project - inspiring people to share!
+ * Copyright (c) 2017 web-vision GmbH
+ */
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -9,16 +17,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ClearCacheService
+ *
  * @package WebVision\WvT3unity\Service
  */
 class ClearCacheService
 {
-
     /**
      * @var array
      */
     protected $extConf = [];
-
 
     /**
      * ClearCacheService constructor.
@@ -28,9 +35,8 @@ class ClearCacheService
         $this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wv_t3unity']);
     }
 
-
     /**
-     * @param $pageUid
+     * @param int $pageUid
      */
     public function clearCacheForSinglePage($pageUid)
     {
@@ -43,26 +49,27 @@ class ClearCacheService
     }
 
     /**
-     *
+     * @return void
      */
     public function clearCacheForAllPages()
     {
         $this->sendClearCacheSignalToMagento();
     }
 
-
     /**
-     * @param null $pagePath
+     * @param string $pagePath
      */
     protected function sendClearCacheSignalToMagento($pagePath = NULL)
     {
-
         if (empty($this->extConf['MagentoUrl'])) {
-            $this->displayFlashMessage('No Magento Instance defined in ExtManager', FlashMessage::ERROR);
+            $this->displayFlashMessage(
+                'No Magento Instance defined in ExtManager', 
+                FlashMessage::ERROR
+            );
             return;
         }
 
-        if (!empty($pagePath)) {
+        if (! empty($pagePath)) {
             $this->displayFlashMessage('Magento Cache invalidated for Page: ' . $pagePath);
             // @todo implement Magento Cache for one page
         } else {
@@ -79,7 +86,8 @@ class ClearCacheService
      */
     protected function displayFlashMessage($text, $severity = FlashMessage::OK)
     {
-        $message = GeneralUtility::makeInstance(FlashMessage::class,
+        $message = GeneralUtility::makeInstance(
+            FlashMessage::class,
             $text,
             'Clear Cache',
             $severity,
@@ -122,6 +130,4 @@ class ClearCacheService
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
         return $queryBuilder;
     }
-
-
 }

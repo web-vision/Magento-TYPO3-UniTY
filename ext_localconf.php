@@ -14,7 +14,8 @@ call_user_func(
         $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
 
         // EID Call for clearing the TYPO3 Cache
-        $GLOBALS[$typo3ConfigurationVariables]['FE']['eID_include'][$extKey . '_clearCache'] = WebVision\WvT3unity\Controller\Eid\ClearCacheFromRemote::class .'::clearCacheAction';
+        $GLOBALS[$typo3ConfigurationVariables]['FE']['eID_include'][$extKey . '_clearCache'] = 
+            WebVision\WvT3unity\Controller\Eid\ClearCacheFromRemote::class .'::clearCacheAction';
 
         $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
 
