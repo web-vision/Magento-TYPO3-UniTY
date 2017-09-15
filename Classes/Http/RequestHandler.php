@@ -15,8 +15,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Http\RequestHandlerInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use WebVision\WvT3unity\Authentication\BackendUserAuthentication;
+use WebVision\WvT3unity\Service\ModulesService;
 
 /**
  * Class SsoRequestHandler
@@ -48,6 +50,7 @@ class RequestHandler implements RequestHandlerInterface
      */
     public function handleRequest(ServerRequestInterface $request)
     {
+        $request = $request->withQueryParams(array_merge($request->getQueryParams(), ['standalone' => '1']));
         $queryParams = $request->getQueryParams();
 
         // Set login data
@@ -57,14 +60,22 @@ class RequestHandler implements RequestHandlerInterface
 
         $this->boot();
 
-        $moduleName = (string)$queryParams['M'];
+        if (!empty($queryParams['module'])) {
+            $moduleName = GeneralUtility::makeInstance(ModulesService::class)->getRealModuleNameFromMapping($queryParams['module']);
+        } else {
+            $moduleName = (string)$queryParams['M'];
+        }
+
         if ($moduleName === '') {
             throw new \InvalidArgumentException(
                 'Module must be set to be able to perform further dispatching',
                 1505302795
             );
         }
-        unset($queryParams['M'], $queryParams['username']);
+
+        // Remove values from query params that are not required anymore
+        $valuesToBeRemoved = ['module', 'M', 'username', 'token'];
+        $queryParams = array_diff_key($queryParams, array_flip($valuesToBeRemoved));
 
         HttpUtility::redirect(BackendUtility::getModuleUrl($moduleName, $queryParams));
         exit;

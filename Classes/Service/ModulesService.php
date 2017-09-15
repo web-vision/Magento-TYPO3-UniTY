@@ -34,7 +34,7 @@ class ModulesService
      * @return void
      */
     public function handleModuleRequest(
-        LoginController &$loginController, 
+        LoginController &$loginController,
         ServerRequestInterface $request
     ) {
         $this->module = $request->getQueryParams()['module'];
@@ -61,11 +61,11 @@ class ModulesService
      *
      * @return bool
      */
-    protected function moduleIsConfigured($module) 
+    protected function moduleIsConfigured($module)
     {
         return (
             in_array(
-                $module, 
+                $module,
                 $this->getModuleRequestConfiguration()['allowedModules']
             ) ? true : false
         );
@@ -78,7 +78,7 @@ class ModulesService
      * @return bool
      */
     protected function modifyRedirectUrl(
-        LoginController &$loginController, 
+        LoginController &$loginController,
         $module
     ) {
         $sanitizedLocalUrl = GeneralUtility::sanitizeLocalUrl(
@@ -104,24 +104,24 @@ class ModulesService
      *
      * @return void
      */
-    private function writeLog(ServerRequestInterface $request, $logKey) 
+    private function writeLog(ServerRequestInterface $request, $logKey)
     {
         $remoteAddress = $request->getServerParams()['REMOTE_ADDR'];
 
         switch ($logKey) {
             case self::MODULE_NOT_CONFIGURED:
                 GeneralUtility::sysLog(
-                    'The requested module "' . $this->module . '" is not allowed or configured (from ' . 
-                        $remoteAddress . ' ).', 
-                    'wv_t3unity', 
+                    'The requested module "' . $this->module . '" is not allowed or configured (from ' .
+                        $remoteAddress . ' ).',
+                    'wv_t3unity',
                     GeneralUtility::SYSLOG_SEVERITY_NOTICE
                 );
                 break;
             case self::INVALID_URL:
                 GeneralUtility::sysLog(
-                    'The URL "' . $url . '" is not considered to be local and was denied ' .
-                        'for module "' . $this->module . '" (from ' . $remoteAddress . ' ).', 
-                    'wv_t3unity', 
+                    'The URL "' . $request->getUri() . '" is not considered to be local and was denied ' .
+                        'for module "' . $this->module . '" (from ' . $remoteAddress . ' ).',
+                    'wv_t3unity',
                     GeneralUtility::SYSLOG_SEVERITY_NOTICE
                 );
                 break;
@@ -146,7 +146,7 @@ class ModulesService
                     }
 
                     throw new \InvalidArgumentException(
-                        'Requested module "' . $module . 
+                        'Requested module "' . $module .
                             '" is not set or found as a main- or submodule in $TBE_MODULES array.'
                     );
                 }
@@ -161,9 +161,9 @@ class ModulesService
     /**
      * Wrapper for MODULE_REQUESTS configuration.
      *
-     * @return array 
+     * @return array
      */
-    public function getModuleRequestConfiguration() 
+    public function getModuleRequestConfiguration()
     {
         return (is_array($GLOBALS['MODULE_REQUESTS']) ? $GLOBALS['MODULE_REQUESTS'] : []);
     }
