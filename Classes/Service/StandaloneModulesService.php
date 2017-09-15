@@ -10,8 +10,8 @@ namespace WebVision\WvT3unity\Service;
  * Copyright (c) 2017 web-vision GmbH
  */
 
-use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WebVision\WvT3unity\Backend\Template\ModuleTemplate;
 use WebVision\WvT3unity\Backend\Tree\View\StandalonePageTreeView;
 
 /**
@@ -48,17 +48,17 @@ class StandaloneModulesService
      * Constructor.
      */
     public function __construct() {
-        $this->standalonePageTreeView = GeneralUtility::makeInstance(standalonePageTreeView::class);
+        $this->standalonePageTreeView = GeneralUtility::makeInstance(StandalonePageTreeView::class);
         $this->standalonePageTreeView->setStandaloneMode(true)->init();
         $this->standalonePageTreeView->getTree(0);
     }
 
     /**
      * @param ModuleTemplate $moduleTemplate
-     * 
+     *
      * @return ModuleTemplate
      */
-    public function setStandaloneParams(ModuleTemplate $moduleTemplate) 
+    public function setStandaloneParams(ModuleTemplate $moduleTemplate)
     {
         return $moduleTemplate->modifyModuleTemplates(
             [
@@ -70,8 +70,8 @@ class StandaloneModulesService
         )->modifyModuleTemplateView(
             [
                 'assign' => [
-                    'pageTree', 
-                    $this->standalonePageTreeView->printTree(),
+                    'pageTree',
+                    $this->standalonePageTreeView->getBrowsableTree(),
                 ]
             ]
         );

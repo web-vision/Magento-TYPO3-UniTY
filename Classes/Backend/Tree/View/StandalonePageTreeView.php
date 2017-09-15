@@ -10,7 +10,7 @@ namespace WebVision\WvT3unity\Backend\Tree\View;
  * Copyright (c) 2017 web-vision GmbH
  */
 
-use TYPO3\CMS\Backend\Tree\View\PageTreeView;
+use TYPO3\CMS\Backend\View\PageTreeView;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -49,7 +49,7 @@ class StandalonePageTreeView extends PageTreeView
 
     /**
      * @param bool $standalone
-     * 
+     *
      * @return StandalonePageTreeView
      */
     public function setStandaloneMode($standalone)

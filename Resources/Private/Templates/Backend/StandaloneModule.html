@@ -1,21 +1,25 @@
 <style>
     #standalone-module {
-        float: right; 
-        left: initial; 
-        width: 69%;
+        float: right;
+        left: initial;
+        top: 65px;
+        width: calc(100% - 300px);
     }
 
     #standalone-module-content {
-        position: relative;
+        top: 65px;
     }
 
-    #standalone-module-docHeader {
-        position: relative;
-        height: 7%;
+    .module-docheader {
+        z-index: 0;
     }
 
     #standalone-pagetree {
         display: block;
+        top: 65px;
+    }
+
+    #typo3-pagetree-treeContainer {
         padding-top: 10px;
     }
 
@@ -27,6 +31,11 @@
     .module-body {
         padding-top: 10px !important;
     }
+
+    .list-tree li:last-child:before {
+        background-color: transparent;
+    }
+
 </style>
 
 <div class="scaffold-content t3js-scaffold-content" id="standalone-wrapper">

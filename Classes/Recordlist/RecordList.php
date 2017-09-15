@@ -15,7 +15,6 @@ use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \WebVision\WvT3unity\Service\StandaloneModulesService;
-use \TYPO3\CMS\Backend\Tree\View\PageTreeView;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
@@ -39,7 +38,7 @@ class RecordList extends CoreRecordList
             $standaloneModulesService = GeneralUtility::makeInstance(StandaloneModulesService::class);
             $standaloneModulesService->setStandaloneParams($this->moduleTemplate);
         }
-        
+
         $this->clearCache();
         $this->main();
 
