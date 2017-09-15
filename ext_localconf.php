@@ -12,8 +12,11 @@
 call_user_func(
     function ($extKey) {
         $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
-
         $unityAuthenticationService = WebVision\WvT3unity\Service\UnityAuthenticationService::class;
+
+        // EID Call for clearing the TYPO3 Cache
+        $GLOBALS[$typo3ConfigurationVariables]['FE']['eID_include'][$extKey . '_clearCache'] = 
+            WebVision\WvT3unity\Controller\Eid\ClearCacheFromRemote::class .'::clearCacheAction';
 
         $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
 
@@ -28,6 +31,9 @@ call_user_func(
                         'processCmdmapClass' => [
                             $extKey => WebVision\WvT3unity\Hooks\Tcemain::class,
                         ],
+                        'clearCachePostProc' => [
+                            $extKey => WebVision\WvT3unity\Hooks\DataHandler::class . '->clearAdditionalCache',
+                        ],
                     ],
                     'tslib/class.tslib_fe.php' => [
                         'contentPostProc-all' => [
@@ -37,6 +43,11 @@ call_user_func(
                             $extKey => WebVision\WvT3unity\Hooks\ContentPostProc::class . '->hookEntry',
                         ],
                     ],
+                    'additionalBackendItems' => [
+                        'cacheActions' => [
+                            $extKey => WebVision\WvT3unity\Hooks\Backend\Toolbar\ClearCacheActionsHook::class
+                        ]
+                    ]
                 ],
             ]
         );
@@ -61,3 +72,5 @@ call_user_func(
     },
     $_EXTKEY
 );
+
+

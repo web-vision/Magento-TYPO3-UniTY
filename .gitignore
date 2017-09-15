@@ -104,7 +104,6 @@ composer.phar
 
 # Own excludes TYPO3
 ######################
-/*.txt
 /fileadmin/
 /uploads/
 /typo3temp/
