@@ -70,11 +70,18 @@ class ClearCacheService
         }
 
         if (! empty($pagePath)) {
-            $this->displayFlashMessage('Magento Cache invalidated for Page: ' . $pagePath);
-            // @todo implement Magento Cache for one page
+            // @WVTODO: Provide clear only one page's cache functionality
+            GeneralUtility::getUrl(
+                $this->extConf['MagentoUrl'] . '/rest/V1/unity/clearAllCaches'
+            );
+
+            $this->displayFlashMessage('Magento Cache successfully cleared for Page: ' . $pagePath);
         } else {
-            $this->displayFlashMessage('Whole Magento Cache was invalidated');
-            // @todo implement invalidation of whole cache
+            GeneralUtility::getUrl(
+                $this->extConf['MagentoUrl'] . '/rest/V1/unity/clearAllCaches'
+            );
+
+            $this->displayFlashMessage('Magento Cache successfully cleared.');
         }
 
         return;
