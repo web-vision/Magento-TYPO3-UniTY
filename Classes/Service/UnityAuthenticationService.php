@@ -11,7 +11,9 @@ namespace WebVision\WvT3unity\Service;
  * Copyright (c) 2017 web-vision GmbH
  */
 
+use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Sv\AuthenticationService;
 
@@ -167,9 +169,22 @@ class UnityAuthenticationService extends AuthenticationService
         $requestUrl = $domain . '/rest/V1/unity/validateToken/username/' . 
             urlencode($username) . '/token/' . urlencode($token);
 
-        $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
-        $response = $requestFactory->request($requestUrl);
+        try {
+            $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
+            $response = $requestFactory->request($requestUrl);
+        } catch (\Exception $e) {
+            $this->getLogger()->critical($e->getMessage());
+            return false;
+        }
 
         return (string)$response->getBody()->getContents() === 'true';
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    protected function getLogger()
+    {
+        return GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
     }
 }
