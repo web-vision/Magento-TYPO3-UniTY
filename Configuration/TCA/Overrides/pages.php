@@ -57,7 +57,7 @@ call_user_func(
         );
 
         // Remove tx_realurl_pathoverride from backend
-        $GLOBALS['TCA'][$pages]['palettes']['137']['showitem'] = '';
+        $GLOBALS['TCA'][$table]['palettes']['137']['showitem'] = '';
 
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
             $extKey,
