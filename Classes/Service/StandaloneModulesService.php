@@ -47,11 +47,17 @@ class StandaloneModulesService
     protected $templateFile = 'StandaloneModule.html';
 
     /**
-     * Constructor.
+     * Initialize pageTreeView.
      */
     public function __construct() {
         $this->standalonePageTreeView = GeneralUtility::makeInstance(StandalonePageTreeView::class);
-        $this->standalonePageTreeView->setStandaloneMode(true)->init('AND ' . $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_SHOW));
+        $this->standalonePageTreeView
+            ->setStandaloneMode(true)
+            ->init(
+                'AND ' . $this->getBackendUserAuthentication()->getPagePermsClause(
+                    Permission::PAGE_SHOW
+                )
+            );
     }
 
     /**
@@ -81,7 +87,7 @@ class StandaloneModulesService
     /**
      * @return BackendUserAuthentication
      */
-    protected function getBackendUserAuthentication(): BackendUserAuthentication
+    protected function getBackendUserAuthentication() : BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }

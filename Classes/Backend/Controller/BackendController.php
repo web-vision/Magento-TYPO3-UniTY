@@ -19,6 +19,8 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use WebVision\WvT3unity\Service\ModulesService;
 
 /**
+ * Overrides BackendController to redirect to standalone view
+ * if requested. 
  */
 class BackendController extends T3BackendController
 {

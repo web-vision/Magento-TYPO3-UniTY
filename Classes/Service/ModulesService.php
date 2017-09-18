@@ -31,6 +31,9 @@ class ModulesService
     /**
      * Handles the request for a specific backend module.
      *
+     * @param LoginController $loginController
+     * @param ServerRequestInterface $request
+     *
      * @return void
      */
     public function handleModuleRequest(
@@ -59,6 +62,8 @@ class ModulesService
     /**
      * Checks if requested module is configured.
      *
+     * @param string $module
+     *
      * @return bool
      */
     protected function moduleIsConfigured($module)
@@ -74,6 +79,9 @@ class ModulesService
     /**
      * Modifies the redirect URL after successful login if
      * a specific module is requested.
+     *
+     * @param LoginController $loginController
+     * @param string $module
      *
      * @return bool
      */
