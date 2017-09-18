@@ -149,11 +149,11 @@ class UnityAuthenticationService extends AuthenticationService
             return 100;
         }
 
-        if (! $this->validateSession($user['username'], GeneralUtility::_GET('token'))) {
-            return 0;
+        if ($this->validateSession($user['username'], GeneralUtility::_GET('token'))) {
+            return 200;
         }
 
-        return 200;
+        return 0;
     }
 
     /**
