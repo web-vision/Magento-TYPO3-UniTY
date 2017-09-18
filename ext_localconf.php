@@ -12,6 +12,8 @@
 call_user_func(
     function ($extKey) {
         $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
+        $typo3ModulesRequestVariables = 'MODULE_REQUESTS';
+
         $unityAuthenticationService = WebVision\WvT3unity\Service\UnityAuthenticationService::class;
 
         // EID Call for clearing the TYPO3 Cache
@@ -49,6 +51,47 @@ call_user_func(
                         ]
                     ]
                 ],
+                'SYS' => [
+                    'Objects' => [
+                        'TYPO3\\CMS\\Backend\\Controller\\PageLayoutController' => [
+                            'className' => 'WebVision\\WvT3unity\\Backend\\Controller\\PageLayoutController'
+                        ],
+                        'TYPO3\\CMS\\Backend\\Template\\ModuleTemplate' => [
+                            'className' => 'WebVision\\WvT3unity\\Backend\\Template\\ModuleTemplate'
+                        ],
+                        'TYPO3\\CMS\\Backend\\Tree\\View\\PageTreeView' => [
+                            'className' => 'WebVision\\WvT3unity\\Backend\\Tree\\View\\StandalonePageTreeView'
+                        ],
+                        'TYPO3\\CMS\\Backend\\Routing\\UriBuilder' => [
+                            'className' => 'WebVision\\WvT3unity\\Backend\\Routing\\UriBuilder'
+                        ],
+                        'TYPO3\\CMS\\Recordlist\\RecordList' => [
+                            'className' => 'WebVision\\WvT3unity\\Recordlist\\RecordList'
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        if (! is_array($GLOBALS[$typo3ModulesRequestVariables])) {
+            $GLOBALS[$typo3ModulesRequestVariables] = [];
+        }
+
+        \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+            $GLOBALS[$typo3ModulesRequestVariables],
+            [
+                'allowedModules' => [
+                    'page',
+                    'list',
+                ],
+                'moduleMapping' => [
+                    'web_layout' => [
+                        'page',
+                    ],
+                    'web_list' => [
+                        'list',
+                    ],
+                ],
             ]
         );
 
@@ -75,5 +118,3 @@ call_user_func(
     },
     $_EXTKEY
 );
-
-

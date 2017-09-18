@@ -11,6 +11,10 @@ namespace WebVision\WvT3unity\Authentication;
  * Copyright (c) 2017 web-vision GmbH
  */
 
+/**
+ * Unity SSO user authentication
+ * Enables authentication via GET parameter
+ */
 class BackendUserAuthentication extends \TYPO3\CMS\Core\Authentication\BackendUserAuthentication
 {
     /**

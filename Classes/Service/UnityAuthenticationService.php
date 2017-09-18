@@ -159,11 +159,21 @@ class UnityAuthenticationService extends AuthenticationService
     /**
      * @param string $username
      * @param string $token
+     * 
      * @return bool
+     * @throws invalidArgumentException if MagentoUrl is not set
      */
     protected function validateSession(string $username, string $token): bool
     {
         $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wv_t3unity']);
+
+        if (! isset($extensionConfiguration['MagentoUrl'])) {
+            throw new \InvalidArgumentException(
+                'MagentoUrl is not configured (in 
+                    "$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'wv_t3unity\'][\'MagentoUrl\']")'
+            );
+        }
+
         $domain = rtrim($extensionConfiguration['MagentoUrl'], '/');
 
         $requestUrl = $domain . '/rest/V1/unity/validateToken/username/' .

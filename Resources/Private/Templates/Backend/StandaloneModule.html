@@ -1,0 +1,86 @@
+<style>
+    #standalone-module {
+        float: right;
+        left: initial;
+        top: 65px;
+        width: calc(100% - 300px);
+    }
+
+    #standalone-module-content {
+        top: 65px;
+    }
+
+    .module-docheader {
+        z-index: 0;
+    }
+
+    #standalone-pagetree {
+        display: block;
+        top: 65px;
+        overflow: scroll;
+        background-color: #f5f5f5;
+    }
+
+    #typo3-pagetree-treeContainer {
+        padding-top: 10px;
+        padding-left: 25px;
+    }
+
+    #standalone-wrapper {
+        position: initial !important;
+        height: 100%;
+    }
+
+    .module-body {
+        padding-top: 10px !important;
+    }
+
+    .list-tree li:last-child:before,
+    .list-tree-control>.fa:before {
+        background-color: #f5f5f5;
+    }
+
+</style>
+
+<div class="scaffold-content t3js-scaffold-content" id="standalone-wrapper">
+    <div id="standalone-module-docHeader">
+        <f:render partial="DocHeader" arguments="{docHeader: docHeader}" />
+    </div>
+    <div id="standalone-module-content">
+        <f:if condition="{pageTree}">
+            <div class="scaffold-content-navigation t3js-scaffold-content-navigation" id="standalone-pagetree">
+                <div id="typo3-pagetree-treeContainer">
+                    {pageTree -> f:format.raw()}
+                </div>
+            </div>
+        </f:if>
+        <div class="scaffold-content-module t3js-scaffold-content-module" id="standalone-module">
+            <f:if condition="{formTag}">
+                <f:then>
+                    <f:format.raw>{formTag}</f:format.raw>
+                </f:then>
+            </f:if>
+            <div class="module-body t3js-module-body">
+                <f:if condition="{uiBlock}">
+                    <div id="t3js-ui-block" class="ui-block">
+                        <core:icon identifier="spinner-circle-light" size="large" />
+                    </div>
+                </f:if>
+                <f:flashMessages queueIdentifier="{flashMessageQueueIdentifier}" />
+                <f:format.raw>{content}</f:format.raw>
+            </div>
+            <f:if condition="{formTag}">
+                <f:then>
+                    </form>
+                </f:then>
+            </f:if>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(document).find('.t3js-contextmenutrigger').on('click', function(e) {
+		e.preventDefault();
+	});
+	$(document).find('.t3js-contextmenutrigger').removeClass('t3js-contextmenutrigger');
+</script>
