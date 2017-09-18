@@ -69,7 +69,7 @@ class PageLayoutController extends BackendPageLayoutController
             $createButton = $this->buttonBar->makeLinkButton()
                 ->setHref($href)
                 ->setTitle($lang->getLL('newRecordGeneral'))
-                ->setIcon($this->iconFactory->getIcon('actions-add', Icon::SIZE_SMALL));
+                ->setIcon($this->iconFactory->getIcon('actions-document-new', Icon::SIZE_SMALL));
 
             $this->buttonBar->addButton($createButton);
         }
