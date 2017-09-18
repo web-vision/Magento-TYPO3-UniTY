@@ -58,28 +58,28 @@ class UnityAuthenticationService extends AuthenticationService
         $user = $this->fetchUserRecord($this->login['uname']);
 
         if (
-            $user['tx_t3unity_standalone'] && 
+            $user['tx_t3unity_standalone'] &&
             (string)$this->login['uident_text'] === ''
         ) {
             // Failed Login attempt (no password given)
             $this->writelog(
-                255, 3, 3, 2, 
-                'Login-attempt from %s (%s) for username \'%s\' with an empty password!', 
+                255, 3, 3, 2,
+                'Login-attempt from %s (%s) for username \'%s\' with an empty password!',
                 [
-                    $this->authInfo['REMOTE_ADDR'], 
-                    $this->authInfo['REMOTE_HOST'], 
+                    $this->authInfo['REMOTE_ADDR'],
+                    $this->authInfo['REMOTE_HOST'],
                     $this->login['uname']
                 ]
             );
 
             GeneralUtility::sysLog(
                 sprintf(
-                    'Login-attempt from %s (%s), for username \'%s\' with an empty password!', 
-                    $this->authInfo['REMOTE_ADDR'], 
-                    $this->authInfo['REMOTE_HOST'], 
+                    'Login-attempt from %s (%s), for username \'%s\' with an empty password!',
+                    $this->authInfo['REMOTE_ADDR'],
+                    $this->authInfo['REMOTE_HOST'],
                     $this->login['uname']
-                ), 
-                'Core', 
+                ),
+                'Core',
                 GeneralUtility::SYSLOG_SEVERITY_WARNING
             );
 
@@ -89,11 +89,11 @@ class UnityAuthenticationService extends AuthenticationService
         if (! is_array($user)) {
             // Failed login attempt (no username found)
             $this->writelog(
-                255, 3, 3, 2, 
-                'Login-attempt from %s (%s), username \'%s\' not found!!', 
+                255, 3, 3, 2,
+                'Login-attempt from %s (%s), username \'%s\' not found!!',
                 [
-                    $this->authInfo['REMOTE_ADDR'], 
-                    $this->authInfo['REMOTE_HOST'], 
+                    $this->authInfo['REMOTE_ADDR'],
+                    $this->authInfo['REMOTE_HOST'],
                     $this->login['uname']
                 ]
             );
@@ -101,24 +101,24 @@ class UnityAuthenticationService extends AuthenticationService
             // Logout written to log
             GeneralUtility::sysLog(
                 sprintf(
-                    'Login-attempt from %s (%s), username \'%s\' not found!', 
-                    $this->authInfo['REMOTE_ADDR'], 
-                    $this->authInfo['REMOTE_HOST'], 
+                    'Login-attempt from %s (%s), username \'%s\' not found!',
+                    $this->authInfo['REMOTE_ADDR'],
+                    $this->authInfo['REMOTE_HOST'],
                     $this->login['uname']
-                ), 
-                'core', 
+                ),
+                'core',
                 GeneralUtility::SYSLOG_SEVERITY_WARNING
             );
         } else {
             if ($this->writeDevLog) {
                 GeneralUtility::devLog(
                     'User found: ' . GeneralUtility::arrayToLogString(
-                        $user, 
+                        $user,
                         [
-                            $this->db_user['userid_column'], 
+                            $this->db_user['userid_column'],
                             $this->db_user['username_column']
                         ]
-                    ), 
+                    ),
                     self::class
                 );
             }
@@ -166,7 +166,7 @@ class UnityAuthenticationService extends AuthenticationService
         $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wv_t3unity']);
         $domain = rtrim($extensionConfiguration['MagentoUrl'], '/');
 
-        $requestUrl = $domain . '/rest/V1/unity/validateToken/username/' . 
+        $requestUrl = $domain . '/rest/V1/unity/validateToken/username/' .
             urlencode($username) . '/token/' . urlencode($token);
 
         try {
