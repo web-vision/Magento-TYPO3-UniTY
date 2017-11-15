@@ -37,6 +37,10 @@
                 <source>Canonical URL</source>
                 <target>Kanonische URL</target>
             </trans-unit>
+            <trans-unit id="pages.tx_realurl_pathsegment">
+                <source>Realurl Pathsegment</source>
+                <target>Realurl Pfadsegment</target>
+            </trans-unit>
 
             <trans-unit id="pages_language_overlay.canonical_url">
                 <source>Canonical URL</source>
@@ -62,7 +66,7 @@
                 <source>Clears the associated Magento cache</source>
                 <target>Leert den zugehörigen Magneto Cache</target>
             </trans-unit>
-            
+
             <trans-unit id="be_users.tx_t3unity_standalone">
                 <source>Standalone user</source>
                 <target>Standalone Nutzer</target>

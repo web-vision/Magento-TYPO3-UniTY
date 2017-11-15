@@ -83,9 +83,10 @@ class Tcemain
      *
      * @var array
      */
-    protected $preventFieldsFromNull = [
+    protected $notNullableFields = [
         'unity_path',
         'canonical_url',
+        'tx_realurl_pathsegment',
     ];
 
     /**
@@ -138,10 +139,10 @@ class Tcemain
             return false;
         }
 
-        // Process if at least one field of $preventFieldsFromNull 
+        // Process if at least one field of $notNullableFields
         // is not set or is null on 'new' action.
         if ($action == 'new') {
-            foreach ($this->preventFieldsFromNull as $field) {
+            foreach ($this->notNullableFields as $field) {
                 if (! isset($modifiedFields[$field]) || $modifiedFields[$field] === null) {
                     return true;
                 }
@@ -208,7 +209,7 @@ class Tcemain
 
         $unityPath = $this->getRecordPath($pagesUid, $sysLanguageUid);
 
-        $this->updateRecord($recordId, $sysLanguageUid, $unityPath);
+        $this->updateRecord($recordId, $sysLanguageUid, $unityPath, $status);
 
         $this->updateSubPages($pagesUid, $sysLanguageUid, $unityPath);
     }
@@ -262,28 +263,35 @@ class Tcemain
      *
      * @return void
      */
-    protected function updateRecord($uid, $sysLanguageUid, $unityPath)
+    protected function updateRecord($uid, $sysLanguageUid, $unityPath, $action = 'update')
     {
         if ($unityPath == '/') {
             $unityPath = '';
         }
 
         $realUrlPath = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
-
         // set default values for update query
         $tableName = static::TABLE_PAGES;
         $where = static::COLUMN_UID . ' = ' . (int)$uid;
         $fields = [
             static::COLUMN_UNITY_PATH => $unityPath,
-            static::COLUMN_TX_REALURL_PATHSEGMENT => $realUrlPath,
         ];
+
+        if (
+            $action == 'new' ||
+            $this->db->exec_selectGetSingleRow(
+                static::COLUMN_TX_REALURL_PATHOVERRIDE,
+                $tableName,
+                $where
+            )[static::COLUMN_TX_REALURL_PATHOVERRIDE] == 0
+        ) {
+            $fields[static::COLUMN_TX_REALURL_PATHSEGMENT] = $realUrlPath;
+        }
 
         // overwrite some settings
         if ($sysLanguageUid > 0) {
             $tableName = static::TABLE_PAGES_LANGUAGE_OVERLAY;
             $where .= ' AND ' . static::COLUMN_SYS_LANGUAGE_UID . ' = ' . (int)$sysLanguageUid;
-        } elseif ($realUrlPath) {
-            $fields[static::COLUMN_TX_REALURL_PATHOVERRIDE] = 1;
         }
 
         $this->db->exec_UPDATEquery($tableName, $where, $fields);
@@ -483,7 +491,8 @@ class Tcemain
      *
      * @return array
      */
-    protected function getPagesOverlayWithoutFERestriction(array $pagesInput, $lUid) {
+    protected function getPagesOverlayWithoutFERestriction(array $pagesInput, $lUid)
+    {
         $page_ids = [];
 
         foreach ($pagesInput as $origPage) {

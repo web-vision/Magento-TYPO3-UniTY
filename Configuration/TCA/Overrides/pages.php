@@ -43,7 +43,6 @@ call_user_func(
                         'type' => $configTypeInput,
                         'max' => 255,
                         'eval' => 'trim,nospace,lower,DmitryDulepov\\Realurl\\Evaluator\\SegmentFieldCleaner',
-                        'readOnly' => 1,
                     ],
                 ],
             ]
