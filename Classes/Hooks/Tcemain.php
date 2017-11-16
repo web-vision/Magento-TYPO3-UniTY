@@ -15,6 +15,8 @@ use \TYPO3\CMS\Backend\Utility\BackendUtility;
 use \TYPO3\CMS\Frontend\Page\PageRepository;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 /**
  * This class makes sure that on save of a page the path for the page will be
@@ -86,7 +88,6 @@ class Tcemain
     protected $notNullableFields = [
         'unity_path',
         'canonical_url',
-        'tx_realurl_pathsegment',
     ];
 
     /**
@@ -109,7 +110,10 @@ class Tcemain
      * @return void
      */
     public function processDatamap_postProcessFieldArray( // @codingStandardsIgnoreLine
-        $action, $table, $uid, array &$modifiedFields
+        $action,
+        $table,
+        $uid,
+        array &$modifiedFields
     ) {
         if (! $this->checkProcessing($table, $action, $modifiedFields)) {
             return;
@@ -157,6 +161,42 @@ class Tcemain
         }
 
         return false;
+    }
+
+    /**
+     * Add "readOnly" property to realurl pathsegment if
+     * "tx_realurl_pathoverride" is not set.
+     *
+     * @param array $fieldArray The array of fields and values
+     * @param string $table The table
+     * @param int $uid The uid of the page
+     * @param \TYPO3\CMS\Core\DataHandling\DataHandler $parentObj : The parent object that triggered this hook
+     *
+     * @return void
+     */
+    public function processDatamap_preProcessFieldArray( // @codingStandardsIgnoreStart
+        &$fieldArray,
+        $table,
+        $uid,
+        DataHandler $parentObj
+    ) { // @codingStandardsIgnoreEnd
+        if ( // @codingStandardsIgnoreStart
+            ($table === 'pages' || $table === 'pages_language_overlay') &&
+            $fieldArray['tx_realurl_pathoverride'] == 0
+        ) { // @codingStandardsIgnoreEnd
+            ArrayUtility::mergeRecursiveWithOverrule(
+                $GLOBALS['TCA'][$table],
+                [
+                    'columns' => [
+                        'tx_realurl_pathsegment' => [
+                            'config' => [
+                                'readOnly' => 1
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 
     /**
@@ -269,29 +309,38 @@ class Tcemain
             $unityPath = '';
         }
 
-        $realUrlPath = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
         // set default values for update query
         $tableName = static::TABLE_PAGES;
         $where = static::COLUMN_UID . ' = ' . (int)$uid;
-        $fields = [
-            static::COLUMN_UNITY_PATH => $unityPath,
-        ];
-
-        if (
-            $action == 'new' ||
-            $this->db->exec_selectGetSingleRow(
-                static::COLUMN_TX_REALURL_PATHOVERRIDE,
-                $tableName,
-                $where
-            )[static::COLUMN_TX_REALURL_PATHOVERRIDE] == 0
-        ) {
-            $fields[static::COLUMN_TX_REALURL_PATHSEGMENT] = $realUrlPath;
-        }
 
         // overwrite some settings
         if ($sysLanguageUid > 0) {
             $tableName = static::TABLE_PAGES_LANGUAGE_OVERLAY;
             $where .= ' AND ' . static::COLUMN_SYS_LANGUAGE_UID . ' = ' . (int)$sysLanguageUid;
+        }
+
+        $record = $this->db->exec_selectGetSingleRow(
+            static::COLUMN_TX_REALURL_PATHOVERRIDE . ',' . static::COLUMN_TX_REALURL_PATHSEGMENT,
+            $tableName,
+            $where
+        );
+
+        if ($action == 'new' || $record[static::COLUMN_TX_REALURL_PATHOVERRIDE] == 0) {
+            $fields = [
+                static::COLUMN_UNITY_PATH => $unityPath,
+                static::COLUMN_TX_REALURL_PATHSEGMENT => rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/'),
+            ];
+        } else {
+            $prefix = (strpos($record[static::COLUMN_TX_REALURL_PATHSEGMENT], '/') === 0 ? '' : '/');
+            $unityPathSegment = rtrim(
+                preg_replace(static::HTML_REGEX, '', $record[static::COLUMN_TX_REALURL_PATHSEGMENT]),
+                '/'
+            ) . '.html';
+
+            $fields = [
+                static::COLUMN_UNITY_PATH => $prefix . $unityPathSegment,
+                static::COLUMN_TX_REALURL_PATHSEGMENT => $prefix . $record[static::COLUMN_TX_REALURL_PATHSEGMENT],
+            ];
         }
 
         $this->db->exec_UPDATEquery($tableName, $where, $fields);

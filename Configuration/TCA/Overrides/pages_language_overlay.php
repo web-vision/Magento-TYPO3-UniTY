@@ -26,6 +26,27 @@ call_user_func(
                         'eval' => 'trim',
                     ],
                 ],
+                'tx_realurl_pathsegment' => [
+                    'label' => $locallang . 'pages.tx_realurl_pathsegment',
+                    'displayCond' => 'FIELD:tx_realurl_exclude:!=:1',
+                    'exclude' => 1,
+                    'config' => [
+                        'type' => 'input',
+                        'size' => 70,
+                        'max' => 255,
+                        'eval' => 'trim,nospace,lower,WebVision\\WvT3Unity\\Evaluator\\SegmentFieldCleaner',
+                    ],
+                ],
+                'tx_realurl_pathoverride' => [
+                    'label' => 'LLL:EXT:realurl/Resources/Private/Language/locallang_db.xlf:pages.tx_realurl_path_override',
+                    'exclude' => 1,
+                    'config' => [
+                        'type' => 'check',
+                        'items' => [
+                            ['LLL:EXT:lang/locallang_core.xlf:labels.enabled', '']
+                        ],
+                    ],
+                ],
             ]
         );
 
@@ -34,6 +55,13 @@ call_user_func(
             'canonical_url',
             1,
             'before:keywords'
+        );
+
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+            $table,
+            'tx_realurl_pathoverride',
+            1,
+            'after:tx_realurl_pathsegment'
         );
     },
     'wv_t3unity',

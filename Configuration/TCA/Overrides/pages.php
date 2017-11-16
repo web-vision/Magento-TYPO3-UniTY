@@ -42,7 +42,7 @@ call_user_func(
                     $config => [
                         'type' => $configTypeInput,
                         'max' => 255,
-                        'eval' => 'trim,nospace,lower,DmitryDulepov\\Realurl\\Evaluator\\SegmentFieldCleaner',
+                        'eval' => 'trim,nospace,lower,WebVision\\WvT3Unity\\Evaluator\\SegmentFieldCleaner',
                     ],
                 ],
             ]

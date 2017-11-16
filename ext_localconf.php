@@ -17,7 +17,7 @@ call_user_func(
         $unityAuthenticationService = WebVision\WvT3unity\Service\UnityAuthenticationService::class;
 
         // EID Call for clearing the TYPO3 Cache
-        $GLOBALS[$typo3ConfigurationVariables]['FE']['eID_include'][$extKey . '_clearCache'] = 
+        $GLOBALS[$typo3ConfigurationVariables]['FE']['eID_include'][$extKey . '_clearCache'] =
             WebVision\WvT3unity\Controller\Eid\ClearCacheFromRemote::class .'::clearCacheAction';
 
         $GLOBALS[$typo3ConfigurationVariables]['FE']['pageOverlayFields'] .= ',canonical_url';
@@ -97,9 +97,9 @@ call_user_func(
 
         // Add the service
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
-            $extKey, 
-            'auth', 
-            $unityAuthenticationService, 
+            $extKey,
+            'auth',
+            $unityAuthenticationService,
             [
                 'title' => 'Unity Authentication',
                 'description' => 'Authenticates with Unity',
