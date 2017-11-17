@@ -30,6 +30,10 @@
                 <source>Canonical URL</source>
             </trans-unit>
 
+            <trans-unit id="pages.tx_realurl_pathsegment">
+                <source>Realurl Pathsegment</source>
+            </trans-unit>
+
             <trans-unit id="pages_language_overlay.canonical_url">
                 <source>Canonical URL</source>
             </trans-unit>
@@ -49,7 +53,7 @@
             <trans-unit id="toolbar.clearCacheDescription">
                 <source>Clears the associated Magento cache</source>
             </trans-unit>
-            
+
             <trans-unit id="be_users.tx_t3unity_standalone">
                 <source>Standalone user</source>
             </trans-unit>
