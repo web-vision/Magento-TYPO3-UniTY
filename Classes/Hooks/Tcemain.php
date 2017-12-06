@@ -336,7 +336,6 @@ class Tcemain
                 $pathsegment = str_replace($search, $replace, $record[static::COLUMN_NAV_TITLE]);
             }
 
-            //rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/')
             $fields = [
                 static::COLUMN_UNITY_PATH => $unityPath,
                 static::COLUMN_TX_REALURL_PATHSEGMENT => $pathsegment,
