@@ -283,7 +283,7 @@ class Tcemain
                 continue;
             }
 
-            $output = $this->addToPath($output, $record);
+            $output = $this->addToPath($record);
         }
 
         if (strlen($output) == 0 && isset($record) && $record[static::COLUMN_IS_SITEROOT] == '1') {
@@ -320,15 +320,26 @@ class Tcemain
         }
 
         $record = $this->db->exec_selectGetSingleRow(
-            static::COLUMN_TX_REALURL_PATHOVERRIDE . ',' . static::COLUMN_TX_REALURL_PATHSEGMENT,
+            static::COLUMN_TX_REALURL_PATHOVERRIDE . ',' . static::COLUMN_TX_REALURL_PATHSEGMENT . ',' .
+            static::COLUMN_NAV_TITLE . ',' . static::COLUMN_TITLE,
             $tableName,
             $where
         );
 
         if ($action == 'new' || $record[static::COLUMN_TX_REALURL_PATHOVERRIDE] == 0) {
+            $search = [' ', '/'];
+            $replace = ['-', '-'];
+
+            $pathsegment = str_replace($search, $replace, $record[static::COLUMN_TITLE]);
+
+            if (! empty($record[static::COLUMN_NAV_TITLE])) {
+                $pathsegment = str_replace($search, $replace, $record[static::COLUMN_NAV_TITLE]);
+            }
+
+            //rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/')
             $fields = [
                 static::COLUMN_UNITY_PATH => $unityPath,
-                static::COLUMN_TX_REALURL_PATHSEGMENT => rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/'),
+                static::COLUMN_TX_REALURL_PATHSEGMENT => $pathsegment,
             ];
         } else {
             $prefix = (strpos($record[static::COLUMN_TX_REALURL_PATHSEGMENT], '/') === 0 ? '' : '/');
@@ -389,8 +400,8 @@ class Tcemain
         // if unity path doesn't start with the current path it needs an update
         if (strpos($data[static::COLUMN_UNITY_PATH], $currentPath) !== 0 || $currentPath == '/') {
             $unityPath = $currentPath;
-            if (!$data[static::COLUMN_TX_REALURL_EXCLUDE]) {
-                $unityPath = $this->addToPath($currentPath, $data);
+            if (! $data[static::COLUMN_TX_REALURL_EXCLUDE]) {
+                $unityPath = $this->addToPath($data);
             }
 
             if (array_key_exists(static::COLUMN_UID, $data) && $data[static::COLUMN_DOKTYPE] < 199) {
@@ -469,20 +480,14 @@ class Tcemain
     }
 
     /**
-     * This method cleans up the $newElement and adds it to the given path.
+     * This method cleans up the $newElement.
      *
-     * @param string $path The current path.
      * @param string $newElement The new element to add.
      *
      * @return string
      */
-    protected function addToPath($path, $newElement)
+    protected function addToPath($newElement)
     {
-        // remove previously added .html
-        $path = preg_replace(static::HTML_REGEX, '', $path);
-        // add slash and remove possibly trailing slashes before
-        $path = rtrim($path, '/') . '/';
-
         // if array is given use nav_title or title or first element if neiter is given
         if (is_array($newElement)) {
             if (array_key_exists(static::COLUMN_NAV_TITLE, $newElement) && $newElement[static::COLUMN_NAV_TITLE]) {
@@ -527,7 +532,7 @@ class Tcemain
         $newElement = trim($newElement, '-');
 
         // urlencode to be absolute sure that it is a valid url
-        return $path . urlencode($newElement) . '.html';
+        return urlencode($newElement) . '.html';
     }
 
     /**
