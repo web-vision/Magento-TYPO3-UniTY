@@ -327,14 +327,7 @@ class Tcemain
         );
 
         if ($action == 'new' || $record[static::COLUMN_TX_REALURL_PATHOVERRIDE] == 0) {
-            $search = [' ', '/'];
-            $replace = ['-', '-'];
-
-            $pathsegment = str_replace($search, $replace, $record[static::COLUMN_TITLE]);
-
-            if (! empty($record[static::COLUMN_NAV_TITLE])) {
-                $pathsegment = str_replace($search, $replace, $record[static::COLUMN_NAV_TITLE]);
-            }
+            $pathsegment = preg_replace(static::HTML_REGEX, '', $this->addToPath($record[static::COLUMN_TITLE]));
 
             $fields = [
                 static::COLUMN_UNITY_PATH => $unityPath,
