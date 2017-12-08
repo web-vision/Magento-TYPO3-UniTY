@@ -48,7 +48,7 @@ call_user_func(
                     'additionalBackendItems' => [
                         'cacheActions' => [
                             $extKey => WebVision\WvT3unity\Hooks\Backend\Toolbar\ClearCacheActionsHook::class
-                        ]
+                        ],
                     ]
                 ],
                 'SYS' => [

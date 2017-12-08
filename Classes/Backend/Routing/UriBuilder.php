@@ -1,5 +1,5 @@
 <?php
-namespace WebVision\WvT3Unity\Backend\Routing;
+namespace WebVision\WvT3unity\Backend\Routing;
 
 /*
  * This file is part of the wv_t3unity Extension for TYPO3 CMS.

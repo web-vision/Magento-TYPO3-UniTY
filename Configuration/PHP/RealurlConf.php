@@ -23,4 +23,4 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl'] = [
             'acceptHTMLsuffix' => 1,
         ],
     ],
-);
+];
