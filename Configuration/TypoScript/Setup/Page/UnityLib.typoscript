@@ -1,0 +1,20 @@
+# To be changed later on with live TYPO3 URL
+# lib.urlValue can be used anywhere in the extensions where the url from TYPO3 instance is required.
+lib.urlValue = TEXT
+lib.urlValue.value = http://www.hark.de/
+
+lib.magurlValue = TEXT
+lib.magurlValue.value = https://m2stage.hark-shop.de/
+
+[globalString = _SERVER|HTTPS=on]
+  lib.urlValue.value = https://www.hark.de/
+[global]
+
+[applicationContext = Development*]
+    lib.urlValue = TEXT
+    lib.urlValue.value = http://cms8stage.hark-shop.de/
+[end]
+
+[applicationContext = Development*] && [globalString = _SERVER|HTTPS=on]
+  lib.urlValue.value = https://cms8stage.hark-shop.de/
+[global]
