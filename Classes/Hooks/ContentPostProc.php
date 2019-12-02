@@ -43,7 +43,10 @@ class ContentPostProc extends AbstractPlugin
 
             $params['pObj']->content = preg_replace('/,\s?]/', ']', $params['pObj']->content);
             // Attaching TYPO3 baseURL to the fileadmin URLs
-            $params['pObj']->content = preg_replace('/\/fileadmin\//', rtrim($typoUrl,"/").'/fileadmin/', $params['pObj']->content);
+            if($typoUrl != NULL){
+                $params['pObj']->content = preg_replace('/\/fileadmin\//', rtrim($typoUrl,"/").'/fileadmin/', $params['pObj']->content);                
+            }
+
         }
     }
 
