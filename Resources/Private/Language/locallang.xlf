@@ -33,6 +33,13 @@
             <trans-unit id="pages_language_overlay.canonical_url">
                 <source>Canonical URL</source>
             </trans-unit>
+
+            <trans-unit id="flushMagCachesTitle" xml:space="preserve">
+                <source>Flush magento caches</source>
+            </trans-unit>
+            <trans-unit id="flushMagCachesDescription" xml:space="preserve">
+                <source>Clear magento and unity related caches</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
