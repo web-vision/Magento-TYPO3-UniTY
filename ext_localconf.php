@@ -41,8 +41,14 @@ call_user_func(
 
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['additionalBackendItems']['cacheActions']['mag_cache'] = 'WebVision\\WvT3unity\\Hooks\\ClearMagCache';
 
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][TYPO3\CMS\Backend\Controller\SimpleDataHandlerController::class] = [
-           'className' => WebVision\WvT3unity\Xclass\SimpleDataHandlerController::class
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'] = 
+        [
+            TYPO3\CMS\Backend\Controller\SimpleDataHandlerController::class => [
+                'className' => WebVision\WvT3unity\Xclass\SimpleDataHandlerController::class,
+            ],
+            TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProvider::class => [
+                'className' => WebVision\WvT3unity\Xclass\PageProvider::class,
+            ],
         ];
         
     },
