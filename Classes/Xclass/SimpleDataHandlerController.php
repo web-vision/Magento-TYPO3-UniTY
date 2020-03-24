@@ -46,6 +46,7 @@ class SimpleDataHandlerController extends \TYPO3\CMS\Backend\Controller\SimpleDa
         if ($this->cacheCmd == 'magento') {
             $this->clearCache();
         }
+        parent::main();
     }
 
     /**
