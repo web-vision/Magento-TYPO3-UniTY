@@ -51,8 +51,8 @@ class PageProvider extends \TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProv
             );
             // Collecting the magento URL saved in TS object
             $magUrl = $tsSetting['lib.']['magurlValue.']['value'];
-            $pageRepo = GeneralUtility::makeInstance(PageRepository::class);
-            $urlSegment = $pageRepo->getPage($this->getPreviewPid())['tx_realurl_pathsegment'];
+            $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
+            $urlSegment = $pageRepository->getPage($this->getPreviewPid())['tx_realurl_pathsegment'];
             
             if ($urlSegment != NULL) {
                 // Writing the redirect URL with magento baseURL and with a trailing slash
