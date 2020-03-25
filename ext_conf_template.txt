@@ -1,0 +1,2 @@
+# cat=General; type=boolean; label=Enable if magento page preview is needed
+magPagePreview = 0
