@@ -208,7 +208,13 @@ class Tcemain
 
         $unityPath = $this->getRecordPath($pagesUid, $sysLanguageUid);
 
-        $this->updateRecord($recordId, $sysLanguageUid, $unityPath);
+        if ($databaseData['tx_realurl_pathsegment']) {
+            $newRealUrlPath = $databaseData['tx_realurl_pathsegment'];
+        } else {
+            $newRealUrlPath = $dataHandler->checkValue_currentRecord[static::COLUMN_TX_REALURL_PATHSEGMENT];
+        }
+
+        $this->updateRecord($recordId, $sysLanguageUid, $unityPath, $newRealUrlPath);
 
         $this->updateSubPages($pagesUid, $sysLanguageUid, $unityPath);
     }
@@ -262,31 +268,48 @@ class Tcemain
      *
      * @return void
      */
-    protected function updateRecord($uid, $sysLanguageUid, $unityPath)
+    protected function updateRecord($uid, $sysLanguageUid, $unityPath, $newRealUrlPath = NULL)
     {
         if ($unityPath == '/') {
             $unityPath = '';
         }
 
-        $realUrlPath = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
+        if ($newRealUrlPath != NULL) {
+            $realUrlPathForPageData = rtrim('/' . ltrim($newRealUrlPath, '/'), '/');
+            $unityPath = $realUrlPath . '.html';
+        } else {
+            $realUrlPathForPageData = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
+        }
 
         // set default values for update query
         $tableName = static::TABLE_PAGES;
         $where = static::COLUMN_UID . ' = ' . (int)$uid;
         $fields = [
             static::COLUMN_UNITY_PATH => $unityPath,
-            static::COLUMN_TX_REALURL_PATHSEGMENT => $realUrlPath,
+            static::COLUMN_TX_REALURL_PATHSEGMENT => $realUrlPathForPageData,
         ];
 
         // overwrite some settings
         if ($sysLanguageUid > 0) {
             $tableName = static::TABLE_PAGES_LANGUAGE_OVERLAY;
             $where .= ' AND ' . static::COLUMN_SYS_LANGUAGE_UID . ' = ' . (int)$sysLanguageUid;
-        } elseif ($realUrlPath) {
+        } elseif ($realUrlPathForPageData) {
             $fields[static::COLUMN_TX_REALURL_PATHOVERRIDE] = 1;
         }
 
         $this->db->exec_UPDATEquery($tableName, $where, $fields);
+
+        // Updating the url pathdata table with new values
+        // The subpages are not affected or changed. Because this change is
+        // exclusive for the current page.
+        $tableName = 'tx_realurl_pathdata';
+        $where = 'page_id = ' . (int)$uid;
+        $fields = [
+            'pagepath' => ltrim($realUrlPathForPageData, '/'),
+            'expire' => 0,
+        ];
+		$this->db->exec_UPDATEquery($tableName, $where, $fields);
+
     }
 
     /**
