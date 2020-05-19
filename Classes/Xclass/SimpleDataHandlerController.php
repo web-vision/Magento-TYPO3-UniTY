@@ -82,12 +82,7 @@ class SimpleDataHandlerController extends \TYPO3\CMS\Backend\Controller\SimpleDa
         );
         // Collecting the magento URL saved in TS object
         $magUrl = $tsSetting['lib.']['magurlValue.']['value'];
-        if ($magUrl != NULL){
-            return $magUrl;
-        } else {
-            return NULL;
-        }
-        
+        return $magUrl;
     }
 
 }
