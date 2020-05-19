@@ -49,6 +49,9 @@ call_user_func(
             TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProvider::class => [
                 'className' => WebVision\WvT3unity\Xclass\PageProvider::class,
             ],
+            TYPO3\CMS\Backend\Controller\PageLayoutController::class => [
+                'className' => WebVision\WvT3unity\Xclass\PageLayoutController::class,
+            ],
         ];
         
     },

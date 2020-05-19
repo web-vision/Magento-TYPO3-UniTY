@@ -18,8 +18,14 @@ namespace WebVision\WvT3unity\Hooks;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use TYPO3\CMS\Backend\Template\Components\Buttons\LinkButton;
 use TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\Icon;
+use WebVision\WvT3unity\Xclass\SimpleDataHandlerController;
 
 /**
  *
@@ -49,5 +55,5 @@ class ClearMagCache implements ClearCacheActionsHookInterface
         $this->optionValues[] = 'magento';
 
     }
-
+    
 }

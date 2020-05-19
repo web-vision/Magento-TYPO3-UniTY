@@ -42,6 +42,10 @@ class SimpleDataHandlerController extends \TYPO3\CMS\Backend\Controller\SimpleDa
      */
     public function main()
     {
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->cacheCmd);
+        exit;
+
         // Identifying the magento cache clear command
         if ($this->cacheCmd == 'magento') {
             $this->clearCache();
@@ -54,6 +58,25 @@ class SimpleDataHandlerController extends \TYPO3\CMS\Backend\Controller\SimpleDa
      */
     public function clearCache()
     {
+        // Collecting the magento URL saved in TS object
+        $magUrl = $this->getMagUrl();
+
+        if ($magUrl == null) {
+            echo 'The magento URL is not saved in TypoScript settings.';
+        } else {
+            $url = rtrim($magUrl, "/") . '/rest/V1/unity/clearAllCaches/cacheType/all';
+            $result = file_get_contents($url);
+            if ($result != 'true') {
+                echo 'false';
+            }
+        }
+    }
+
+    /**
+     * Collect magento baseURL from TS
+     */
+    public function getMagUrl()
+    {
         // Initializing configuration manager for reading
         // TS settings
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -63,16 +86,12 @@ class SimpleDataHandlerController extends \TYPO3\CMS\Backend\Controller\SimpleDa
         );
         // Collecting the magento URL saved in TS object
         $magUrl = $tsSetting['lib.']['magurlValue.']['value'];
-
-        if ($magUrl == null) {
-            echo 'The magento URL is not saved in TypoScript settings.';
+        if ($magUrl != NULL){
+            return $magUrl;
         } else {
-            $url = rtrim($magUrl, "/") . '/rest/V1/unity/clearAllCaches';
-            $result = file_get_contents($url);
-            if ($result != 'true') {
-                echo 'false';
-            }
+            return NULL;
         }
+        
     }
 
 }
