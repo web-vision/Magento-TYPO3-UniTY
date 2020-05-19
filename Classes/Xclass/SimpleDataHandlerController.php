@@ -42,10 +42,6 @@ class SimpleDataHandlerController extends \TYPO3\CMS\Backend\Controller\SimpleDa
      */
     public function main()
     {
-
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->cacheCmd);
-        exit;
-
         // Identifying the magento cache clear command
         if ($this->cacheCmd == 'magento') {
             $this->clearCache();
