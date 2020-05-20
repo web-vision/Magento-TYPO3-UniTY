@@ -49,5 +49,5 @@ class ClearMagCache implements ClearCacheActionsHookInterface
         $this->optionValues[] = 'magento';
 
     }
-
+    
 }
