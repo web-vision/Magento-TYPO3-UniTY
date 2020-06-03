@@ -10,8 +10,11 @@ namespace WebVision\WvT3unity\Hooks;
  * Copyright (c) 2017 web-vision GmbH
  */
 
-use \WebVision\WvT3unity\Utility\Configuration;
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
+use \TYPO3\CMS\Backend\Utility\BackendUtility;
+use \TYPO3\CMS\Core\TypoScript\TemplateService;
+use \WebVision\WvT3unity\Utility\Configuration;
 
 /**
  * This class renders all meta data as json
@@ -31,6 +34,7 @@ class ContentPostProc extends AbstractPlugin
      */
     public function hookEntry(array &$params, &$that)
     {
+        $typoUrl = (is_array($this->loadTS(1)['lib.']['urlValue.']) ? $this->loadTS(1)['lib.']['urlValue.']['value'] : NULL);
         if (Configuration::isMagentoContent($params['pObj']->type, 'head')) {
             $this->removeGenerator($params['pObj']->content);
             $this->parseMetaTags($params['pObj']->content);
@@ -38,6 +42,10 @@ class ContentPostProc extends AbstractPlugin
             $this->parseJs($params['pObj']->content);
 
             $params['pObj']->content = preg_replace('/,\s?]/', ']', $params['pObj']->content);
+            // Attaching TYPO3 baseURL to the fileadmin URLs
+            if($typoUrl != NULL){
+                $params['pObj']->content = preg_replace('/%BASE_URL%\/fileadmin\//', rtrim($typoUrl,"/").'/fileadmin/', $params['pObj']->content);              
+            }
         }
     }
 
@@ -107,4 +115,22 @@ class ContentPostProc extends AbstractPlugin
 
         return '{"' . $matches[1] . '": "' . $matches[2] . '", "content":"' . $matches[3] . '"},';
     }
+
+    /**
+     *
+     * @throws \TYPO3\CMS\Fluid\Core\ViewHelper\Exception
+     * @param int $pageUid pageuid from where TS template should be accessed
+     * @return array
+     */
+    public function loadTS($pageUid)
+    {
+        $backendUtility = GeneralUtility::makeInstance(BackendUtility::class);
+        $rootLine = $backendUtility->BEgetRootline($pageUid);
+        $TSObj = GeneralUtility::makeInstance(TemplateService::class);
+        $TSObj->tt_track = 0;
+        $TSObj->init();
+        $TSObj->runThroughTemplates($rootLine);
+        $TSObj->generateConfig();
+        return $TSObj->setup;
+    } 
 }
