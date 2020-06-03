@@ -20,6 +20,7 @@ namespace WebVision\WvT3unity\Hooks;
 
 use TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  *
@@ -38,12 +39,12 @@ class ClearMagCache implements ClearCacheActionsHookInterface
      */
     public function manipulateCacheActions(&$cacheActions, &$optionValues)
     {
-
+        $uriBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
         $cacheActions[] = [
             'id' => 'magento',
             'title' => 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:flushMagCachesTitle',
             'description' => 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:flushMagCachesDescription',
-            'href' => BackendUtility::getModuleUrl('tce_db', ['cacheCmd' => 'magento']),
+            'href' => $uriBuilder->buildUriFromRoute('tce_db', ['cacheCmd' => 'magento']),
             'iconIdentifier' => 'actions-system-cache-clear-impact-medium',
         ];
         $this->optionValues[] = 'magento';

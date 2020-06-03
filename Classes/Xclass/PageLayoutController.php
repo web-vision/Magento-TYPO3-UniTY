@@ -25,6 +25,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Http\HtmlResponse;
 use WebVision\WvT3unity\Xclass\SimpleDataHandlerController;
 
 /**
@@ -39,12 +40,11 @@ class PageLayoutController extends \TYPO3\CMS\Backend\Controller\PageLayoutContr
      * As this controller goes only through the main() method, it is rather simple for now
      *
      * @param ServerRequestInterface $request the current request
-     * @param ResponseInterface $response
      * @return ResponseInterface the response with the content
      */
-    public function mainAction(ServerRequestInterface $request, ResponseInterface $response)
+    public function mainAction(ServerRequestInterface $request): ResponseInterface
     {
-        parent::mainAction($request, $response);
+        parent::mainAction($request);
         $simpleDataHandler = GeneralUtility::makeInstance(SimpleDataHandlerController::class);
         $mageUrl = $simpleDataHandler->getMagUrl();
         // Check if url contains block_cache clear param 
@@ -57,7 +57,7 @@ class PageLayoutController extends \TYPO3\CMS\Backend\Controller\PageLayoutContr
                 echo '<br/>';
             }
         }
-        return $response;
+        return new HtmlResponse($this->moduleTemplate->renderContent());
     }
 
     /***************************
@@ -68,15 +68,16 @@ class PageLayoutController extends \TYPO3\CMS\Backend\Controller\PageLayoutContr
     /**
      * This creates the buttons for the modules
      */
-    protected function makeButtons()
+    protected function makeButtons(ServerRequestInterface $request): void
     {
-        parent::makeButtons();
+        parent::makeButtons($request);
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $simpleDataHandler = GeneralUtility::makeInstance(SimpleDataHandlerController::class);
         $mageUrl = $simpleDataHandler->getMagUrl();
+        $uriBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
         // Building the button for magento block_cache clearing
         $mageCacheClearButton = $this->buttonBar->makeLinkButton()
-            ->setHref(BackendUtility::getModuleUrl($this->moduleName, ['id' => $this->pageinfo['uid'], 'clear_magebcache' => '1']))
+            ->setHref($uriBuilder->buildUriFromRoute($this->moduleName, ['id' => $this->pageinfo['uid'], 'clear_magebcache' => '1']))
             ->setIcon($iconFactory->getIcon('actions-system-cache-clear-impact-medium', Icon::SIZE_SMALL))
             ->setTitle('Clear Magento Block Cache');
         $this->buttonBar->addButton($mageCacheClearButton, ButtonBar::BUTTON_POSITION_RIGHT, 2);

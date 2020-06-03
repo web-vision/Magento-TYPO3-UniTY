@@ -128,7 +128,7 @@ class ContentPostProc extends AbstractPlugin
         $rootLine = $backendUtility->BEgetRootline($pageUid);
         $TSObj = GeneralUtility::makeInstance(TemplateService::class);
         $TSObj->tt_track = 0;
-        $TSObj->init();
+        //$TSObj->init();  TODO - Need to test later whether ts setup returned correctly
         $TSObj->runThroughTemplates($rootLine);
         $TSObj->generateConfig();
         return $TSObj->setup;

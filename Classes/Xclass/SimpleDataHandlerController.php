@@ -18,6 +18,8 @@ namespace WebVision\WvT3unity\Xclass;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -29,25 +31,22 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class SimpleDataHandlerController extends \TYPO3\CMS\Backend\Controller\SimpleDataHandlerController
 {
 
-    /**
-     * Constructor
+     /**
+     * Injects the request object for the current request or subrequest
+     * As this controller goes only through the processRequest() method, it just redirects to the given URL afterwards.
+     *
+     * @param ServerRequestInterface $request the current request
+     * @return ResponseInterface the response with the content
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Executing the posted actions ...
-     */
-    public function main()
+    public function mainAction(ServerRequestInterface $request): ResponseInterface
     {
         // Identifying the magento cache clear command
         if ($this->cacheCmd == 'magento') {
             $this->clearCache();
         }
-        parent::main();
+        return parent::mainAction($request);
     }
+    
 
     /**
      * Clear magento cache via the API call...
