@@ -21,8 +21,8 @@ namespace WebVision\WvT3unity\Xclass;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
  * Class responsible for providing click menu items for db records which don't have custom provider (as e.g. pages)
@@ -40,8 +40,7 @@ class PageProvider extends \TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProv
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
         // Collecting the extension option to check whether redirect have to made
-        $configurationUtility = $objectManager->get(ConfigurationUtility::class);
-        $extensionConfiguration = $configurationUtility->getCurrentConfiguration('wv_t3unity');
+        $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('wv_t3unity');
         $magePreview = $extensionConfiguration['magPagePreview']['value'];
         // Magento preview enabled
         if ($magePreview == 1) {
