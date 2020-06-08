@@ -276,7 +276,7 @@ class Tcemain
 
         if ($newRealUrlPath != NULL) {
             $realUrlPathForPageData = rtrim('/' . ltrim($newRealUrlPath, '/'), '/');
-            $unityPath = $realUrlPath . '.html';
+            $unityPath = $realUrlPathForPageData . '.html';
         } else {
             $realUrlPathForPageData = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
         }
