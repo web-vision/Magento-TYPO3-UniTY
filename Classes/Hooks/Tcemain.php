@@ -7,7 +7,7 @@ namespace WebVision\WvT3unity\Hooks;
  * @WVTODO: Add license
  *
  * The TYPO3 project - inspiring people to share!
- * Copyright (c) 2017 web-vision GmbH
+ * Copyright (c) 2020 web-vision GmbH
  */
 
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -37,9 +37,8 @@ class Tcemain
     const COLUMN_UNITY_PATH = 'unity_path';
     const COLUMN_IS_SITEROOT = 'is_siteroot';
     const COLUMN_SYS_LANGUAGE_UID = 'sys_language_uid';
-    const COLUMN_TX_REALURL_EXCLUDE = 'tx_realurl_exclude';
-    const COLUMN_TX_REALURL_PATHSEGMENT = 'tx_realurl_pathsegment';
-    const COLUMN_TX_REALURL_PATHOVERRIDE = 'tx_realurl_pathoverride';
+    const COLUMN_EXCLUDE_SLUG_FOR_SUBPAGES = 'exclude_slug_for_subpages';
+    const COLUMN_SLUG = 'slug';
     const TABLE_PAGES = 'pages';
     const TABLE_PAGES_LANGUAGE_OVERLAY = 'pages_language_overlay';
 
@@ -208,10 +207,10 @@ class Tcemain
 
         $unityPath = $this->getRecordPath($pagesUid, $sysLanguageUid);
 
-        if ($databaseData['tx_realurl_pathsegment']) {
-            $newRealUrlPath = $databaseData['tx_realurl_pathsegment'];
+        if ($databaseData['slug']) {
+            $newRealUrlPath = $databaseData['slug'];
         } else {
-            $newRealUrlPath = $dataHandler->checkValue_currentRecord[static::COLUMN_TX_REALURL_PATHSEGMENT];
+            $newRealUrlPath = $dataHandler->checkValue_currentRecord[static::COLUMN_SLUG];
         }
 
         $this->updateRecord($recordId, $sysLanguageUid, $unityPath, $newRealUrlPath);
@@ -232,7 +231,7 @@ class Tcemain
         $output = '';
 
         $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-        $pages = $this->pageRepository->getRootLine($uid);
+        $pages = (GeneralUtility::makeInstance(\TYPO3\CMS\Core\Utility\RootlineUtility::class, $uid))->get();
         $data = [];
 
         if ($sysLanguageUid > 0) {
@@ -244,7 +243,7 @@ class Tcemain
         ksort($data);
 
         foreach ($data as $record) {
-            if ($record[static::COLUMN_IS_SITEROOT] == '1' || $record[static::COLUMN_TX_REALURL_EXCLUDE]) {
+            if ($record[static::COLUMN_IS_SITEROOT] == '1' || $record[static::COLUMN_EXCLUDE_SLUG_FOR_SUBPAGES]) {
                 continue;
             }
 
@@ -286,29 +285,16 @@ class Tcemain
         $where = static::COLUMN_UID . ' = ' . (int)$uid;
         $fields = [
             static::COLUMN_UNITY_PATH => $unityPath,
-            static::COLUMN_TX_REALURL_PATHSEGMENT => $realUrlPathForPageData,
+            static::COLUMN_SLUG => $realUrlPathForPageData,
         ];
 
         // overwrite some settings
         if ($sysLanguageUid > 0) {
             $tableName = static::TABLE_PAGES_LANGUAGE_OVERLAY;
             $where .= ' AND ' . static::COLUMN_SYS_LANGUAGE_UID . ' = ' . (int)$sysLanguageUid;
-        } elseif ($realUrlPathForPageData) {
-            $fields[static::COLUMN_TX_REALURL_PATHOVERRIDE] = 1;
         }
 
         $this->db->exec_UPDATEquery($tableName, $where, $fields);
-
-        // Updating the url pathdata table with new values
-        // The subpages are not affected or changed. Because this change is
-        // exclusive for the current page.
-        $tableName = 'tx_realurl_pathdata';
-        $where = 'page_id = ' . (int)$uid;
-        $fields = [
-            'pagepath' => ltrim($realUrlPathForPageData, '/'),
-            'expire' => 0,
-        ];
-		$this->db->exec_UPDATEquery($tableName, $where, $fields);
 
     }
 
@@ -355,7 +341,7 @@ class Tcemain
         // if unity path doesn't start with the current path it needs an update
         if (strpos($data[static::COLUMN_UNITY_PATH], $currentPath) !== 0 || $currentPath == '/') {
             $unityPath = $currentPath;
-            if (!$data[static::COLUMN_TX_REALURL_EXCLUDE]) {
+            if (!$data[static::COLUMN_EXCLUDE_SLUG_FOR_SUBPAGES]) {
                 $unityPath = $this->addToPath($currentPath, $data);
             }
 
@@ -396,7 +382,7 @@ class Tcemain
         $resultSet = $this->db->exec_SELECTquery(
             'uid, doktype, title, nav_title, unity_path, tx_realurl_exclude',
             static::TABLE_PAGES,
-            static::COLUMN_PID . ' = ' . $pid . ' ' . BackendUtility::deleteClause(static::TABLE_PAGES)
+            static::COLUMN_PID . ' = ' . $pid . ' AND deleted=0'
         );
 
         while (($row = $this->db->sql_fetch_assoc($resultSet))) {
