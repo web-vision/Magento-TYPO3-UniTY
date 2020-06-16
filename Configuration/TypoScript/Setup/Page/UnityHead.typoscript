@@ -27,15 +27,15 @@ UnityHead {
 
     meta {
         abstract {
-            field = abstract
+            override.field = abstract
         }
 
         author_email {
-            field = author_email
+            override.field = author_email
         }
 
         last_updated {
-            field = lastUpdated
+            override.field = lastUpdated
         }
     }
 
