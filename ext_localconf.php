@@ -52,6 +52,9 @@ call_user_func(
             TYPO3\CMS\Backend\Controller\PageLayoutController::class => [
                 'className' => WebVision\WvT3unity\Xclass\PageLayoutController::class,
             ],
+            TYPO3\CMS\Frontend\Middleware\PrepareTypoScriptFrontendRendering::class => [
+                'className' => WebVision\WvT3unity\Middleware\PrepareTypoScriptFrontendRendering::class,
+            ],
         ];
         
     },
