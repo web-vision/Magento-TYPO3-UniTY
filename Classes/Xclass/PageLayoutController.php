@@ -57,6 +57,7 @@ class PageLayoutController extends \TYPO3\CMS\Backend\Controller\PageLayoutContr
                 echo '<br/>';
             }
         }
+        $this->main($request);
         return new HtmlResponse($this->moduleTemplate->renderContent());
     }
 
