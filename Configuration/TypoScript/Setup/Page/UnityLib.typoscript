@@ -6,15 +6,15 @@ lib.urlValue.value =
 lib.magurlValue = TEXT
 lib.magurlValue.value =
 
-[globalString = _SERVER|HTTPS=on]
+[request.getNormalizedParams().isHttps()]
   lib.urlValue.value =
-[global]
+[end]
 
-[applicationContext = Development*]
+[applicationContext matches "/^Development/"]
     lib.urlValue = TEXT
     lib.urlValue.value =
 [end]
 
-[applicationContext = Development*] && [globalString = _SERVER|HTTPS=on]
+[applicationContext matches "/^Development/"] && [request.getNormalizedParams().isHttps()]
   lib.urlValue.value =
-[global]
+[end]
