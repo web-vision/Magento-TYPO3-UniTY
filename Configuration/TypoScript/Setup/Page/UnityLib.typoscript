@@ -5,16 +5,3 @@ lib.urlValue.value =
 
 lib.magurlValue = TEXT
 lib.magurlValue.value =
-
-[request.getNormalizedParams().isHttps()]
-  lib.urlValue.value =
-[end]
-
-[applicationContext matches "/^Development/"]
-    lib.urlValue = TEXT
-    lib.urlValue.value =
-[end]
-
-[applicationContext matches "/^Development/" && request.getNormalizedParams().isHttps()]
-  lib.urlValue.value =
-[end]
