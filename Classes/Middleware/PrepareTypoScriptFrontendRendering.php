@@ -49,7 +49,7 @@ class PrepareTypoScriptFrontendRendering extends \TYPO3\CMS\Frontend\Middleware\
         $queryParams = $request->getQueryParams();
         // Checking for request which calls only for menus and specific static contents
         // Page contents will still be rendered from cache 
-        if (!( array_key_exists("uid", $queryParams) || array_key_exists("special", $queryParams) ) ) {
+        if (!( array_key_exists("uid", $queryParams) || array_key_exists("special", $queryParams) || array_key_exists("colPos", $queryParams)) ) {
             $this->controller->getFromCache();
         }
         $this->timeTracker->pull();
