@@ -83,5 +83,4 @@ class SimpleDataHandlerController extends \TYPO3\CMS\Backend\Controller\SimpleDa
         $magUrl = $tsSetting['lib.']['magurlValue.']['value'];
         return $magUrl;
     }
-
 }

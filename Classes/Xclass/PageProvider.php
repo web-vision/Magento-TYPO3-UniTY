@@ -53,13 +53,12 @@ class PageProvider extends \TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProv
             $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
             $urlSegment = $pageRepository->getPage($this->getPreviewPid())['slug'];
             
-            if ($urlSegment != NULL) {
+            if ($urlSegment != null) {
                 // Writing the redirect URL with magento baseURL and with a trailing slash
                 $viewLink = rtrim($magUrl, "/") . $urlSegment . '/';
             } else {
                 $viewLink = $this->getViewLink();
             }
-            
         } else {
             // Magento preview disabled and vanilla URL generation
             $viewLink = $this->getViewLink();
