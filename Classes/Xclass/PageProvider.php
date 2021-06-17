@@ -41,7 +41,7 @@ class PageProvider extends \TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProv
 
         // Collecting the extension option to check whether redirect have to made
         $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('wv_t3unity');
-        $magePreview = $extensionConfiguration['magPagePreview']['value'];
+        $magePreview = $extensionConfiguration['magPagePreview'];
         // Magento preview enabled
         if ($magePreview == 1) {
             $configurationManager = $objectManager->get(ConfigurationManagerInterface::class);

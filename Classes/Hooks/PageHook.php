@@ -34,32 +34,34 @@ class PageHook
         $buttons = $params['buttons'];
         // Data required for redirection into the current module after processing
         $getData = GeneralUtility::_GET();
-        $routeArray = explode('/', $getData['route']);
-        $id = $getData['id'];
-
-        if (str_starts_with($getData['route'], '/module/web')) {
-            $moduleName = $routeArray[2] . '_' . $routeArray[3];
-            // Configure new button with custom data
-            $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-            $button = $buttonBar->makeLinkButton();
-            $button->setIcon($iconFactory->getIcon(
-                'actions-system-cache-clear-impact-medium',
-                Icon::SIZE_SMALL
-            ));
-            $button->setTitle('Clear Magento Block Cache');
-            $button->setShowLabelText(true);
-            //create link/route and set book uid
-            $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-            $uri = $uriBuilder->buildUriFromRoutePath(
-                '/mageblockcache',
-                [
-                    'page' => $id,
-                    'redirectModule' => $moduleName
-                ]
-            );
-            $button->setHref($uri);
-            //register button
-            $buttons[ButtonBar::BUTTON_POSITION_RIGHT][2][] = $button;
+        if (!empty($getData)) {
+            $routeArray = explode('/', $getData['route']);
+            $id = $getData['id'];
+    
+            if (str_starts_with($getData['route'], '/module/web')) {
+                $moduleName = $routeArray[2] . '_' . $routeArray[3];
+                // Configure new button with custom data
+                $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+                $button = $buttonBar->makeLinkButton();
+                $button->setIcon($iconFactory->getIcon(
+                    'actions-system-cache-clear-impact-medium',
+                    Icon::SIZE_SMALL
+                ));
+                $button->setTitle('Clear Magento Block Cache');
+                $button->setShowLabelText(true);
+                //create link/route and set book uid
+                $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+                $uri = $uriBuilder->buildUriFromRoutePath(
+                    '/mageblockcache',
+                    [
+                        'page' => $id,
+                        'redirectModule' => $moduleName
+                    ]
+                );
+                $button->setHref($uri);
+                //register button
+                $buttons[ButtonBar::BUTTON_POSITION_RIGHT][2][] = $button;
+            }
         }
         return $buttons;
     }
