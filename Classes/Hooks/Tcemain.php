@@ -7,7 +7,7 @@ namespace WebVision\WvT3unity\Hooks;
  * @WVTODO: Add license
  *
  * The TYPO3 project - inspiring people to share!
- * Copyright (c) 2020 web-vision GmbH
+ * Copyright (c) 2021 web-vision GmbH
  */
 
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -106,8 +106,11 @@ class Tcemain
      *
      * @return void
      */
-    public function processDatamap_postProcessFieldArray( // @codingStandardsIgnoreLine
-        $action, $table, $uid, array &$modifiedFields
+    public function processDatamap_postProcessFieldArray(// @codingStandardsIgnoreLine
+        $action,
+        $table,
+        $uid,
+        array &$modifiedFields
     ) {
         if (! $this->checkProcessing($table, $action, $modifiedFields)) {
             return;
@@ -137,7 +140,7 @@ class Tcemain
             return false;
         }
 
-        // Process if at least one field of $preventFieldsFromNull 
+        // Process if at least one field of $preventFieldsFromNull
         // is not set or is null on 'new' action.
         if ($action == 'new') {
             foreach ($this->preventFieldsFromNull as $field) {
@@ -267,13 +270,13 @@ class Tcemain
      *
      * @return void
      */
-    protected function updateRecord($uid, $sysLanguageUid, $unityPath, $newRealUrlPath = NULL)
+    protected function updateRecord($uid, $sysLanguageUid, $unityPath, $newRealUrlPath = null)
     {
         if ($unityPath == '/') {
             $unityPath = '';
         }
 
-        if ($newRealUrlPath != NULL) {
+        if ($newRealUrlPath != null) {
             $realUrlPathForPageData = rtrim('/' . ltrim($newRealUrlPath, '/'), '/');
             $unityPath = $realUrlPathForPageData . '.html';
         } else {
@@ -282,7 +285,9 @@ class Tcemain
 
         // set default values for update query
         $tableName = static::TABLE_PAGES;
-        $where = static::COLUMN_UID . ' = ' . (int)$uid;
+        $where = [
+            static::COLUMN_UID => (int)$uid,
+        ];
         $fields = [
             static::COLUMN_UNITY_PATH => $unityPath,
             static::COLUMN_SLUG => $realUrlPathForPageData,
@@ -291,11 +296,19 @@ class Tcemain
         // overwrite some settings
         if ($sysLanguageUid > 0) {
             $tableName = static::TABLE_PAGES_LANGUAGE_OVERLAY;
-            $where .= ' AND ' . static::COLUMN_SYS_LANGUAGE_UID . ' = ' . (int)$sysLanguageUid;
+            array_push(
+                $where,
+                static::COLUMN_SYS_LANGUAGE_UID . '=>' . (int)$sysLanguageUid
+            );
         }
 
-        $this->db->exec_UPDATEquery($tableName, $where, $fields);
-
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($tableName);
+        $connection->update(
+            $tableName,
+            $fields,
+            $where,
+            [Connection::PARAM_INT]
+        );
     }
 
     /**
@@ -379,37 +392,22 @@ class Tcemain
             return $treeList;
         }
 
-        $resultSet = $this->db->exec_SELECTquery(
-            'uid, doktype, title, nav_title, unity_path, tx_realurl_exclude',
+        $resultSet = GeneralUtility::makeInstance(ConnectionPool::class)
+        ->getConnectionForTable(static::TABLE_PAGES)
+        ->select(
+            ['uid','doktype','title','nav_title','unity_path','slug'],
             static::TABLE_PAGES,
-            static::COLUMN_PID . ' = ' . $pid . ' AND deleted=0'
-        );
+            [
+               static::COLUMN_PID => $pid,
+               'deleted' => 0,
+           ]
+        )->fetchAll();
 
-        while (($row = $this->db->sql_fetch_assoc($resultSet))) {
+        foreach ($resultSet as $key => $row) {
             $uid = $row[static::COLUMN_UID];
-
             $row[static::COLUMN_SYS_LANGUAGE_UID] = 0;
-
-            if ($sysLanguageUid) {
-                // get localized data
-                $langResultSet = $this->db->exec_SELECTquery(
-                    'uid, doktype, title, nav_title, unity_path',
-                    static::TABLE_PAGES_LANGUAGE_OVERLAY,
-                    static::COLUMN_PID . ' = ' . $uid . ' ' . BackendUtility::deleteClause(
-                        static::TABLE_PAGES_LANGUAGE_OVERLAY
-                    ) . ' AND ' . static::COLUMN_SYS_LANGUAGE_UID . ' = ' . $sysLanguageUid
-                );
-                $langResult = $this->db->sql_fetch_assoc($langResultSet);
-                if ($langResult) {
-                    $row = array_merge($row, $langResult);
-                    $row[static::COLUMN_SYS_LANGUAGE_UID] = $sysLanguageUid;
-                } else {
-                    unset($row[static::COLUMN_UID]);
-                }
-            }
-
             $treeList[$uid] = $row;
-
+    
             // get children
             $children = $this->getTreeList($uid, $sysLanguageUid);
             if (!empty($children)) {
@@ -492,7 +490,8 @@ class Tcemain
      *
      * @return array
      */
-    protected function getPagesOverlayWithoutFERestriction(array $pagesInput, $lUid) {
+    protected function getPagesOverlayWithoutFERestriction(array $pagesInput, $lUid)
+    {
         $page_ids = [];
 
         foreach ($pagesInput as $origPage) {
