@@ -12,7 +12,7 @@
         }
     },
     "require": {
-        "typo3/cms-core": "^10.4",
+        "typo3/cms-core": "^10.4 || ^11.5",
         "b13/masi": "^1.1",
         "friendsoftypo3/typo3db-legacy": "^1.1",
         "php": ">=7.0.0"

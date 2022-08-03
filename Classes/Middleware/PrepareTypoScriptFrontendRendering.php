@@ -24,14 +24,24 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-
+use TYPO3\CMS\Frontend\Middleware\PrepareTypoScriptFrontendRendering as PrepareTSFE;
 /**
  * Initialization of TypoScriptFrontendController
  * Do all necessary preparation steps for rendering
 * @author Ricky Mathew <ricky@web-vision.de>
  */
-class PrepareTypoScriptFrontendRendering extends \TYPO3\CMS\Frontend\Middleware\PrepareTypoScriptFrontendRendering
+class PrepareTypoScriptFrontendRendering extends PrepareTSFE
 {
+    /**
+     * @var TimeTracker
+     */
+    protected $timeTracker;
+
+    public function __construct(TimeTracker $timeTracker)
+    {
+        $this->timeTracker = $timeTracker;
+    }
+
     /**
      * Initialize TypoScriptFrontendController to the point right before rendering of the page is triggered
      * Overrided to Check for request which calls only for menus and specific static contents
@@ -44,26 +54,29 @@ class PrepareTypoScriptFrontendRendering extends \TYPO3\CMS\Frontend\Middleware\
         // as long as TSFE throws errors with the global object, this needs to be set, but
         // should be removed later-on once TypoScript Condition Matcher is built with the current request object.
         $GLOBALS['TYPO3_REQUEST'] = $request;
+
+        /** @var TypoScriptFrontendController */
+        $controller = $request->getAttribute('frontend.controller');
         // Get from cache
         $this->timeTracker->push('Get Page from cache');
         $queryParams = $request->getQueryParams();
         // Checking for request which calls only for menus and specific static contents
-        // Page contents will still be rendered from cache 
+        // Page contents will still be rendered from cache
         if (!( array_key_exists("uid", $queryParams) || array_key_exists("special", $queryParams) || array_key_exists("colPos", $queryParams)) ) {
-            $this->controller->getFromCache();
+            $controller->getFromCache();
         }
         $this->timeTracker->pull();
         // Get config if not already gotten
         // After this, we should have a valid config-array ready
-        $this->controller->getConfigArray();
+        $controller->getConfigArray();
 
-        // Setting language and locale
-        $this->timeTracker->push('Setting language');
-        $this->controller->settingLanguage();
-        $this->timeTracker->pull();
+        // // Setting language and locale
+        // $this->timeTracker->push('Setting language');
+        // $this->controller->settingLanguage();
+        // $this->timeTracker->pull();
 
         // Convert POST data to utf-8 for internal processing if metaCharset is different
-        if ($this->controller->metaCharset !== 'utf-8' && $request->getMethod() === 'POST') {
+        if ($controller->metaCharset !== 'utf-8' && $request->getMethod() === 'POST') {
             $parsedBody = $request->getParsedBody();
             if (is_array($parsedBody) && !empty($parsedBody)) {
                 $this->convertCharsetRecursivelyToUtf8($parsedBody, $this->controller->metaCharset);

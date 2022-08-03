@@ -17,10 +17,10 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 't.werdin@web-vision.de, y.hermes@web-vision.de',
     'author_company' => 'web-vision GmbH',
     'state' => 'alpha',
-    'version' => '3.1.0',
+    'version' => '4.2.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '10.4.0-10.4.99',
+            'typo3' => '10.4.0-11.9.99',
         ],
         'conflicts' => [],
         'suggests'  => [],
