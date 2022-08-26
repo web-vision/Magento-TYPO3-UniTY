@@ -19,10 +19,11 @@ namespace WebVision\WvT3unity\Middleware;
  */
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Middleware\PrepareTypoScriptFrontendRendering as PrepareTSFE;
 /**
@@ -32,16 +33,6 @@ use TYPO3\CMS\Frontend\Middleware\PrepareTypoScriptFrontendRendering as PrepareT
  */
 class PrepareTypoScriptFrontendRendering extends PrepareTSFE
 {
-    /**
-     * @var TimeTracker
-     */
-    protected $timeTracker;
-
-    public function __construct(TimeTracker $timeTracker)
-    {
-        $this->timeTracker = $timeTracker;
-    }
-
     /**
      * Initialize TypoScriptFrontendController to the point right before rendering of the page is triggered
      * Overrided to Check for request which calls only for menus and specific static contents
@@ -53,10 +44,12 @@ class PrepareTypoScriptFrontendRendering extends PrepareTSFE
     {
         // as long as TSFE throws errors with the global object, this needs to be set, but
         // should be removed later-on once TypoScript Condition Matcher is built with the current request object.
-        $GLOBALS['TYPO3_REQUEST'] = $request;
+        // $GLOBALS['TYPO3_REQUEST'] = $request;
+        $this->timeTracker = $this->getTimeTracker();
 
         /** @var TypoScriptFrontendController */
         $controller = $request->getAttribute('frontend.controller');
+
         // Get from cache
         $this->timeTracker->push('Get Page from cache');
         $queryParams = $request->getQueryParams();
@@ -71,9 +64,9 @@ class PrepareTypoScriptFrontendRendering extends PrepareTSFE
         $controller->getConfigArray();
 
         // // Setting language and locale
-        // $this->timeTracker->push('Setting language');
-        // $this->controller->settingLanguage();
-        // $this->timeTracker->pull();
+        $this->timeTracker->push('Setting language');
+        // $controller->settingLanguage();
+        $this->timeTracker->pull();
 
         // Convert POST data to utf-8 for internal processing if metaCharset is different
         if ($controller->metaCharset !== 'utf-8' && $request->getMethod() === 'POST') {
@@ -84,5 +77,13 @@ class PrepareTypoScriptFrontendRendering extends PrepareTSFE
             }
         }
         return $handler->handle($request);
+    }
+
+    /**
+     * @return TimeTracker
+     */
+    protected function getTimeTracker(): TimeTracker
+    {
+        return GeneralUtility::makeInstance(TimeTracker::class);
     }
 }
