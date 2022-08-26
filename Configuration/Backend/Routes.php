@@ -1,7 +1,9 @@
 <?php
+
+use WebVision\WvT3unity\Utility\ClearCustomCache;
 return [
     'mageblockcache' => [
         'path' => '/mageblockcache',
-        'target' => \WebVision\WvT3unity\Utility\ClearCustomCache::class . '::clear',
+        'target' => ClearCustomCache::class . '::clear',
     ]
 ];

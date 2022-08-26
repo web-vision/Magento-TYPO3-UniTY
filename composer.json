@@ -22,5 +22,10 @@
             "name": "Yannick Hermes",
             "email": "y.hermes@web-vision.de"
         }
-    ]
+    ],
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "wv_t3unity"
+        }
+    }
 }
