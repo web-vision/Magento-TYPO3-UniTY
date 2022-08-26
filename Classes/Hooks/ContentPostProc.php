@@ -9,7 +9,7 @@ namespace WebVision\WvT3unity\Hooks;
  * The TYPO3 project - inspiring people to share!
  * Copyright (c) 2017 web-vision GmbH
  */
-
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 use \TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -35,6 +35,7 @@ class ContentPostProc extends AbstractPlugin
     public function hookEntry(array &$params, &$that)
     {
         $typoUrl = (is_array($this->loadTS(1)['lib.']['urlValue.']) ? $this->loadTS(1)['lib.']['urlValue.']['value'] : NULL);
+        $typoUrl = (is_array($this->loadTS(1)['lib.']['urlValue.']) ? $this->loadTS(1)['lib.']['urlValue.']['value'] : NULL);
         if (Configuration::isMagentoContent($params['pObj']->type, 'head')) {
             $this->removeGenerator($params['pObj']->content);
             $this->parseMetaTags($params['pObj']->content);
@@ -44,7 +45,7 @@ class ContentPostProc extends AbstractPlugin
             $params['pObj']->content = preg_replace('/,\s?]/', ']', $params['pObj']->content);
             // Attaching TYPO3 baseURL to the fileadmin URLs
             if($typoUrl != NULL){
-                $params['pObj']->content = preg_replace('/%BASE_URL%\/fileadmin\//', rtrim($typoUrl,"/").'/fileadmin/', $params['pObj']->content);              
+                $params['pObj']->content = preg_replace('/%BASE_URL%\/fileadmin\//', rtrim($typoUrl,"/").'/fileadmin/', $params['pObj']->content);
             }
         }
     }
@@ -118,7 +119,7 @@ class ContentPostProc extends AbstractPlugin
 
     /**
      *
-     * @throws \TYPO3\CMS\Fluid\Core\ViewHelper\Exception
+     * @throws Exception
      * @param int $pageUid pageuid from where TS template should be accessed
      * @return array
      */
@@ -132,5 +133,5 @@ class ContentPostProc extends AbstractPlugin
         $TSObj->runThroughTemplates($rootLine);
         $TSObj->generateConfig();
         return $TSObj->setup;
-    } 
+    }
 }

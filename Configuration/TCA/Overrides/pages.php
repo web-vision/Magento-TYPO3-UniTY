@@ -1,5 +1,6 @@
 <?php
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 /*
  * This file is part of the wv_t3unity Extension for TYPO3 CMS.
  *
@@ -8,7 +9,6 @@
  * The TYPO3 project - inspiring people to share!
  * Copyright (c) 2017 web-vision GmbH
  */
-
 call_user_func(
     function ($extKey, $table) {
         // Localization paths
@@ -22,7 +22,7 @@ call_user_func(
         // Configuration values
         $configTypeInput = 'input';
 
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns(
+        ExtensionManagementUtility::addTCAcolumns(
             $table,
             [
                 'canonical_url' => [
@@ -49,7 +49,7 @@ call_user_func(
             ]
         );
 
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+        ExtensionManagementUtility::addToAllTCAtypes(
             $table,
             'canonical_url',
             1,
@@ -59,7 +59,7 @@ call_user_func(
         // Remove tx_realurl_pathoverride from backend
         $GLOBALS['TCA'][$table]['palettes']['137']['showitem'] = '';
 
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
+        ExtensionManagementUtility::registerPageTSConfigFile(
             $extKey,
             'Configuration/PageTS/Include.ts',
             'web-vision UniTY - Config'

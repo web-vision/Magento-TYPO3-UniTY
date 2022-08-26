@@ -17,11 +17,10 @@ namespace WebVision\WvT3unity\Xclass;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
@@ -52,7 +51,7 @@ class PageProvider extends \TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProv
             $magUrl = $tsSetting['lib.']['magurlValue.']['value'];
             $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
             $urlSegment = $pageRepository->getPage($this->getPreviewPid())['slug'];
-            
+
             if ($urlSegment != null) {
                 // Writing the redirect URL with magento baseURL and with a trailing slash
                 $viewLink = rtrim($magUrl, "/") . $urlSegment . '/';

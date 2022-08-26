@@ -8,12 +8,13 @@ namespace WebVision\WvT3unity\Hooks;
  * Copyright (c) 2020 web-vision GmbH
  */
 
-use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WebVision\WvT3unity\Xclass\SimpleDataHandlerController;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use WebVision\WvT3unity\Xclass\SimpleDataHandlerController;
 
 /**
  * This class is a hook class which adds a custom button for magento block cache clearing
@@ -32,12 +33,13 @@ class PageHook
     public function render(array $params, ButtonBar $buttonBar)
     {
         $buttons = $params['buttons'];
+        $queryParams = $GLOBALS['TYPO3_REQUEST']->getQueryParams();
         // Data required for redirection into the current module after processing
-        $getData = GeneralUtility::_GET();
-        if (!empty($getData)) {
+
+        if (!empty($getData)) {$queryParams = $GLOBALS['TYPO3_REQUEST']->getQueryParams();
             $routeArray = explode('/', $getData['route']);
-            $id = $getData['id'];
-    
+            $id = $queryParams['id'];
+
             if (str_starts_with($getData['route'], '/module/web')) {
                 $moduleName = $routeArray[2] . '_' . $routeArray[3];
                 // Configure new button with custom data

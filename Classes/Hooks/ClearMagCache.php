@@ -17,7 +17,7 @@ namespace WebVision\WvT3unity\Hooks;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -39,7 +39,7 @@ class ClearMagCache implements ClearCacheActionsHookInterface
      */
     public function manipulateCacheActions(&$cacheActions, &$optionValues)
     {
-        $uriBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $cacheActions[] = [
             'id' => 'magento',
             'title' => 'LLL:EXT:wv_t3unity/Resources/Private/Language/locallang.xlf:flushMagCachesTitle',
