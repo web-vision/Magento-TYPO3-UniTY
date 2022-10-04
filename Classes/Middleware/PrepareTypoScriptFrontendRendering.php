@@ -72,10 +72,11 @@ class PrepareTypoScriptFrontendRendering extends PrepareTSFE
         if ($controller->metaCharset !== 'utf-8' && $request->getMethod() === 'POST') {
             $parsedBody = $request->getParsedBody();
             if (is_array($parsedBody) && !empty($parsedBody)) {
-                $this->convertCharsetRecursivelyToUtf8($parsedBody, $this->controller->metaCharset);
+                $this->convertCharsetRecursivelyToUtf8($parsedBody, $controller->metaCharset);
                 $request = $request->withParsedBody($parsedBody);
             }
         }
+
         return $handler->handle($request);
     }
 
