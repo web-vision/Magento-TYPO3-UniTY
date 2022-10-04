@@ -36,7 +36,7 @@
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
-        "typo3/cms-core": "^10.4 || ^11.5",
+        "typo3/cms-core": "^10.4 || ^11.0",
         "typo3/cms-filelist": "^10.4 || ^11.0",
         "typo3/cms-tstemplate": "^10.4 || ^11.0",
         "typo3/cms-backend": "^10.4 || ^11.0",
