@@ -36,10 +36,8 @@ class ClearMagCache implements ClearCacheActionsHookInterface
      *
      * @param array $cacheActions Array of CacheMenuItems
      * @param array $optionValues Array of AccessConfigurations-identifiers (typically  used by userTS with options.clearCache.identifier)
-     *
-     * @return void
      */
-    public function manipulateCacheActions(&$cacheActions, &$optionValues)
+    public function manipulateCacheActions(&$cacheActions, &$optionValues): void
     {
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $cacheActions[] = [
@@ -50,7 +48,5 @@ class ClearMagCache implements ClearCacheActionsHookInterface
             'iconIdentifier' => 'actions-system-cache-clear-impact-medium',
         ];
         $this->optionValues[] = 'magento';
-
     }
-    
 }
