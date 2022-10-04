@@ -17,6 +17,8 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  * This class includes all functions for generating XML sitemaps.
  *
  * @author Tim Werdin <t.werdin@web-vision.de>
+ *
+ * @deprecated Currently this controller is not used, no configuration, no use in extension
  */
 class SitemapController
 {
