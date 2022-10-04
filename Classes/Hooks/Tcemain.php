@@ -40,12 +40,8 @@ class Tcemain
     const COLUMN_EXCLUDE_SLUG_FOR_SUBPAGES = 'exclude_slug_for_subpages';
     const COLUMN_SLUG = 'slug';
     const TABLE_PAGES = 'pages';
+    // ToDo: pages_language_overlay not exist in typo3 >=v10
     const TABLE_PAGES_LANGUAGE_OVERLAY = 'pages_language_overlay';
-
-    /**
-     * @var \TYPO3\CMS\Core\Database\DatabaseConnection
-     */
-    protected $db;
 
     /**
      * Fieldnames that trigger the handler.
@@ -74,6 +70,7 @@ class Tcemain
      */
     protected $tablesToProcess = [
         'pages',
+        // ToDo: pages_language_overlay not exist in typo3 >=v10
         'pages_language_overlay'
     ];
 
@@ -93,10 +90,7 @@ class Tcemain
     {
         $this->pageRepository = $pageRepository;
     }
-    // public function __construct(PageRepository $pageRepository)
-    // {
-    //     $this->pageRepository = $pageRepository;
-    // }
+
     /**
      * Hook to set an empty string for fields that use text as data type and
      * are not required to prevent a SQL warning / error.
@@ -211,8 +205,6 @@ class Tcemain
                 return;
         }
 
-        $this->db = $GLOBALS['TYPO3_DB'];
-
         $unityPath = $this->getRecordPath($pagesUid, $sysLanguageUid);
 
         if (!array_key_exists('slug', $databaseData)) {
@@ -278,23 +270,17 @@ class Tcemain
      *
      * @return void
      */
-    protected function updateRecord($uid, $sysLanguageUid, $unityPath, $newRealUrlPath = null, $newRealUrlPath = null)
+    protected function updateRecord($uid, $sysLanguageUid, $unityPath, $newRealUrlPath = null)
     {
         if ($unityPath == '/') {
             $unityPath = '';
         }
 
         if ($newRealUrlPath != null) {
-    
-        if ($newRealUrlPath != null) {
             $realUrlPathForPageData = rtrim('/' . ltrim($newRealUrlPath, '/'), '/');
             $unityPath = $realUrlPathForPageData . '.html';
         } else {
-            $realUrlPathForPageDataForPageData = rtrim('/' . ltrim($newRealUrlPath, '/'), '/');
-            $unityPath = $realUrlPathForPageData . '.html';
-        } else {
             $realUrlPathForPageData = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
-        }
         }
 
         // set default values for update query
@@ -518,84 +504,7 @@ class Tcemain
             }
         }
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('pages_language_overlay');
-
-        $result = $queryBuilder->select('*')
-            ->from('pages_language_overlay')
-            ->where(
-                $queryBuilder->expr()->in(
-                    'pid',
-                    $queryBuilder->createNamedParameter($page_ids, Connection::PARAM_INT_ARRAY)
-                ),
-                $queryBuilder->expr()->eq(
-                    'sys_language_uid',
-                    $queryBuilder->createNamedParameter($lUid, \PDO::PARAM_INT)
-                )
-            )
-            ->execute();
-
-        $overlays = [];
-        while ($row = $result->fetch()) {
-            $this->pageRepository->versionOL('pages_language_overlay', $row);
-            if (is_array($row)) {
-                $row['_PAGES_OVERLAY'] = true;
-                $row['_PAGES_OVERLAY_UID'] = $row['uid'];
-                $row['_PAGES_OVERLAY_LANGUAGE'] = $lUid;
-                $origUid = $row['pid'];
-                // Unset vital fields that are NOT allowed to be overlaid:
-                unset($row['uid']);
-                unset($row['pid']);
-                $overlays[$origUid] = $row;
-            }
-        }
-
-        // Create output:
-        $pagesOutput = [];
-        foreach ($pagesInput as $key => $origPage) {
-            if (is_array($origPage)) {
-                $pagesOutput[$key] = $origPage;
-                if (isset($overlays[$origPage['uid']])) {
-                    // Overwrite the original field with the overlay
-                    foreach ($overlays[$origPage['uid']] as $fieldName => $fieldValue) {
-                        if ($fieldName !== 'uid' && $fieldName !== 'pid') {
-                            $pagesOutput[$key][$fieldName] = $fieldValue;
-                        }
-                    }
-                }
-            } else {
-                if (isset($overlays[$origPage])) {
-                    $pagesOutput[$key] = $overlays[$origPage];
-                }
-            }
-        }
-        return $pagesOutput;
-    }
-
-    /**
-     * This method is almost the same as PageRepository::getPagesOverlay
-     * but does not set the frontend editing restriction as in the
-     * backend are no user groups and it throws an exception.
-     *
-     * @param array $pagesInput The pages input.
-     * @param int $lUid The language uid.
-     *
-     * @return array
-     */
-    protected function getPagesOverlayWithoutFERestriction(array $pagesInput, $lUid)
-    {
-        $page_ids = [];
-
-        foreach ($pagesInput as $origPage) {
-            if (is_array($origPage)) {
-                // Was the whole record
-                $page_ids[] = $origPage['uid'];
-            } else {
-                // Was the id
-                $page_ids[] = $origPage;
-            }
-        }
-
+        // ToDo: Change to normal page table
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('pages_language_overlay');
 
