@@ -10,8 +10,8 @@ namespace WebVision\WvT3unity\Controller;
  * Copyright (c) 2017 web-vision GmbH
  */
 
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use \TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
  * This class includes all functions for generating XML sitemaps.
@@ -29,13 +29,6 @@ class SitemapController
      * @var array
      */
     protected $sitemapConfiguration = [];
-
-    /**
-     * Holds the database class for easier access throughout the class.
-     *
-     * @var \TYPO3\CMS\Core\Database\DatabaseConnection
-     */
-    protected $db;
 
     /**
      * Page tree for the current page.
@@ -56,10 +49,8 @@ class SitemapController
     {
         $this->sitemapConfiguration = $configuration;
 
-        $this->db = $GLOBALS['TYPO3_DB'];
-
         $id = (int)$this->getFrontendController()->id;
-        $sysLanguageUid = (int)$this->getFrontendController()->sys_language_uid;
+        $sysLanguageUid = $this->getFrontendController()->getContext()->getPropertyFromAspect('language', 'id');
         $treeRecords = $this->getTreeList($id, $sysLanguageUid);
 
         if (array_key_exists('excludeUid', $this->sitemapConfiguration)) {
@@ -120,42 +111,38 @@ class SitemapController
      *
      * @return array
      */
-    protected function getTreeList($pid, $sysLanguageUid, $prefix = '')
+    protected function getTreeList(int $pid, int $sysLanguageUid, string $prefix = '')
     {
-        $fields = 'uid,doktype,crdate,unity_path,canonical_url';
+        $pageRepository = GeneralUtility::makeInstance(\WebVision\WvT3unity\Domain\Repository\PageRepository::class);
+        $fields = ['uid','doktype','crdate','unity_path','canonical_url'];
 
-        $id = (int)$pid;
-        if ($id < 0) {
-            $id = abs($id);
+        $id = $pid;
+        if ($id > 0) {
+            return $this->tree;
         }
-        if ($id) {
-            $resultSet = $this->db->exec_SELECTquery(
-                $fields . ',mount_pid,nav_hide,SYS_LASTCHANGED',
-                'pages',
-                'pid=' . $id . ' AND deleted=0'
-            );
-            while (($row = $this->db->sql_fetch_assoc($resultSet))) {
-                $row[static::COLUMN_UNITY_PATH] = $prefix . $row[static::COLUMN_UNITY_PATH];
-                $this->tree[$row['uid']] = $row;
 
-                if ($sysLanguageUid) {
-                    $where = 'pid=' . $row['uid'] . ' ';
-                    $where .= 'AND deleted=0 ';
-                    $where .= 'AND sys_language_uid = ' . $sysLanguageUid;
-                    // get localized data
-                    $langResultSet = $this->db->exec_SELECTquery($fields, 'pages_language_overlay', $where);
-                    $langResult = $this->db->sql_fetch_assoc($langResultSet);
-                    $langResult[static::COLUMN_UNITY_PATH] = $prefix . $langResult[static::COLUMN_UNITY_PATH];
-                    $this->tree[$row['uid']]['lang'] = $langResult;
-                }
+        $pageResult = $pageRepository->findPageById($id, $fields);
 
-                // get children
-                if ($row['doktype'] == 7 && $row['mount_pid']) {
-                    $subPrefix = preg_replace('/\.html$/', '', $row[static::COLUMN_UNITY_PATH]);
-                    $this->getTreeList($row['mount_pid'], $sysLanguageUid, $subPrefix);
-                } else {
-                    $this->getTreeList($row['uid'], $sysLanguageUid, $prefix);
-                }
+        if ($pageResult->rowCount() === 0) {
+            return $this->tree;
+        }
+
+        foreach ($pageResult->fetchAllAssociative() as $row) {
+            $row[static::COLUMN_UNITY_PATH] = $prefix . $row[static::COLUMN_UNITY_PATH];
+            $this->tree[$row['uid']] = $row;
+
+            if ($sysLanguageUid) {
+                $pageLangResult = $pageRepository->findPageOverLayeByParentId($row['uid'], $sysLanguageUid, $fields);
+                $pageLangResult[static::COLUMN_UNITY_PATH] = $prefix . $pageLangResult[static::COLUMN_UNITY_PATH];
+                $this->tree[$row['uid']]['lang'] = $pageLangResult;
+            }
+
+            // get children
+            if ($row['doktype'] == PageRepository::DOKTYPE_MOUNTPOINT && $row['mount_pid']) {
+                $subPrefix = preg_replace('/\.html$/', '', $row[static::COLUMN_UNITY_PATH]);
+                $this->getTreeList($row['mount_pid'], $sysLanguageUid, $subPrefix);
+            } else {
+                $this->getTreeList($row['uid'], $sysLanguageUid, $prefix);
             }
         }
 
