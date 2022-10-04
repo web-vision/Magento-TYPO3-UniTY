@@ -7,15 +7,14 @@ use WebVision\WvT3unity\Hooks\ContentPostProc;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProvider;
 use TYPO3\CMS\Backend\Controller\SimpleDataHandlerController;
-use TYPO3\CMS\Frontend\Middleware\PrepareTypoScriptFrontendRendering;
+
 (function () {
-    ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:wv_t3unity/Configuration/PageTS/Include.tsconfig">');
-
-    $typo3ConfigurationVariables = 'TYPO3_CONF_VARS';
-
+    ExtensionManagementUtility::addPageTSConfig(
+        '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:wv_t3unity/Configuration/PageTS/Include.tsconfig">'
+    );
 
     ArrayUtility::mergeRecursiveWithOverrule(
-        $GLOBALS[$typo3ConfigurationVariables],
+        $GLOBALS['TYPO3_CONF_VARS'],
         [
             'SC_OPTIONS' => [
                 't3lib/class.t3lib_tcemain.php' => [
