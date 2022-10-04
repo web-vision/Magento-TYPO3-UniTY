@@ -25,6 +25,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  *
  * @author Anu Bhuvanendran Nair <anu@web-vision.de>
+ *
+ * @ToDo: Migrate to PSR-14-based ModifyClearCacheActionsEvent
  */
 class ClearMagCache implements ClearCacheActionsHookInterface
 {
