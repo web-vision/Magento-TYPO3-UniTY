@@ -4,14 +4,14 @@ $EM_CONF[$_EXTKEY] = [
     'title' => 'Unity',
     'description' => 'Connects TYPO3 with Magento',
     'category' => 'services',
-    'author' => 'Tim Werdin, Yannick Hermes',
-    'author_email' => 't.werdin@web-vision.de, y.hermes@web-vision.de',
+    'author' => 'web-vision Team',
+    'author_email' => 'hello@web-vision.de',
     'author_company' => 'web-vision GmbH',
     'state' => 'beta',
-    'version' => '4.2.0',
+    'version' => '2.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '10.4.0-11.9.99',
+            'typo3' => '10.4.0-11.5.99',
         ],
     ],
 ];

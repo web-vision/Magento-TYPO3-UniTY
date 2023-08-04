@@ -48,7 +48,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
     ExtensionManagementUtility::registerPageTSConfigFile(
         $extKey,
-        'Configuration/PageTS/Include.ts',
+        'Configuration/PageTS/Include.tsconfig',
         'web-vision UniTY - Config'
     );
 }

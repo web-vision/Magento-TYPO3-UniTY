@@ -1,13 +1,6 @@
 <?php
 namespace WebVision\WvT3unity\Utility;
 
-/*
- * This file is part of the wv_t3unity Extension for TYPO3 CMS.
- *
- * The TYPO3 project - inspiring people to share!
- * Copyright (c) 2020 web-vision GmbH
- */
-
  use Psr\Http\Message\ResponseInterface;
  use Psr\Http\Message\ServerRequestInterface;
  use TYPO3\CMS\Core\Http\RedirectResponse;

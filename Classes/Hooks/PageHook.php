@@ -1,13 +1,6 @@
 <?php
 namespace WebVision\WvT3unity\Hooks;
 
-/*
- * This file is part of the wv_t3unity Extension for TYPO3 CMS.
- *
- * The TYPO3 project - inspiring people to share!
- * Copyright (c) 2020 web-vision GmbH
- */
-
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
