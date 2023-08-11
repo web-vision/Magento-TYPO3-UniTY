@@ -1,5 +1,4 @@
 CREATE TABLE pages (
-    unity_path TEXT NOT NULL,
-    canonical_url TEXT NOT NULL
+    unity_path varchar(255) DEFAULT '' NOT NULL,
+    canonical_url varchar(255) DEFAULT '' NOT NULL
 );
-

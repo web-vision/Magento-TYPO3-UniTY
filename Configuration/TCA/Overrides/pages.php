@@ -24,18 +24,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
                     'max'  => 70,
                     'eval' => 'trim,nospace,lower',
                 ],
-            ],
-            'tx_realurl_pathsegment' => [
-                'label' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang.xlf:' . 'pages.tx_realurl_pathsegment',
-                'displayCond' => 'FIELD:tx_realurl_exclude:!=:1',
-                'exclude' => 1,
-                'config' => [
-                    'type' => 'input',
-                    'max' => 255,
-                    'eval' => 'trim,nospace,lower,DmitryDulepov\\Realurl\\Evaluator\\SegmentFieldCleaner',
-                    'readOnly' => 0,
-                ],
-            ],
+            ]
         ]
     );
 

@@ -51,4 +51,9 @@ use TYPO3\CMS\Backend\Controller\SimpleDataHandlerController;
                 'className' => WebVision\WvT3unity\Middleware\PrepareTypoScriptFrontendRendering::class,
             ],
         ];
+
+    // Exclude cHash validation for certain parameters
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'] = [
+        'colPos','uid'
+    ];
 })();

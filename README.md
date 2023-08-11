@@ -11,6 +11,11 @@ Checkout the video here: https://youtu.be/q6b1Eg8bS7k
 
 ## Installation
 
+Easiest way to install the extension is via composer.
+
+`composer req web-vision/wv_t3unity`
+
+Alternatively you can install the extension manually from Github.
 Add the github repositiory to your composer.json file:
 
 ```composer config repositories.t3_unity vcs git@github.com:web-vision/Magento-TYPO3-UniTY.git```
