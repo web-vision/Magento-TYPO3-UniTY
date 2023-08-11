@@ -1,0 +1,24 @@
+stages:
+    - documentation
+
+.deploy: &deploy_template
+    tags:
+        - shared-runner
+    image: composer:1.9
+    before_script:
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+        - eval "$(ssh-agent -s)"
+        - ssh-add <(echo "$SSH_PRIVATE_KEY")
+        - mkdir -p ~/.ssh
+        - chmod 0700 ~/.ssh
+        - echo "$SSH_SERVER_HOSTKEYS" >> ~/.ssh/known_hosts
+
+Deploy Documentation:
+  <<: *deploy_template
+  only:
+    - main
+  stage: documentation
+  script:
+    - scp docs/index.md "$HOSTSERVER":httpdocs/source/wv_t3unity
+    - scp -r docs/images/* "$HOSTSERVER":httpdocs/source/wv_t3unity/docs/images
+    - ssh "$HOSTSERVER" "cd httpdocs/ && make html"
