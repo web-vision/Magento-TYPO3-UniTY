@@ -36,11 +36,11 @@
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
-        "typo3/cms-core": "^10.4 || ^11.0",
-        "typo3/cms-filelist": "^10.4 || ^11.0",
-        "typo3/cms-tstemplate": "^10.4 || ^11.0",
-        "typo3/cms-backend": "^10.4 || ^11.0",
-        "typo3/cms-frontend": "^10.4 || ^11.0"
+        "typo3/cms-core": "^10.4 || ^11.0 || ^12.4",
+        "typo3/cms-filelist": "^10.4 || ^11.0 || ^12.4",
+        "typo3/cms-tstemplate": "^10.4 || ^11.0 || ^12.4",
+        "typo3/cms-backend": "^10.4 || ^11.0 || ^12.4",
+        "typo3/cms-frontend": "^10.4 || ^11.0 || ^12.4"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
@@ -49,7 +49,7 @@
         "saschaegerer/phpstan-typo3": "^1.0",
         "ssch/typo3-rector": "^1.0",
         "symfony/var-dumper": "^5.4",
-        "typo3/cms-belog": "^11.0",
+        "typo3/cms-belog": "^11.0 || ^12.4",
         "typo3/coding-standards": "^0.5"
     },
     "suggest": {

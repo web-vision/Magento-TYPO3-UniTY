@@ -47,9 +47,6 @@ use TYPO3\CMS\Backend\Controller\SimpleDataHandlerController;
             PageProvider::class => [
                 'className' => WebVision\WvT3unity\Xclass\PageProvider::class,
             ],
-            TYPO3\CMS\Frontend\Middleware\PrepareTypoScriptFrontendRendering::class => [
-                'className' => WebVision\WvT3unity\Middleware\PrepareTypoScriptFrontendRendering::class,
-            ],
         ];
 
     // Exclude cHash validation for certain parameters
