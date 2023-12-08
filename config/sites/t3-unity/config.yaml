@@ -1,4 +1,3 @@
-
 base: 'https://t3-unity.ddev.site/'
 languages:
   -
@@ -28,5 +27,6 @@ languages:
     fallbacks: ''
     flag: de
     languageId: 1
+magentoUrl: 'https://magento.t3-unity.ddev.site'
 rootPageId: 1
 websiteTitle: 'TYPO3 Unity'
