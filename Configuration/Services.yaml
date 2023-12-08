@@ -7,6 +7,7 @@ services:
   WebVision\WvT3unity\:
     resource: '../Classes/*'
     exclude: '../Classes/{Domain/Model}'
+
   WebVision\WvT3unity\Hooks\Tcemain:
     public: true
   WebVision\WvT3unity\Hooks\PageHook:
