@@ -1,11 +1,7 @@
 <?php
 
-use WebVision\WvT3unity\Hooks\Tcemain;
 use WebVision\WvT3unity\Hooks\PageHook;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
-use WebVision\WvT3unity\Hooks\ContentPostProc;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProvider;
 use TYPO3\CMS\Backend\Controller\SimpleDataHandlerController;
 
 (function () {
@@ -39,14 +35,12 @@ use TYPO3\CMS\Backend\Controller\SimpleDataHandlerController;
 
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['additionalBackendItems']['cacheActions']['mag_cache'] = 'WebVision\\WvT3unity\\Hooks\\ClearMagCache';
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['Backend\Template\Components\ButtonBar']['getButtonsHook']['mag_cache'] = PageHook::class . '->render';
+
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'] =
         [
             SimpleDataHandlerController::class => [
                 'className' => WebVision\WvT3unity\Xclass\SimpleDataHandlerController::class,
-            ],
-            PageProvider::class => [
-                'className' => WebVision\WvT3unity\Xclass\PageProvider::class,
-            ],
+            ]
         ];
 
     // Exclude cHash validation for certain parameters
