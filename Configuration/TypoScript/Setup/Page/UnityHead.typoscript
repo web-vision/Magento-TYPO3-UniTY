@@ -25,6 +25,6 @@ UnityHead {
 
     10 = USER
     10 {
-        userFunc = WebVision\WvT3unity\UserFunc\ContentJson->getPageData
+        userFunc = WebVision\WvT3unity\UserFunc\ContentJson->getHeadData
     }
 }
