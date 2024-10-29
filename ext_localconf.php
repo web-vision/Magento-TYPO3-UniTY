@@ -33,10 +33,8 @@ use TYPO3\CMS\Backend\Controller\SimpleDataHandlerController;
     //     ]
     // );
 
-
     // Exclude cHash validation for certain parameters
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'] = [
-        'colPos','uid','entry-level','layout'
+        'uid','entry-level','layout'
     ];
-
 })();

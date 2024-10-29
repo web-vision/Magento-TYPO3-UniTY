@@ -68,7 +68,7 @@ return [
     ],
     'FE' => [
         'cacheHash' => [
-            'enforceValidation' => true,
+            'enforceValidation' => false,
         ],
         'disableNoCacheParameter' => true,
     ],
