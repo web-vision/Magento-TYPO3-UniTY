@@ -8,6 +8,7 @@ use TYPO3\CMS\Backend\ContextMenu\ItemProviders\AbstractProvider;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
+use TYPO3\CMS\Core\Routing\UnableToLinkToPageException;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -18,7 +19,7 @@ class MagentoUrlProvider extends AbstractProvider
     /**
      * This array contains configuration for items you want to add
      *
-     * @var array[]
+     * @var array<string, mixed>
      */
     protected $itemsConfiguration = [
         'magentoView' => [
@@ -30,7 +31,7 @@ class MagentoUrlProvider extends AbstractProvider
     ];
 
     /**
-     * @var array[]
+     * @var array<array-key, mixed>
      */
     private array $record;
 
@@ -71,8 +72,11 @@ class MagentoUrlProvider extends AbstractProvider
      * whenever the user tries to click on the "Hello World" item.
      * The method is called from AbstractProvider::prepareItems() for each context menu item.
      *
-     * @param string $itemName
-     * @return array
+     * @return array{
+     *     data-callback-module: string,
+     *     data-preview-url?: string
+     * }
+     * @throws UnableToLinkToPageException
      */
     protected function getAdditionalAttributes(string $itemName): array
     {
@@ -82,10 +86,9 @@ class MagentoUrlProvider extends AbstractProvider
         $magentoUrl = '';
         try {
             $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
-            /** @var Site */
             $site = $siteFinder->getSiteByPageId((int)$this->identifier);
             $magentoUrl =  $site->getConfiguration()['magentoUrl'] ?: null;
-        } catch (SiteNotFoundException | \InvalidArgumentException $e) {
+        } catch (SiteNotFoundException|\InvalidArgumentException) {
         }
 
         if ($magentoUrl !== '') {
@@ -108,8 +111,8 @@ class MagentoUrlProvider extends AbstractProvider
      * You could also modify existing items here.
      * The new item is added after the 'info' item.
      *
-     * @param array $items
-     * @return array
+     * @param array<array-key, mixed> $items
+     * @return array<array-key, mixed>
      */
     public function addItems(array $items): array
     {
@@ -163,7 +166,7 @@ class MagentoUrlProvider extends AbstractProvider
             && !$this->isExcludedDoktype();
     }
 
-    protected function isRoot()
+    protected function isRoot(): bool
     {
         return (int)$this->identifier === 0;
     }
