@@ -1,12 +1,12 @@
 <?php
+
 namespace WebVision\WvT3unity\Hooks;
 
-use TYPO3\CMS\Core\Utility\RootlineUtility;
 use TYPO3\CMS\Core\Database\Connection;
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use \TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\RootlineUtility;
 
 /**
  * This class makes sure that on save of a page the path for the page will be
@@ -14,26 +14,24 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
  *
  * Also prevents SQL errors for $fields when trying to insert null or empty
  * values as TEXT fields do not allow default values.
- *
- * @author Tim Werdin <t.werdin@web-vision.de>
  */
 class Tcemain
 {
-    const HTML_REGEX = '/\.html$/';
-    const KEY_CHILDREN = 'children';
-    const COLUMN_UID = 'uid';
-    const COLUMN_PID = 'pid';
-    const COLUMN_TITLE = 'title';
-    const COLUMN_DOKTYPE = 'doktype';
-    const COLUMN_NAV_TITLE = 'nav_title';
-    const COLUMN_UNITY_PATH = 'unity_path';
-    const COLUMN_IS_SITEROOT = 'is_siteroot';
-    const COLUMN_SYS_LANGUAGE_UID = 'sys_language_uid';
-    const COLUMN_EXCLUDE_SLUG_FOR_SUBPAGES = 'exclude_slug_for_subpages';
-    const COLUMN_SLUG = 'slug';
-    const TABLE_PAGES = 'pages';
+    public const HTML_REGEX = '/\.html$/';
+    public const KEY_CHILDREN = 'children';
+    public const COLUMN_UID = 'uid';
+    public const COLUMN_PID = 'pid';
+    public const COLUMN_TITLE = 'title';
+    public const COLUMN_DOKTYPE = 'doktype';
+    public const COLUMN_NAV_TITLE = 'nav_title';
+    public const COLUMN_UNITY_PATH = 'unity_path';
+    public const COLUMN_IS_SITEROOT = 'is_siteroot';
+    public const COLUMN_SYS_LANGUAGE_UID = 'sys_language_uid';
+    public const COLUMN_EXCLUDE_SLUG_FOR_SUBPAGES = 'exclude_slug_for_subpages';
+    public const COLUMN_SLUG = 'slug';
+    public const TABLE_PAGES = 'pages';
     // ToDo: pages_language_overlay not exist in typo3 >=v10
-    const TABLE_PAGES_LANGUAGE_OVERLAY = 'pages_language_overlay';
+    public const TABLE_PAGES_LANGUAGE_OVERLAY = 'pages_language_overlay';
 
     /**
      * Fieldnames that trigger the handler.
@@ -52,7 +50,7 @@ class Tcemain
      */
     protected $actions = [
         'new',
-        'update'
+        'update',
     ];
 
     /**
@@ -63,7 +61,7 @@ class Tcemain
     protected $tablesToProcess = [
         'pages',
         // ToDo: pages_language_overlay not exist in typo3 >=v10
-        'pages_language_overlay'
+        'pages_language_overlay',
     ];
 
     /**
@@ -94,8 +92,6 @@ class Tcemain
      * @param string $table The table affected by action, e.g. 'pages'.
      * @param int $uid The uid of the record affected by action.
      * @param array $modifiedFields The modified fields of the record.
-     *
-     * @return void
      */
     public function processDatamap_postProcessFieldArray(// @codingStandardsIgnoreLine
         $action,
@@ -159,8 +155,6 @@ class Tcemain
      * @param int $recordId
      * @param array $databaseData
      * @param object $dataHandler
-     *
-     * @return void
      */
     public function processDatamap_afterDatabaseOperations(
         $status,
@@ -236,7 +230,6 @@ class Tcemain
 
         ksort($data);
 
-
         foreach ($data as $record) {
             if ($record[static::COLUMN_IS_SITEROOT] == '1') {
                 continue;
@@ -259,8 +252,6 @@ class Tcemain
      * @param int $uid The uid of the page to update.
      * @param int $sysLanguageUid The language uid of the page to update.
      * @param string $unityPath The unity path to set.
-     *
-     * @return void
      */
     protected function updateRecord($uid, $sysLanguageUid, $unityPath, $newRealUrlPath = null)
     {
@@ -310,8 +301,6 @@ class Tcemain
      * @param int $uid The uid to find the children for.
      * @param int $sysLanguageUid The language uid for child tree.
      * @param string $path The current path.
-     *
-     * @return void
      */
     protected function updateSubPages($uid, $sysLanguageUid, $path)
     {
@@ -338,8 +327,6 @@ class Tcemain
      *
      * @param array $data The subpage to update.
      * @param string $currentPath The current path.
-     *
-     * @return void
      */
     protected function updateSubPage(array $data, $currentPath)
     {
@@ -387,7 +374,7 @@ class Tcemain
         $resultSet = GeneralUtility::makeInstance(ConnectionPool::class)
         ->getConnectionForTable(static::TABLE_PAGES)
         ->select(
-            ['uid','doktype','title','nav_title','unity_path','slug'],
+            ['uid', 'doktype', 'title', 'nav_title', 'unity_path', 'slug'],
             static::TABLE_PAGES,
             [
                static::COLUMN_PID => $pid,
@@ -399,7 +386,7 @@ class Tcemain
             $uid = $row[static::COLUMN_UID];
             $row[static::COLUMN_SYS_LANGUAGE_UID] = 0;
             $treeList[$uid] = $row;
-        
+
             // get children
             $children = $this->getTreeList($uid, $sysLanguageUid);
             if (!empty($children)) {

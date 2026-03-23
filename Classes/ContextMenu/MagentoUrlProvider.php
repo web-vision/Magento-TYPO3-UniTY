@@ -83,13 +83,13 @@ class MagentoUrlProvider extends AbstractProvider
         try {
             $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
             /** @var Site */
-            $site = $siteFinder->getSiteByPageId((int) $this->identifier);
+            $site = $siteFinder->getSiteByPageId((int)$this->identifier);
             $magentoUrl =  $site->getConfiguration()['magentoUrl'] ?: null;
         } catch (SiteNotFoundException | \InvalidArgumentException $e) {
         }
 
         if ($magentoUrl !== '') {
-            $url = BackendUtility::getPreviewUrl((int) $this->identifier);
+            $url = BackendUtility::getPreviewUrl((int)$this->identifier);
 
             if ($magentoUrl !== null) {
                 $magentoUrl = rtrim((string)$magentoUrl, '/');

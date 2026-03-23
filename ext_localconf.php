@@ -1,8 +1,6 @@
 <?php
 
-use WebVision\WvT3unity\Hooks\PageHook;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Backend\Controller\SimpleDataHandlerController;
 
 (function () {
     ExtensionManagementUtility::addPageTSConfig(
@@ -35,6 +33,6 @@ use TYPO3\CMS\Backend\Controller\SimpleDataHandlerController;
 
     // Exclude cHash validation for certain parameters
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'] = [
-        'uid','entry-level','layout'
+        'uid', 'entry-level', 'layout',
     ];
 })();
