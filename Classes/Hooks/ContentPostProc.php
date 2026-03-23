@@ -1,17 +1,16 @@
 <?php
+
 namespace WebVision\WvT3unity\Hooks;
 
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\TypoScript\TemplateService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use \TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
-use \TYPO3\CMS\Backend\Utility\BackendUtility;
-use \TYPO3\CMS\Core\TypoScript\TemplateService;
-use \WebVision\WvT3unity\Utility\Configuration;
+use WebVision\WvT3unity\Utility\Configuration;
 
 /**
  * This class renders all meta data as json
- *
- * @author Tim Werdin <t.werdin@web-vision.de>
  */
 class ContentPostProc extends AbstractPlugin
 {
@@ -21,13 +20,11 @@ class ContentPostProc extends AbstractPlugin
      *
      * @param array $params
      * @param mixed $that
-     *
-     * @return void
      */
     public function hookEntry(array &$params, &$that)
     {
-        $typoUrl = (is_array($this->loadTS(1)['lib.']['urlValue.']) ? $this->loadTS(1)['lib.']['urlValue.']['value'] : NULL);
-        $typoUrl = (is_array($this->loadTS(1)['lib.']['urlValue.']) ? $this->loadTS(1)['lib.']['urlValue.']['value'] : NULL);
+        $typoUrl = (is_array($this->loadTS(1)['lib.']['urlValue.']) ? $this->loadTS(1)['lib.']['urlValue.']['value'] : null);
+        $typoUrl = (is_array($this->loadTS(1)['lib.']['urlValue.']) ? $this->loadTS(1)['lib.']['urlValue.']['value'] : null);
         if (Configuration::isMagentoContent($params['pObj']->type, 'head')) {
             $this->removeGenerator($params['pObj']->content);
             $this->parseMetaTags($params['pObj']->content);
@@ -36,8 +33,8 @@ class ContentPostProc extends AbstractPlugin
 
             $params['pObj']->content = preg_replace('/,\s?]/', ']', $params['pObj']->content);
             // Attaching TYPO3 baseURL to the fileadmin URLs
-            if($typoUrl != NULL){
-                $params['pObj']->content = preg_replace('/%BASE_URL%\/fileadmin\//', rtrim($typoUrl,"/").'/fileadmin/', $params['pObj']->content);
+            if ($typoUrl != null) {
+                $params['pObj']->content = preg_replace('/%BASE_URL%\/fileadmin\//', rtrim($typoUrl, '/') . '/fileadmin/', $params['pObj']->content);
             }
         }
     }
@@ -46,8 +43,6 @@ class ContentPostProc extends AbstractPlugin
      * This method removes the meta tags with name generator.
      *
      * @param string $content The content to parse.
-     *
-     * @return void
      */
     protected function removeGenerator(&$content)
     {
@@ -58,8 +53,6 @@ class ContentPostProc extends AbstractPlugin
      * This method parses meta tags with a name or property attribute into a json
      *
      * @param string $content The content to parse.
-     *
-     * @return void
      */
     protected function parseMetaTags(&$content)
     {
@@ -74,8 +67,6 @@ class ContentPostProc extends AbstractPlugin
      * This method replaces link tags with the value of the href attribute.
      *
      * @param string $content The content to parse.
-     *
-     * @return void
      */
     protected function parseCss(&$content)
     {
@@ -86,8 +77,6 @@ class ContentPostProc extends AbstractPlugin
      * This method replaces script tags with the value of the src attribute.
      *
      * @param string $content The content to parse.
-     *
-     * @return void
      */
     protected function parseJs(&$content)
     {
@@ -110,7 +99,6 @@ class ContentPostProc extends AbstractPlugin
     }
 
     /**
-     *
      * @throws Exception
      * @param int $pageUid pageuid from where TS template should be accessed
      * @return array

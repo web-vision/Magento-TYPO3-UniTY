@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebVision\WvT3unity\Domain\Repository;
@@ -14,7 +15,7 @@ class PageRepository
      */
     public function findPageById(int $id, array $field)
     {
-        $fields = array_merge($field ?? [], ['mount_pid','nav_hide','SYS_LASTCHANGED']);
+        $fields = array_merge($field ?? [], ['mount_pid', 'nav_hide', 'SYS_LASTCHANGED']);
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
         $result = $queryBuilder->select(...$fields)
@@ -29,7 +30,7 @@ class PageRepository
     /**
      * @return Result|int
      */
-    public  function findPageOverLayeByParentId($uid, int $sysLanguageUid, array $fields = [])
+    public function findPageOverLayeByParentId($uid, int $sysLanguageUid, array $fields = [])
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
         $pageLangResult = $queryBuilder->select(...$fields)

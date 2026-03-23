@@ -1,18 +1,17 @@
 <?php
+
 namespace WebVision\WvT3unity\Utility;
 
-use \TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 
 /**
  * This class provides some helper functions for configuration values.
- *
- * @author Tim Werdin <t.werdin@web-vision.de>
  */
 class Configuration extends ConfigurationManager
 {
     /**
-     * @param null|int $pageType
-     * @param null|string $unityType
+     * @param int|null $pageType
+     * @param string|null $unityType
      *
      * @return bool
      */
