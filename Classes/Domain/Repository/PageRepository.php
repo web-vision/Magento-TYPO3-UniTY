@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebVision\WvT3unity\Domain\Repository;
@@ -7,38 +8,34 @@ use Doctrine\DBAL\Result;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class PageRepository
+final class PageRepository
 {
     /**
-     * @return Result|int
+     * @param string[] $field
      */
-    public function findPageById(int $id, array $field)
+    public function findPageById(int $id, array $field): Result
     {
-        $fields = array_merge($field ?? [], ['mount_pid','nav_hide','SYS_LASTCHANGED']);
+        $fields = array_merge($field, ['mount_pid', 'nav_hide', 'SYS_LASTCHANGED']);
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
-        $result = $queryBuilder->select(...$fields)
+        return $queryBuilder->select(...$fields)
             ->from('pages')
             ->where(
                 $queryBuilder->expr()->eq('pid', $id)
-            )->execute();
-
-        return $result;
+            )->executeQuery();
     }
 
     /**
-     * @return Result|int
+     * @param string[] $fields
      */
-    public  function findPageOverLayeByParentId($uid, int $sysLanguageUid, array $fields = [])
+    public function findPageOverLayeByParentId(int|string $uid, int $sysLanguageUid, array $fields = []): Result
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
-        $pageLangResult = $queryBuilder->select(...$fields)
+        return $queryBuilder->select(...array_values($fields))
             ->from('pages')
             ->where(
                 $queryBuilder->expr()->eq('pid', (int)$uid),
                 $queryBuilder->expr()->eq('sys_language_uid', $sysLanguageUid)
-            )->execute();
-
-        return $pageLangResult;
+            )->executeQuery();
     }
 }

@@ -6,7 +6,7 @@ Use TYPO3 as content mamagement system inside or side-by-side for your Magento s
 Checkout the video here: https://youtu.be/q6b1Eg8bS7k
 
 ## System Requirements
-- A working TYPO3 CMS v11 LTS System
+- A working TYPO3  11 and 12 LTS System
 - A Magento 2.4.x version with an installed Magento UniTY Extension, which can be found here: https://github.com/extendware/Magento-TYPO3-UniTY
 
 ## Installation

@@ -50,5 +50,13 @@ composer.phar
 
 # Repository excludes
 #######################
-/.Build/
+/.Build
 /composer.lock
+/var
+
+/.php-cs-fixer.cache
+
+/Documentation-GENERATED-temp
+
+/.cache/
+/Build/testing-docker/.env
