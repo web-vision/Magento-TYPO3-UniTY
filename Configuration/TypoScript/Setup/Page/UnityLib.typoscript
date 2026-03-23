@@ -1,7 +1,9 @@
 # To be changed later on with live TYPO3 URL
 # lib.urlValue can be used anywhere in the extensions where the url from TYPO3 instance is required.
-lib.urlValue = TEXT
-lib.urlValue.value =
+lib {
+  urlValue = TEXT
+  urlValue.value =
 
-lib.magurlValue = TEXT
-lib.magurlValue.value =
+  magurlValue = TEXT
+  magurlValue.value =
+}
