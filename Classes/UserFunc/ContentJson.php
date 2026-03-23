@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace WebVision\WvT3unity\UserFunc;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use WebVision\WvT3unity\Event\ManipulateHeadDataEvent;
 
+#[Autoconfigure(public: true)]
 class ContentJson
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly EventDispatcherInterface $eventDispatcher,
+    ) {
     }
 
     /**
@@ -46,7 +49,9 @@ class ContentJson
             'robots' => $pageData['robots'] ?? '',
         ];
 
-        return $this->encodeToJson($seoData);
+        $manipulateHeadDataEvent = $this->eventDispatcher->dispatch(new ManipulateHeadDataEvent($seoData, $request, $configuration));
+
+        return $this->encodeToJson($manipulateHeadDataEvent->headData);
     }
 
     /**
