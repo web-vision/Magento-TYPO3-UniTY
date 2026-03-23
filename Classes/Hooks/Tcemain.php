@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebVision\WvT3unity\Hooks;
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
@@ -15,7 +19,7 @@ use TYPO3\CMS\Core\Utility\RootlineUtility;
  * Also prevents SQL errors for $fields when trying to insert null or empty
  * values as TEXT fields do not allow default values.
  */
-class Tcemain
+final class Tcemain
 {
     public const HTML_REGEX = '/\.html$/';
     public const KEY_CHILDREN = 'children';
@@ -36,9 +40,9 @@ class Tcemain
     /**
      * Fieldnames that trigger the handler.
      *
-     * @var array
+     * @var string[]
      */
-    protected $fields = [
+    protected array $fields = [
         'unity_path',
         'canonical_url',
     ];
@@ -46,9 +50,9 @@ class Tcemain
     /**
      * Actions that are allowed to trigger the handler.
      *
-     * @var array
+     * @var string[]
      */
-    protected $actions = [
+    protected array $actions = [
         'new',
         'update',
     ];
@@ -56,9 +60,9 @@ class Tcemain
     /**
      * Tables to work on. Only those tables will be processed.
      *
-     * @var string
+     * @var string[]
      */
-    protected $tablesToProcess = [
+    protected array $tablesToProcess = [
         'pages',
         // ToDo: pages_language_overlay not exist in typo3 >=v10
         'pages_language_overlay',
@@ -67,16 +71,16 @@ class Tcemain
     /**
      * Fields that should not be null on 'new' action.
      *
-     * @var array
+     * @var string[]
      */
-    protected $preventFieldsFromNull = [
+    protected array $preventFieldsFromNull = [
         'unity_path',
         'canonical_url',
     ];
 
     protected PageRepository $pageRepository;
 
-    public function injectPageRepository(PageRepository $pageRepository)
+    public function injectPageRepository(PageRepository $pageRepository): void
     {
         $this->pageRepository = $pageRepository;
     }
@@ -91,20 +95,20 @@ class Tcemain
      * @param string $action The action to perform, e.g. 'new'.
      * @param string $table The table affected by action, e.g. 'pages'.
      * @param int $uid The uid of the record affected by action.
-     * @param array $modifiedFields The modified fields of the record.
+     * @param array<array-key, mixed> $modifiedFields The modified fields of the record.
      */
     public function processDatamap_postProcessFieldArray(// @codingStandardsIgnoreLine
-        $action,
-        $table,
-        $uid,
+        string $action,
+        string $table,
+        int $uid,
         array &$modifiedFields
-    ) {
+    ): void {
         if (! $this->checkProcessing($table, $action, $modifiedFields)) {
             return;
         }
 
         foreach ($this->fields as $field) {
-            if (! isset($modifiedFields[$field]) || $modifiedFields[$field] === null) {
+            if (! isset($modifiedFields[$field])) {
                 $modifiedFields[$field] = '';
             }
         }
@@ -113,13 +117,9 @@ class Tcemain
     /**
      * Check whether to continue with the handler or not.
      *
-     * @param string $table
-     * @param string $action
-     * @param array $modifiedFields
-     *
-     * @return bool
+     * @param array<array-key, mixed> $modifiedFields
      */
-    protected function checkProcessing($table, $action, array $modifiedFields)
+    protected function checkProcessing(string $table, string $action, array $modifiedFields): bool
     {
         // Do not process if foreign table, unintended action,
         // or fields were changed explicitly.
@@ -131,7 +131,7 @@ class Tcemain
         // is not set or is null on 'new' action.
         if ($action == 'new') {
             foreach ($this->preventFieldsFromNull as $field) {
-                if (! isset($modifiedFields[$field]) || $modifiedFields[$field] === null) {
+                if (! isset($modifiedFields[$field])) {
                     return true;
                 }
             }
@@ -150,26 +150,22 @@ class Tcemain
     /**
      * A TCEmain hook to expire old records and add new ones
      *
-     * @param string $status
-     * @param string $tableName
-     * @param int $recordId
-     * @param array $databaseData
-     * @param object $dataHandler
+     * @param array<array-key, mixed> $databaseData
      */
     public function processDatamap_afterDatabaseOperations(
-        $status,
-        $tableName,
-        $recordId,
+        string $status,
+        string $tableName,
+        int|string $recordId,
         array $databaseData,
-        $dataHandler
-    ) {
+        DataHandler $dataHandler
+    ): void {
         // new entry via drag & drop don't process
         if ($recordId === 'NEW12345') {
             return;
         }
 
         // new normal entry has hashed record id, get real id from data handler
-        if ($status == 'new' && strpos($recordId, 'NEW') === 0) {
+        if ($status == 'new' && str_starts_with((string)$recordId, 'NEW')) {
             $recordId = $dataHandler->substNEWwithIDs[$recordId];
         }
 
@@ -216,11 +212,10 @@ class Tcemain
      *
      * @return string
      */
-    protected function getRecordPath($uid, $sysLanguageUid)
+    protected function getRecordPath(int $uid, int $sysLanguageUid): string
     {
         $output = '';
         $pages = (GeneralUtility::makeInstance(RootlineUtility::class, $uid))->get();
-        $data = [];
 
         if ($sysLanguageUid > 0) {
             $data = $this->getPagesOverlayWithoutFERestriction($pages, $sysLanguageUid);
@@ -253,7 +248,7 @@ class Tcemain
      * @param int $sysLanguageUid The language uid of the page to update.
      * @param string $unityPath The unity path to set.
      */
-    protected function updateRecord($uid, $sysLanguageUid, $unityPath, $newRealUrlPath = null)
+    protected function updateRecord(int $uid, int $sysLanguageUid, string $unityPath, ?string $newRealUrlPath = null): void
     {
         if ($unityPath == '/') {
             $unityPath = '';
@@ -263,13 +258,13 @@ class Tcemain
             $realUrlPathForPageData = rtrim('/' . ltrim($newRealUrlPath, '/'), '/');
             $unityPath = $realUrlPathForPageData . '.html';
         } else {
-            $realUrlPathForPageData = rtrim(preg_replace(static::HTML_REGEX, '', $unityPath), '/');
+            $realUrlPathForPageData = rtrim((string)preg_replace(static::HTML_REGEX, '', $unityPath), '/');
         }
 
         // set default values for update query
         $tableName = static::TABLE_PAGES;
         $where = [
-            static::COLUMN_UID => (int)$uid,
+            static::COLUMN_UID => $uid,
         ];
         $fields = [
             static::COLUMN_UNITY_PATH => $unityPath,
@@ -279,10 +274,7 @@ class Tcemain
         // overwrite some settings
         if ($sysLanguageUid > 0) {
             $tableName = static::TABLE_PAGES_LANGUAGE_OVERLAY;
-            array_push(
-                $where,
-                static::COLUMN_SYS_LANGUAGE_UID . '=>' . (int)$sysLanguageUid
-            );
+            $where[] = static::COLUMN_SYS_LANGUAGE_UID . '=>' . $sysLanguageUid;
         }
 
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($tableName);
@@ -302,7 +294,7 @@ class Tcemain
      * @param int $sysLanguageUid The language uid for child tree.
      * @param string $path The current path.
      */
-    protected function updateSubPages($uid, $sysLanguageUid, $path)
+    protected function updateSubPages(int $uid, int $sysLanguageUid, string $path): void
     {
         // remove previously added .html
         $path = preg_replace(static::HTML_REGEX, '', $path) . '/';
@@ -325,13 +317,13 @@ class Tcemain
      * If the sub page has children this method will recursively call itself for
      * each child.
      *
-     * @param array $data The subpage to update.
+     * @param array<array-key, mixed> $data The subpage to update.
      * @param string $currentPath The current path.
      */
-    protected function updateSubPage(array $data, $currentPath)
+    protected function updateSubPage(array $data, string $currentPath): void
     {
         // if unity path doesn't start with the current path it needs an update
-        if (strpos($data[static::COLUMN_UNITY_PATH], $currentPath) !== 0 || $currentPath == '/') {
+        if (!str_starts_with($data[static::COLUMN_UNITY_PATH], $currentPath) || $currentPath == '/') {
             $unityPath = $currentPath;
             if (!$data[static::COLUMN_EXCLUDE_SLUG_FOR_SUBPAGES]) {
                 $unityPath = $this->addToPath($currentPath, $data);
@@ -358,9 +350,10 @@ class Tcemain
      * @param int $pid The pid to generate the array for.
      * @param int $sysLanguageUid The language uid to add translations.
      *
-     * @return array
+     * @return array<array-key, mixed>
+     * @throws Exception
      */
-    protected function getTreeList($pid, $sysLanguageUid)
+    protected function getTreeList(int $pid, int $sysLanguageUid): array
     {
         $pid = (int)$pid;
         if ($pid < 0) {
@@ -380,9 +373,9 @@ class Tcemain
                static::COLUMN_PID => $pid,
                'deleted' => 0,
            ]
-        )->fetchAll();
+        );
 
-        foreach ($resultSet as $key => $row) {
+        while ($row = $resultSet->fetchAssociative()) {
             $uid = $row[static::COLUMN_UID];
             $row[static::COLUMN_SYS_LANGUAGE_UID] = 0;
             $treeList[$uid] = $row;
@@ -398,17 +391,18 @@ class Tcemain
     }
 
     /**
+     * @todo !!!!!! Check $newElement being possible as array and string, as this will break logic inside this function
      * This method cleans up the $newElement and adds it to the given path.
      *
      * @param string $path The current path.
-     * @param string $newElement The new element to add.
+     * @param string|array<array-key, mixed> $newElement The new element to add.
      *
      * @return string
      */
-    protected function addToPath($path, $newElement)
+    protected function addToPath(string $path, string|array $newElement): string
     {
         // remove previously added .html
-        $path = preg_replace(static::HTML_REGEX, '', $path);
+        $path = (string)preg_replace(static::HTML_REGEX, '', $path);
         // add slash and remove possibly trailing slashes before
         $path = rtrim($path, '/') . '/';
 
@@ -440,17 +434,17 @@ class Tcemain
         }
 
         // replace all non ascii characters like è
-        $newElement = iconv('UTF-8', 'ASCII//TRANSLIT', $newElement);
-        $newElement = iconv('ASCII', 'UTF-8', $newElement);
+        $newElement = (string)iconv('UTF-8', 'ASCII//TRANSLIT', $newElement);
+        $newElement = (string)iconv('ASCII', 'UTF-8', $newElement);
 
         // translit can result in upper case characters € -> EUR
         $newElement = strtolower($newElement);
 
         // replace everything that is not in the alphabet or a number with a minus
-        $newElement = preg_replace('/[^a-z0-9-]/', '-', $newElement);
+        $newElement = (string)preg_replace('/[^a-z0-9-]/', '-', $newElement);
 
         // remove multiple -
-        $newElement = preg_replace('/--{1,}/', '-', $newElement);
+        $newElement = (string)preg_replace('/--{1,}/', '-', $newElement);
 
         // remove leading and trailing minus
         $newElement = trim($newElement, '-');
@@ -464,12 +458,13 @@ class Tcemain
      * but does not set the frontend editing restriction as in the
      * backend are no user groups and it throws an exception.
      *
-     * @param array $pagesInput The pages input.
+     * @param array<array-key, mixed> $pagesInput The pages input.
      * @param int $lUid The language uid.
      *
-     * @return array
+     * @return array<array-key, mixed>
+     * @throws Exception
      */
-    protected function getPagesOverlayWithoutFERestriction(array $pagesInput, $lUid)
+    protected function getPagesOverlayWithoutFERestriction(array $pagesInput, int $lUid): array
     {
         $page_ids = [];
 
@@ -483,7 +478,8 @@ class Tcemain
             }
         }
 
-        // ToDo: Change to normal page table
+        // @todo BREAKING `pages_language_overlay` was dropped in TYPO3 v9.0. REFACTOR IMMEDIATELY
+        // https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/9.0/Important-82445-MigratePagesLanguageOverlayIntoPages.html
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('pages_language_overlay');
 
@@ -499,10 +495,10 @@ class Tcemain
                     $queryBuilder->createNamedParameter($lUid, \PDO::PARAM_INT)
                 )
             )
-            ->execute();
+            ->executeQuery();
 
         $overlays = [];
-        while ($row = $result->fetch()) {
+        while ($row = $result->fetchAssociative()) {
             $this->pageRepository->versionOL('pages_language_overlay', $row);
             if (is_array($row)) {
                 $row['_PAGES_OVERLAY'] = true;

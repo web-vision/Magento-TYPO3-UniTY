@@ -32,6 +32,7 @@
         "php": "^8.1 || ^8.2 || ^8.3 || ^8.4",
         "ext-curl": "*",
         "ext-gd": "*",
+        "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
         "typo3/cms-backend": "^12.4",
