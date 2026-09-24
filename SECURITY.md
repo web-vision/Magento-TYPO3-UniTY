@@ -14,9 +14,8 @@ reporting an issue against them.
 
 | Version | Supported |
 | ------- | --------- |
-| 10,11.x | :x:       |
-| 8.x     | :x:       |
-| < 8.0   | :x:       |
+| 3.x     | :x:       |
+| < 3.0   | :x:       |
 
 > **Note:** the newest version of this product targets a TYPO3 version that has left
 > regular LTS maintenance, so no version is currently covered by security updates.
