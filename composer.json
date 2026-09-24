@@ -26,7 +26,15 @@
 		"vendor-dir": ".Build/vendor",
 		"bin-dir": ".Build/bin",
 		"allow-plugins": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "block-insecure": false
+        },
+		"policy": {
+			"advisories": {
+				"block": false
+			}
+		}
 	},
     "require": {
         "php": "^8.1 || ^8.2 || ^8.3 || ^8.4",
