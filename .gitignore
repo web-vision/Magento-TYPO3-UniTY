@@ -60,3 +60,4 @@ composer.phar
 
 /.cache/
 /Build/testing-docker/.env
+/composer.json.orig
